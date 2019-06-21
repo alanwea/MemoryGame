@@ -1,0 +1,46 @@
+/*
+    The Gotham font family is owned by Hoefler & Frere-Jones (http://www.typography.com/), and is not free; for web use only the price is around $149. For testing purposes, Gotham Thin and Gotham Book were downloaded from www.ufonts.com.
+
+    According to http://www.identifont.com their are several alternative fonts similar to Gotham, but the only one that is free, and available from Google fonts, appears to be Montserrat.
+
+    Note that no testing was done with Linux, Apple Macintosh or mobile device, web safe fonts.
+
+TODO:
+For some reason, adding the fallback fonts causes the local Gotham fonts to be bypassed, even though the Chrome Dev tools Inspector verifies that Gotham is being used (even after cache clear and reset).  Happens in Firefox too.
+*/
+
+/*@import url('https://fonts.googleapis.com/css?family=Montserrat:300,700|Spectral:300,700');
+*/
+
+@font-face {
+
+	font-family: GothamThin;
+	font-style: normal;
+	font-weight: 300;
+
+	src:
+		local('GothamThin'),
+		url(oldiefix.eot?#iefix) format('embedded-opentype'),	/*old IE compatibility fix, example of handling legacy browsers */
+		url("../fonts/gotham-thin.woff") format('woff'),
+		url("../fonts/gotham-thin.woff") format('woff'),
+		url("../fonts/gotham-thin.ttf") format('truetype'),
+		url("../fonts/gotham-thin.ttf") format('truetype'),
+		url("../fonts/gotham-thin.eot") format('eot');
+}
+
+@font-face {
+	font-family: GothamBook;
+	font-weight: 700;
+	font-style: normal;
+	src:
+		local('GothamBook'),
+		url(oldiefix.eot?#iefix) format('embedded-opentype'),  /*old IE compatibility fix*/
+		url("../fonts/gothamHTF-Book.ttf") format('truetype');
+}
+
+/* Still some problems here.  GothamThin fallsbacks to Monserrat, but is too bold, is it using 700 weight? */
+@font-face {
+	font-family: Montserrat;
+	font-style: normal;
+	src: url("https://fonts.googleapis.com/css?family=Montserrat:300,700");
+}
