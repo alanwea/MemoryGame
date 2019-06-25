@@ -676,13 +676,19 @@ let logicMap = new Map([
 //		});
 	}}],
 
-	//* Second click of a double click
+	//* Handle a double click on same card
 	['2001', {logic: (selectedCardObj, mgo) => {
 	//	let showFace = selectedCardObj.faceUp ? false : true;
 	console.log('In 2001');
 		setFace(selectedCardObj, false, mgo);
 		updateTally(+1, mgo);
-		setCardStates(true, false, selectedCardObj.cardIdx, mgo);
+//		setCardStates(true, false, selectedCardObj.cardIdx, mgo);
+// code that is in setCardStates.  On double click:
+//turn card face down, increment the tally.  Go back to initial state.
+			mgo.firstCard = card1;  // need this here?
+			mgo.secondCard = card2;  // need this here?
+			mgo.previousCard = cardSelected;  // need this here??
+			mgo.previousFace = mgo.cardMap.get(cardSelected).faceUp;  // need this here??
 		clickState(mgo);
 		return;
 		}
