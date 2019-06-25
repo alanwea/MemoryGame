@@ -68,6 +68,14 @@ function InitCardHandler(mgo) {
 
 	} // end of inital card processing
 
+	function terminiateAnimation(mgo) {
+		console.log('In terminate animation');
+//	if (mgo.) {
+//
+//}
+//
+	}
+
 // Consumes clicks and dispatches to handlers
 function cardsContainerHandler(mgo) {
 
@@ -108,6 +116,9 @@ function cardsContainerHandler(mgo) {
 // Extract the card number by matching one or more digits if preceeded by 'card', 'cardxx' -> xx
 	mgo.selectedCard = (selectedCardClass.match(/(?<=card)\d+/))[0];
 
+// If click recived before animation complete then terminate it and continue
+	terminiateAnimation(mgo);
+
 // Retrieve the card object associated with the current click, and the match card object
 	let selectedCardObj = mgo.cardMap.get(mgo.selectedCard);
 	let matchedCardObj = mgo.cardMap.get(selectedCardObj.matchCard);
@@ -139,6 +150,7 @@ function cardsContainerHandler(mgo) {
 //		console.log('In main loop:  pauseState is ' + mgo.pauseState);
 //		if (mgo.pauseState === true) mgo.pauseState = false;
 
+// Dispatch to the handler routine
 		logicMap.get(logicKey)['logic'](selectedCardObj, mgo);
 
 		if (mgo.testMode) {	console.log('Waiting........'); }
