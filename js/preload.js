@@ -13,9 +13,10 @@ function initializeGame(rows, columns) {
 
 // A template literal used to define HTML that will be injected for each card image element.  The arrow syntax is used to defer resolution of the parameters until used below at runtime.  Change the literal here to change the injected HTML.
 
-// FUTURE:  tabindex=0 class to add for accessibility
+// TODO (future):  add tabindex=0 for accessibility
+// Template definition for front and back of card.  Backimage is used in both here, the front will be filled in with actual value in the delayed routine as part of the performance experiement with a base64 embedded image.
 	var htmlTemplate = (cardNumber, backImage) => `<img class='card card${cardNumber} back'  src='${backImage}' alt='Card ${cardNumber}'>
-	<img hidden class='card card${cardNumber} front' src='frontImage' alt='Card ${cardNumber}'>`;
+	<img hidden class='card card${cardNumber} front' src='${backImage}' alt='Card ${cardNumber}'>`;
 
 // Memory Game Object(mgo) where the state of the game is stored.  Note: some pundits say map should be used instead, I chose an Object for experience, as I use a map elsewhere.
 // REMEMBER TO INITIALIZE VALUES IN BODY OF ROUTINE OR THEY WON'T SHOW UP IN OBJECT
@@ -48,6 +49,8 @@ function initializeGame(rows, columns) {
 		let clickState = 0; // first or second click
 
 		let testMode = false;  // indicates test mode
+
+		let pauseState = false;
 
 	return {
 		}
@@ -118,6 +121,7 @@ function initializeGame(rows, columns) {
 		mgo.cardHandlerFunction = '';
 		mgo.clickState = 0;	// initial state set in card click handler
 		mgo.testMode = false;
+		mgo.pauseState = false;  // used to terminate a pause early
 
 		if (rows * columns % 2 != 0) {  // Is cardCount even?
 			console.log('cardCount is not even, terminiate');

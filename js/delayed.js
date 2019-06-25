@@ -115,6 +115,10 @@ if (mgo.animationOn) { // cards are still blinking from previous match try
 // Build the dispatch map key from boolean coded game state
 		console.log('logic key is ' + logicKey);
 
+		// If in the middle of a pause, terminiate it
+		console.log('In main loop:  pauseState is ' + mgo.pauseState);
+		if (mgo.pauseState === true) mgo.pauseState = false;
+
 		logicMap.get(logicKey)['logic'](selectedCardObj, mgo);
 
 		if (mgo.testMode) {	console.log('Waiting........'); }
@@ -415,6 +419,22 @@ const pause = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
+// Interuptible pause
+function pauseInterrupt(milliseconds, mgo) {
+	let seconds = milliseconds / 1000;
+	mgo.pauseState = true;
+	console.log("Start pause loop");
+
+	for (let i=0; i<seconds; i++) {
+		setTimeout(function(){console.log("in setInterval " + i);}, 5000);
+		if (!mgo.pauseState) {
+				console.log('break loop ' + mgo.pauseState);
+			break;
+		}  // If the pause is to stop then abort early
+	}
+	mgo.pauseState = false;
+}
+
 // TODO - Reset stars
 function resetStars() {
 	console.log("resetStars");
@@ -526,7 +546,7 @@ function* timerCount(flag) {
 }
 //*/
 
-//* Fancy toggle technique
+//* Fancy technique to toggle between 1 and 2.
 function clickState(mgo) {
 	mgo.clickState = 3 - mgo.clickState;
 	return mgo.clickState;
@@ -551,12 +571,14 @@ let logicMap = new Map([
 		}}],
 
 		['1001', {logic: (selectedCardObj, mgo) => {  //
+			console.log('In 1001');
 																toggleFace(selectedCardObj, mgo);
 																setCardStates(true, false, mgo.selectedCard, mgo);
 																return;
 		}}],
 
 	['1010', {logic: (selectedCardObj, mgo) => {  //
+		console.log('In 1010');
 		toggleFace(selectedCardObj, mgo);
 																	setCardStates(false, true, mgo.selectedCard, mgo);
 																	return;
@@ -568,6 +590,7 @@ let logicMap = new Map([
 
 	//* Card already matched
 	['1100', {logic: (selectedCardObj, mgo) => {
+		console.log('In 1100');
 				const cardIdx = [];
 				cardIdx.push(selectedCardObj.cardIdx);
 				cardIdx.push(selectedCardObj.matchCard);
@@ -595,33 +618,54 @@ let logicMap = new Map([
 		['2000', {'logic': (selectedCardObj, mgo) => {
 			console.log('In 2000');
 			let timeOut = 3000;
+			console.log('turn 2nd card faceup');
 			setFace(selectedCardObj, true, mgo);
 			updateTally(+1, mgo);
 
+			// blink the current and previous cards
 			const cardIdx = [];
 			cardIdx.push(selectedCardObj.cardIdx);
 			cardIdx.push(mgo.previousCard);
 			logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
 
 			console.log('animation flag ' + mgo.animationOn );
-			if (mgo.animationOn) {
-				timeOut = 0;
-				setFace(selectedCardObj, false, mgo);
-				mgo.animationOn = false;
-			}
+//			if (mgo.animationOn) {
+//				timeOut = 3000;
+//				setFace(selectedCardObj, false, mgo);
+//				mgo.animationOn = false;
+//			}
+//
+//			console.log('getting ready to pause');
+//			console.log('timeout = ' + timeOut + ' animation ' + mgo.animationOn);
+// pause to let player memorize the current card before tuning it over
+// Calls setTimeout milliseonds / 1000 times, each time checking if it should continue.  This is used to shortcut a timeout if a new click comes in too soon.
+// This timeout does not seem to work
+//	setTimeout(testMsg('In 10 sec pause'), 10000);
+// try recursive timeout
 
-			console.log('getting ready to pause');
-			console.log('timeout = ' + timeOut + ' animation ' + mgo.animationOn);
-			pause(timeOut).then(() => {
+		let timerId = setTimeout(function tick() {
+			console.log('tick...');
+			timerId = setTimeout(tick, 2000);
+		}, 2000);
+
+
+				console.log('end of pause');
+//				pauseInterrupt(5000, mgo);
 				setFace(selectedCardObj, false, mgo);
 	//			updateTally(+1, mgo);
 				setCardStates(false, true, mgo.previousCard, mgo);
-		});
+
+//pause(timeOut).then(() => {
+//				setFace(selectedCardObj, false, mgo);
+	//			updateTally(+1, mgo);
+//				setCardStates(false, true, mgo.previousCard, mgo);
+//		});
 	}}],
 
 	//* Second click of a double click
 	['2001', {logic: (selectedCardObj, mgo) => {
 	//	let showFace = selectedCardObj.faceUp ? false : true;
+	console.log('In 2001');
 		setFace(selectedCardObj, false, mgo);
 		updateTally(+1, mgo);
 		setCardStates(true, false, selectedCardObj.cardIdx, mgo);
@@ -670,6 +714,7 @@ let logicMap = new Map([
 
 	//*  1st card clicked on face down, 2nd card is already matched
 	['2100', {logic: (selectedCardObj, mgo) => { //second, up, down, no
+		console.log('In 2100');
 		setFace(selectedCardObj, true, mgo);
 	// 2nd card is already matched, and 1st card is not going to match
 	// blink green the 2nd card and its match card and continue in card 1 ready state
@@ -694,6 +739,7 @@ let logicMap = new Map([
 	//	}
 	//	}],
 	['2101', {logic: (selectedCardObj, mgo) => {  //
+		console.log('In 2101');
 													setFace(selectedCardObj, false, mgo);
 													updateTally(+1, mgo);
 													//												console.log('This is wrong?????  should it be 0???');
@@ -721,7 +767,7 @@ let logicMap = new Map([
 					blinkBorder('.card' + index + blinkFace, colorClass, mgo);
 
 				});
-	//				mgo.animationOn = false;
+				mgo.animationOn = false;
 				return;
 			}
 		}],
@@ -786,6 +832,9 @@ let logicMap = new Map([
 
 	]); // end of Map
 
+	function testMsg(msg) {
+		console.log(msg);
+	}
 
 // Returns the base64 representation of the masterImage
 // Used under academic license from https://www.google.com/search?q=high+resolution+pictures+mosaic&rlz=1C1CHBD_enUS834US834&source=lnms&tbm=isch&sa=X&ved=0ahUKEwjZq9qo-6zgAhWRMX0KHZHzBdEQ_AUIDigB&biw=920&bih=483#imgrc=-NIsMd9cV19d4M:
