@@ -42,7 +42,7 @@ function initializeGame(rows, columns) {
 		let gameTimerId = 0;
 		let soundAlert = 0;
 		let truthTable = 0;
-		let animationOn = false;
+//		let animationOn = false;
 
 		let cardHandlerFunction = '';
 
@@ -117,7 +117,7 @@ function initializeGame(rows, columns) {
 		mgo.imageMap = new Map; // maps face card image shards
 		mgo.cardMap = new Map; // maps card objects
 		mgo.cardBackImage = cardBackImage;  // holds the URI reference to the card back image
-		mgo.animationOn = false;
+//		mgo.animationOn = false;
 		mgo.cardHandlerFunction = '';
 		mgo.clickState = 0;	// initial state set in card click handler
 		mgo.testMode = false;
