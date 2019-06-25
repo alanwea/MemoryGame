@@ -108,20 +108,22 @@ function cardsContainerHandler(mgo) {
 // Extract the card number by matching one or more digits if preceeded by 'card', 'cardxx' -> xx
 	mgo.selectedCard = (selectedCardClass.match(/(?<=card)\d+/))[0];
 
+// Retrieve the card object associated with the current click, and the match card object
 	let selectedCardObj = mgo.cardMap.get(mgo.selectedCard);
 	let matchedCardObj = mgo.cardMap.get(selectedCardObj.matchCard);
 
-// Double click if current card equals the last card and the click-state is 2nd click
+// If the current card equals the previous, then this is a double click
 	let isDoubleClick = ( (mgo.selectedCard === mgo.previousCard)
 											&& mgo.clickState === 2) ? true : false;
 
-// Current card and its match card are both faceup
+// If current card and and match card are both faceup, then they have already matched
 	let isAlreadyMatched = (selectedCardObj.faceUp && matchedCardObj.faceUp) ? true : false;
 
-// On second card selection event, the current card is a match for the previous card
+// If on second click, the match card for the current card is equal, then the cards will match after being handled
 	let willMatch = (selectedCardObj.matchCard === mgo.previousCard)
 									&& mgo.clickState === 2 ? true : false;
 
+// Create a dispatch key
 	let logicKey =
 	(mgo.clickState) +
 	(isAlreadyMatched ? '1' : '0') +
@@ -130,14 +132,12 @@ function cardsContainerHandler(mgo) {
 
 	if (mgo.testMode) {
 		console.log(`key ${logicKey}: Already Matched? ${isAlreadyMatched} Matches previous ${willMatch} Double-clicked ${isDoubleClick}`);
+		console.log('logic key is ' + logicKey);
 	}
 
-// Build the dispatch map key from boolean coded game state
-		console.log('logic key is ' + logicKey);
-
 		// If in the middle of a pause, terminiate it
-		console.log('In main loop:  pauseState is ' + mgo.pauseState);
-		if (mgo.pauseState === true) mgo.pauseState = false;
+//		console.log('In main loop:  pauseState is ' + mgo.pauseState);
+//		if (mgo.pauseState === true) mgo.pauseState = false;
 
 		logicMap.get(logicKey)['logic'](selectedCardObj, mgo);
 
