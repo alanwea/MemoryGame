@@ -685,10 +685,10 @@ let logicMap = new Map([
 //		setCardStates(true, false, selectedCardObj.cardIdx, mgo);
 // code that is in setCardStates.  On double click:
 //turn card face down, increment the tally.  Go back to initial state.
-			mgo.firstCard = card1;  // need this here?
-			mgo.secondCard = card2;  // need this here?
-			mgo.previousCard = cardSelected;  // need this here??
-			mgo.previousFace = mgo.cardMap.get(cardSelected).faceUp;  // need this here??
+//			mgo.firstCard = true;  // replaced by the clickstate toggle
+//			mgo.secondCard = false;  // replaced by the clickstate toggle
+//			mgo.previousCard = selectedCardObj.cardIdx;  // previous card stays bthe same
+//			mgo.previousFace = mgo.cardMap.get(selectedCardObj.cardIdx).faceUp; // why is this needed??
 		clickState(mgo);
 		return;
 		}
