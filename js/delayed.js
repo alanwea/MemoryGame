@@ -181,7 +181,7 @@ function blinkBorder(className, CSSSelector, mgo) {
 // At end of animation remove the associated class
 		targetElement.addEventListener('animationend', function() {
 			targetElement.classList.remove(CSSSelector);
-			mgo.animationOn = false;
+//			mgo.animationOn = false;
 		});
 
 /* Callback on each animation iteration to check for early terminiation
@@ -642,7 +642,7 @@ let logicMap = new Map([
 			cardIdx.push(mgo.previousCard);
 			logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
 
-			console.log('animation flag ' + mgo.animationOn );
+//			console.log('animation flag ' + mgo.animationOn );
 //			if (mgo.animationOn) {
 //				timeOut = 3000;
 //				setFace(selectedCardObj, false, mgo);
