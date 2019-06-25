@@ -575,7 +575,7 @@ let logicMap = new Map([
 	// First card clicked of attempted match pair.
 	['1000', {logic: (selectedCardObj, mgo) => {
 		console.log('in 1000');
-		mgo.animationOn = false;
+//		mgo.animationOn = false;
 
 		setFace(selectedCardObj, true, mgo); // turn face-up
 
