@@ -54,18 +54,21 @@ let masterImage = new Image();
 function cardsContainerHandler(mgo) {
 
 // New click has come in, if second card is true, we are in the middle of an animation for the previous two cards.  This should only happen during a tile blink and is used to terminate it early if a third click is recieved while the animation is playing
-if (mgo.animationOn) { // cards are still blinking from previous match try
-		console.log('Stop animation');
-		mgo.animationOn = false;
-	}
+//if (mgo.animationOn) {
+//		console.log('Stop animation');
+//		mgo.animationOn = false;
+//	}
 
 	event.stopPropagation();
 
 	let selectedCardClass = event.target.classList.value;
+// if the card container has been clicked, but not a card, just return.
 	if ( selectedCardClass === 'cards-container') { return};
-	let isCard = (selectedCardClass.match(/\s*card\s*/) === null) ? false : true;  // look for the card class
-	console.assert(isCard, isCard,'Could not find card class');  // Sample 'assert' experiment
-
+// Test to determine if a card has been clicked
+	let isCard = (selectedCardClass.match(/\s*card\s*/) === null) ? false : true;
+// Could be more robust here, but wanted to see how assert worked
+	console.assert(isCard, isCard,'Could not find card class');
+// Beginning of game setup
 	if (mgo.initialCard) {
 
 		mgo.initialCard = false;  // toggle so if only executed once
