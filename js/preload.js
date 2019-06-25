@@ -33,7 +33,7 @@ function initializeGame(rows, columns) {
 		let imageMap = {};
 		let cardMap = {};
 
-		let firstCard = '0';
+//		let firstCard = '0';
 		let selectedCard = '0';
 		let initialCard = true;
 		let previousCard = '0';
@@ -106,7 +106,7 @@ function initializeGame(rows, columns) {
 		mgo.columns = columns;
 		mgo.tally = 0;
 		mgo.initialCard = true;  // used to do pre-init in the card click handler
-		mgo.firstCard = false; //
+//		mgo.firstCard = false; //
 		mgo.previousCard = '0'; // keeps track of the last card clicked
 		mgo.previousFace = false;
 		mgo.selectedCard = '0';  // contains the current card clicked
