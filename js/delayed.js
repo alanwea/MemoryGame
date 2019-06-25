@@ -50,6 +50,24 @@ let masterImage = new Image();
 	}; // end of masterImage load callback
 //*/
 
+function InitCardHandler(mgo) {
+
+		mgo.initialCard = false;  // toggle so only executed once
+		mgo.firstCard = true; // first click is coming so make it true
+		mgo.secondCard = false;
+
+		mgo.previousCard = '0';
+		mgo.previousFace = false;
+		mgo.clickState = 1;  // 1 indicates first card selection event of a pair
+
+// Start timer and store it in the game object
+		const seconds = timerCount(true);
+		mgo.gameTimerId = setInterval(showGameTimer, 1000, seconds );
+// Create an audio context and store it in the game object
+		mgo.soundAlert = new AudioContext();
+
+	} // end of inital card processing
+
 // Consumes clicks and dispatches to handlers
 function cardsContainerHandler(mgo) {
 
@@ -70,20 +88,20 @@ function cardsContainerHandler(mgo) {
 	console.assert(isCard, isCard,'Could not find card class');
 // Beginning of game setup
 	if (mgo.initialCard) {
+		InitCardHandler(mgo);
+//		mgo.initialCard = false;  // toggle so if only executed once
+//		mgo.firstCard = true; // first click is coming so make it true
+//		mgo.secondCard = false;
 
-		mgo.initialCard = false;  // toggle so if only executed once
-		mgo.firstCard = true; // first click is coming so make it true
-		mgo.secondCard = false;
-
-		mgo.previousCard = '0';
-		mgo.previousFace = false;
-		mgo.clickState = 1;  // 1 indicates first card selection event of a pair
+//		mgo.previousCard = '0';
+//		mgo.previousFace = false;
+//		mgo.clickState = 1;  // 1 indicates first card selection event of a pair
 
 // Start timer and store it in the game object
-		const seconds = timerCount(true);
-		mgo.gameTimerId = setInterval(showGameTimer, 1000, seconds );
+//		const seconds = timerCount(true);
+//		mgo.gameTimerId = setInterval(showGameTimer, 1000, seconds );
 // Create an audio context and store it in the game object
-		mgo.soundAlert = new AudioContext();
+//		mgo.soundAlert = new AudioContext();
 
 	} // end of inital card processing
 
