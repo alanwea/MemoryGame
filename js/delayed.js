@@ -51,6 +51,7 @@ let masterImage = new Image();
 //*/
 
 // Called once when card click event handler is initialized
+// TODO must set stars in here too, when a reset happens
 function InitCardHandler(mgo) {
 
 		mgo.initialCard = false;  // toggle so only executed once
@@ -80,22 +81,20 @@ function InitCardHandler(mgo) {
 // Consumes clicks and dispatches to handlers
 function cardsContainerHandler(mgo) {
 
-// New click has come in, if second card is true, we are in the middle of an animation for the previous two cards.  This should only happen during a tile blink and is used to terminate it early if a third click is recieved while the animation is playing
-//if (mgo.animationOn) {
-//		console.log('Stop animation');
-//		mgo.animationOn = false;
-//	}
-
 	event.stopPropagation();
 
 	let selectedCardClass = event.target.classList.value;
+
 // if the card container has been clicked, but not a card, just return.
 	if ( selectedCardClass === 'cards-container') { return};
-// Test to determine if a card has been clicked
+
+	// Verify that a card has been clicked
 	let isCard = (selectedCardClass.match(/\s*card\s*/) === null) ? false : true;
-// Could be more robust here, but wanted to see how assert worked
+
+	// Could be more robust here, but wanted to see how assert worked
 	console.assert(isCard, isCard,'Could not find card class');
-// Beginning of game setup
+
+	// Beginning of game setup
 	if (mgo.initialCard) {
 		InitCardHandler(mgo);
 	}
@@ -103,8 +102,9 @@ function cardsContainerHandler(mgo) {
 // Extract the card number by matching one or more digits if preceeded by 'card', 'cardxx' -> xx
 	mgo.selectedCard = (selectedCardClass.match(/(?<=card)\d+/))[0];
 
-// If click recived before animation complete then terminate it and continue
-	terminiateAnimation(mgo);
+// TODO: test here to see if this is a third click while processing still going on first two cards
+//
+	console.log('Test for third click; state is ' + mgo.clickState);
 
 // Retrieve the card object associated with the current click, and its match card object
 	let selectedCardObj = mgo.cardMap.get(mgo.selectedCard);
@@ -170,7 +170,7 @@ function setFrontCardHTML(mgo) {
 // Blink the border by classname
 // Good example of animation callbacks at https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
 function blinkBorder(className, CSSSelector, mgo) {
-	mgo.animationOn = true;
+	// mgo.animationOn = true;
 
 //	let targetElement1 = document.getElementsByClassName(className)[0];
 	let targetElement = document.querySelector(className);
@@ -632,7 +632,6 @@ let logicMap = new Map([
 		// Not matched, not a double click, 2nd card click
 		['2000', {'logic': (selectedCardObj, mgo) => {
 			console.log('In 2000');
-//			let timeOut = 3000;
 //			console.log('turn 2nd card faceup');
 			setFace(selectedCardObj, true, mgo);
 			updateTally(+1, mgo);
@@ -658,23 +657,23 @@ let logicMap = new Map([
 //	setTimeout(testMsg('In 10 sec pause'), 10000);
 // try recursive timeout
 
-		let timerId = setTimeout(function tick() {
+//		let timerId = setTimeout(function tick() {
 //			console.log('tick...');
-			timerId = setTimeout(tick, 2000);
-		}, 2000);
+//			timerId = setTimeout(tick, 2000);
+//		}, 2000);
 
-
-				console.log('end of pause');
+//				console.log('end of pause');
 //				pauseInterrupt(5000, mgo);
-				setFace(selectedCardObj, false, mgo);
-	//			updateTally(+1, mgo);
-				setCardStates(false, true, mgo.previousCard, mgo);
-
-//pause(timeOut).then(() => {
 //				setFace(selectedCardObj, false, mgo);
 	//			updateTally(+1, mgo);
 //				setCardStates(false, true, mgo.previousCard, mgo);
-//		});
+
+			let timeOut = 3000;
+pause(timeOut).then(() => {
+				setFace(selectedCardObj, false, mgo);
+			updateTally(+1, mgo);
+				setCardStates(false, true, mgo.previousCard, mgo);
+		});
 	}}],
 
 	//* Handle a double click on same card
