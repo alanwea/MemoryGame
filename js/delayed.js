@@ -50,7 +50,7 @@ let masterImage = new Image();
 	}; // end of masterImage load callback
 //*/
 
-// Card container event handler
+// Consumes clicks and dispatches to handlers
 function cardsContainerHandler(mgo) {
 
 // New click has come in, if second card is true, we are in the middle of an animation for the previous two cards.  This should only happen during a tile blink and is used to terminate it early if a third click is recieved while the animation is playing
@@ -68,24 +68,23 @@ if (mgo.animationOn) { // cards are still blinking from previous match try
 
 	if (mgo.initialCard) {
 
-		mgo.initialCard = false;  // toggle flag so this won't be called again until new game.
-		mgo.firstCard = true; // Waiting for first card selection event
+		mgo.initialCard = false;  // toggle so if only executed once
+		mgo.firstCard = true; // first click is coming so make it true
 		mgo.secondCard = false;
 
-		mgo.previousCard = '0'; // Card index of the card selection event before the current
+		mgo.previousCard = '0';
 		mgo.previousFace = false;
 		mgo.clickState = 1;  // 1 indicates first card selection event of a pair
 
-// Start timer on first click of a card.
+// Start timer and store it in the game object
 		const seconds = timerCount(true);
 		mgo.gameTimerId = setInterval(showGameTimer, 1000, seconds );
-
+// Create an audio context and store it in the game object
 		mgo.soundAlert = new AudioContext();
 
 	} // end of inital card processing
 
-// Extract the card number by matching one or more digits if preceeded by 'card'
-// 'cardxx' -> xx
+// Extract the card number by matching one or more digits if preceeded by 'card', 'cardxx' -> xx
 	mgo.selectedCard = (selectedCardClass.match(/(?<=card)\d+/))[0];
 
 	let selectedCardObj = mgo.cardMap.get(mgo.selectedCard);
@@ -557,9 +556,8 @@ function clickState(mgo) {
 // key: 1st or 2nd click, is a match flag, will match flag, double-click flag
 let logicMap = new Map([
 
-	// Card match click 1, no matches, no double clicks (the match start state)
+	// First card clicked of attempted match pair.
 	['1000', {logic: (selectedCardObj, mgo) => {
-		// Handle condition when a click is received before card animation is complete
 		console.log('in 1000');
 		mgo.animationOn = false;
 
