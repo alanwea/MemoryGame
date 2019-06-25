@@ -54,8 +54,8 @@ let masterImage = new Image();
 function InitCardHandler(mgo) {
 
 		mgo.initialCard = false;  // toggle so only executed once
-		mgo.firstCard = true; // first click is coming so make it true
-		mgo.secondCard = false;
+//		mgo.firstCard = true; // replaced by clickState
+//		mgo.secondCard = false; // replaced by clickstate
 
 		mgo.previousCard = '0';
 		mgo.previousFace = false;
