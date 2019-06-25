@@ -184,7 +184,7 @@ function blinkBorder(className, CSSSelector, mgo) {
 			mgo.animationOn = false;
 		});
 
-// Callback on each animation iteration to check for early terminiation
+/* Callback on each animation iteration to check for early terminiation
 		targetElement.addEventListener("animationiteration", function() {
 			if (!mgo.animationOn) {
 				event.target.classList.remove(CSSSelector);
@@ -192,6 +192,7 @@ function blinkBorder(className, CSSSelector, mgo) {
 				console.log('interation ' + mgo.animationOn);
 			}
 		});
+//*/
 
 		targetElement.classList.add(CSSSelector);
 
@@ -631,8 +632,8 @@ let logicMap = new Map([
 		// Not matched, not a double click, 2nd card click
 		['2000', {'logic': (selectedCardObj, mgo) => {
 			console.log('In 2000');
-			let timeOut = 3000;
-			console.log('turn 2nd card faceup');
+//			let timeOut = 3000;
+//			console.log('turn 2nd card faceup');
 			setFace(selectedCardObj, true, mgo);
 			updateTally(+1, mgo);
 
@@ -658,7 +659,7 @@ let logicMap = new Map([
 // try recursive timeout
 
 		let timerId = setTimeout(function tick() {
-			console.log('tick...');
+//			console.log('tick...');
 			timerId = setTimeout(tick, 2000);
 		}, 2000);
 
@@ -695,23 +696,21 @@ let logicMap = new Map([
 	}],
 	//*/
 
+// The cards match, but the second card is still facedown
 	['2010', {'logic': (selectedCardObj, mgo) => {
 		console.log('in 2010');
 		setFace(selectedCardObj, true, mgo); // turn face-up
 
-		// first check if this card and the last card are a match
-		// with 'willMatch' defined, we already know that the cards will match
-		// NEW BEHAVIOR TO BE EDITED IN
-	//	if (mgo.previousCard = selectedCardObj.matchCard) {
-	//		logicMap.get('match')['logic'](selectedCardObj, mgo);
-			if (updateTT(mgo)) { // if true, all cards are face-up
-				const cardIdx = [];
+// if all cards are face-up, indicate and finish game
+// Using a truth table for experimental purposes
+			if (updateTT(mgo)) {
+//				const cardIdx = [];  // need this here??
 				updateTally(+1, mgo);
 				logicMap.get('allMatched')['logic'](mgo);
 				logicMap.get('endOfGame')['logic'](selectedCardObj, mgo);
 				return;
-
 			}
+
 			const cardIdx = [];
 			cardIdx.push(selectedCardObj.cardIdx);
 			cardIdx.push(selectedCardObj.matchCard);
@@ -781,13 +780,14 @@ let logicMap = new Map([
 			logic:(colorClass, cardIdx, mgo) => {
 				console.log('Blink');
 
+// This is used to differentiate between the base64 and on disk image in test mode
 				let blinkFace = mgo.testMode ? '.back' : '.front';
 				cardIdx.forEach(function(index) {
-					mgo.animationOn = true;
+//					mgo.animationOn = true;  // doing it a different way
 					blinkBorder('.card' + index + blinkFace, colorClass, mgo);
 
 				});
-				mgo.animationOn = false;
+//				mgo.animationOn = false;  // using another method
 				return;
 			}
 		}],
