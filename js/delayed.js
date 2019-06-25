@@ -50,6 +50,7 @@ let masterImage = new Image();
 	}; // end of masterImage load callback
 //*/
 
+// Called once when card click event handler is initialized
 function InitCardHandler(mgo) {
 
 		mgo.initialCard = false;  // toggle so only executed once
@@ -97,21 +98,7 @@ function cardsContainerHandler(mgo) {
 // Beginning of game setup
 	if (mgo.initialCard) {
 		InitCardHandler(mgo);
-//		mgo.initialCard = false;  // toggle so if only executed once
-//		mgo.firstCard = true; // first click is coming so make it true
-//		mgo.secondCard = false;
-
-//		mgo.previousCard = '0';
-//		mgo.previousFace = false;
-//		mgo.clickState = 1;  // 1 indicates first card selection event of a pair
-
-// Start timer and store it in the game object
-//		const seconds = timerCount(true);
-//		mgo.gameTimerId = setInterval(showGameTimer, 1000, seconds );
-// Create an audio context and store it in the game object
-//		mgo.soundAlert = new AudioContext();
-
-	} // end of inital card processing
+	}
 
 // Extract the card number by matching one or more digits if preceeded by 'card', 'cardxx' -> xx
 	mgo.selectedCard = (selectedCardClass.match(/(?<=card)\d+/))[0];
@@ -119,11 +106,11 @@ function cardsContainerHandler(mgo) {
 // If click recived before animation complete then terminate it and continue
 	terminiateAnimation(mgo);
 
-// Retrieve the card object associated with the current click, and the match card object
+// Retrieve the card object associated with the current click, and its match card object
 	let selectedCardObj = mgo.cardMap.get(mgo.selectedCard);
 	let matchedCardObj = mgo.cardMap.get(selectedCardObj.matchCard);
 
-// If the current card equals the previous, then this is a double click
+// If this is 2nd click of pair and card equals previous card, then this is a double click
 	let isDoubleClick = ( (mgo.selectedCard === mgo.previousCard)
 											&& mgo.clickState === 2) ? true : false;
 
@@ -145,10 +132,6 @@ function cardsContainerHandler(mgo) {
 		console.log(`key ${logicKey}: Already Matched? ${isAlreadyMatched} Matches previous ${willMatch} Double-clicked ${isDoubleClick}`);
 		console.log('logic key is ' + logicKey);
 	}
-
-		// If in the middle of a pause, terminiate it
-//		console.log('In main loop:  pauseState is ' + mgo.pauseState);
-//		if (mgo.pauseState === true) mgo.pauseState = false;
 
 // Dispatch to the handler routine
 		logicMap.get(logicKey)['logic'](selectedCardObj, mgo);
