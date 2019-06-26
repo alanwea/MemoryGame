@@ -178,11 +178,24 @@ function blinkBorder(className, CSSSelector, mgo) {
 	console.log(`blinkBorder: class ${className} selector ${CSSSelector} target ${targetElement}`);
 //	console.log(`blinkBorder: target1 ${targetElement1} target2 ${targetElement2}`);
 
+// New JS only code without using CSS
+	targetElement.classList.add(CSSSelector);
+	
+// ------------------------------------------
+
 // At end of animation remove the associated class
-		targetElement.addEventListener('animationend', function() {
-			targetElement.classList.remove(CSSSelector);
+//		targetElement.addEventListener('animationend', function() {
+//			targetElement.classList.remove(CSSSelector);
 //			mgo.animationOn = false;
-		});
+//		});
+
+//		targetElement.addEventListener("animationiteration", function() {
+//			if (!mgo.clickState === 2) {
+//				event.target.classList.remove(CSSSelector);
+//				mgo.animationOn = false;
+//				console.log('interation ' + mgo.animationOn);
+//			}
+//		});
 
 /* Callback on each animation iteration to check for early terminiation
 		targetElement.addEventListener("animationiteration", function() {
@@ -194,7 +207,7 @@ function blinkBorder(className, CSSSelector, mgo) {
 		});
 //*/
 
-		targetElement.classList.add(CSSSelector);
+//		targetElement.classList.add(CSSSelector);
 
 	return;
 }
@@ -431,6 +444,7 @@ function updateAlt(firstCard, secondCard) {
 
 // Guaranted delay of execution - used in animation
 // Derived from https://flaviocopes.com/javascript-sleep/
+// TODO:  NEED TO CHANGE THIS SO THAT IT CAN BE TERMINATED
 const pause = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
@@ -668,12 +682,12 @@ let logicMap = new Map([
 	//			updateTally(+1, mgo);
 //				setCardStates(false, true, mgo.previousCard, mgo);
 
-			let timeOut = 3000;
-pause(timeOut).then(() => {
-				setFace(selectedCardObj, false, mgo);
-			updateTally(+1, mgo);
-				setCardStates(false, true, mgo.previousCard, mgo);
-		});
+//			let timeOut = 3000;
+//pause(timeOut).then(() => {
+//				setFace(selectedCardObj, false, mgo);
+//			updateTally(+1, mgo);
+//				setCardStates(false, true, mgo.previousCard, mgo);
+//		});
 	}}],
 
 	//* Handle a double click on same card
@@ -786,6 +800,9 @@ pause(timeOut).then(() => {
 					blinkBorder('.card' + index + blinkFace, colorClass, mgo);
 
 				});
+
+				setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);
+
 //				mgo.animationOn = false;  // using another method
 				return;
 			}

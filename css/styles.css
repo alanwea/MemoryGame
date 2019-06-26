@@ -319,14 +319,20 @@ Retrieved from https://worldvectorlogo.com/logo/udacity
 	font-size: 1.3em;
 	font-weight: bold;
 	padding: 10px;
-	animation: blinking-red .3s 3;
+/*	animation: blinking-red .3s linear 3;
+	animation-name: blinking-red;
+	animation-duration: .4s;
+	animation-timing-function: linear;
+	animation-delay: 0;
+	animation-iteration-count: 3;
+*/
 }
 
 .blinking-green {
 	font-size: 1.3em;
 	font-weight: bold;
 	padding: 10px;
-	animation: blinking-green .3s 3;
+/*	animation: blinking-green .3s 3; */
 }
 
 .reset-blink-red {
