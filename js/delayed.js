@@ -175,12 +175,80 @@ function blinkBorder(className, CSSSelector, mgo) {
 //	let targetElement1 = document.getElementsByClassName(className)[0];
 	let targetElement = document.querySelector(className);
 //	let targetElement2 = retrieveFirstClassValue(className);
-	console.log(`blinkBorder: class ${className} selector ${CSSSelector} target ${targetElement}`);
+//	console.log(`blinkBorder: class ${className} selector ${CSSSelector} target ${targetElement}`);
 //	console.log(`blinkBorder: target1 ${targetElement1} target2 ${targetElement2}`);
 
+//console.log('before pause');
+//
+
+//	console.log('starting Promise');
+//	sleep(3000).then(()=> {
+//		console.log('ending Promise');
+//	})
+console.log('starting blink loop for classname ' + className);
+function clickState(mgo) {
+	mgo.clickState = 3 - mgo.clickState;
+	return mgo.clickState;
+}
+let i = 1;
+let blinkState = 1;
+let blinkCount = 10;
+let outerTimeout = setTimeout(function run(){
+		if (blinkState === 1) {
+			targetElement.classList.add(CSSSelector);
+			blinkState = 3 - blinkState;
+		}	else {
+			targetElement.classList.remove(CSSSelector);
+			blinkState = 3 - blinkState;
+		}
+		let innerTimeout = setTimeout(run, 500);
+		blinkCount = blinkCount - 1;
+		if (blinkCount < 1) {
+			targetElement.classList.remove(CSSSelector);
+			clearTimeout(innerTimeout);
+			clearTimeout(outerTimeout);
+		}
+}, 500);
+/*
+( async () => {
+	for (let i=1; i<3; i++) {
+		console.log('turn red on');
+		await sleep(5000);
+	console.log('turn red off');
+	await sleep(5000);
+}
+})();
+
+//*/
+//	for (let i=0; i<10; i++) {
+//		targetElement.classList.add(CSSSelector);
+//		doSomething();
+//		targetElement.classList.remove(CSSSelector);
+//		doSomething();
+//	}
+//
+//pause(5000).then(() => {
+//	console.log('inside 5 second pause()');
+//			updateTally(+1, mgo);
+//		});
+
+//console.log('setting 5 sec');
+//setTimeout(function(){ console.log("Tick..."); }, 5000);
+//console.log('setting 3 sec');
+//setTimeout(function(){targetElement.classList.add(CSSSelector);}, 3000);
+//targetElement.classList.remove(CSSSelector);
+//console.log('after settimeout');
+
 // New JS only code without using CSS
-	targetElement.classList.add(CSSSelector);
-	
+//	for (let i=0; i < 10; i++) {
+//		targetElement.classList.add(CSSSelector);
+//		let pauseTimeout = setInterval(function() {
+
+//		}, 5000);
+
+
+//	}
+
 // ------------------------------------------
 
 // At end of animation remove the associated class
@@ -212,6 +280,16 @@ function blinkBorder(className, CSSSelector, mgo) {
 	return;
 }
 
+// test routine to replace pause
+const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
+
+const doSomething = async () => {
+	await sleep(2000);
+	console.log('return from sleep');
+}
+
 // Handles reset button when clicked
 // Reset button has been clicked
 // remove the blink - red from the allmatch, if it exisits
@@ -219,7 +297,6 @@ function blinkBorder(className, CSSSelector, mgo) {
 // reset stars
 // reset moves
 // reset timer
-
 function resetButtonHandler(mgo) {
 
 	event.stopPropagation();
@@ -446,6 +523,7 @@ function updateAlt(firstCard, secondCard) {
 // Derived from https://flaviocopes.com/javascript-sleep/
 // TODO:  NEED TO CHANGE THIS SO THAT IT CAN BE TERMINATED
 const pause = (milliseconds) => {
+		console.log('in pause(): milliseconds= ' + milliseconds);
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
@@ -801,7 +879,7 @@ let logicMap = new Map([
 
 				});
 
-				setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);
+//				setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);
 
 //				mgo.animationOn = false;  // using another method
 				return;
