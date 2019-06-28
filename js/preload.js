@@ -33,7 +33,6 @@ function initializeGame(rows, columns) {
 		let imageMap = {};
 		let cardMap = {};
 
-//		let firstCard = '0';
 		let selectedCard = '0';
 		let initialCard = true;
 		let previousCard = '0';
@@ -42,7 +41,6 @@ function initializeGame(rows, columns) {
 		let gameTimerId = 0;
 		let soundAlert = 0;
 		let truthTable = 0;
-//		let animationOn = false;
 
 		let cardHandlerFunction = '';
 
@@ -51,6 +49,9 @@ function initializeGame(rows, columns) {
 		let testMode = false;  // indicates test mode
 
 		let pauseState = false;
+
+		let animationBreak = false;
+		let animationOn = false;
 
 	return {
 		}
@@ -122,6 +123,8 @@ function initializeGame(rows, columns) {
 		mgo.clickState = 0;	// initial state set in card click handler
 		mgo.testMode = false;
 		mgo.pauseState = false;  // used to terminate a pause early
+		mgo.animationBreak = false; // used to terminate a card border animation
+		mgo.animationOn = false;
 
 		if (rows * columns % 2 != 0) {  // Is cardCount even?
 			console.log('cardCount is not even, terminiate');

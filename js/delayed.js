@@ -72,10 +72,6 @@ function InitCardHandler(mgo) {
 
 	function terminiateAnimation(mgo) {
 		console.log('In terminate animation');
-//	if (mgo.) {
-//
-//}
-//
 	}
 
 // Consumes clicks and dispatches to handlers
@@ -105,6 +101,9 @@ function cardsContainerHandler(mgo) {
 // TODO: test here to see if this is a third click while processing still going on first two cards
 //
 	console.log('Test for third click; state is ' + mgo.clickState);
+	if (mgo.animationOn) {
+		mgo.animationBreak = true;
+	}
 
 // Retrieve the card object associated with the current click, and its match card object
 	let selectedCardObj = mgo.cardMap.get(mgo.selectedCard);
@@ -170,112 +169,46 @@ function setFrontCardHTML(mgo) {
 // Blink the border by classname
 // Good example of animation callbacks at https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
 function blinkBorder(className, CSSSelector, mgo) {
-	// mgo.animationOn = true;
 
-//	let targetElement1 = document.getElementsByClassName(className)[0];
 	let targetElement = document.querySelector(className);
-//	let targetElement2 = retrieveFirstClassValue(className);
-//	console.log(`blinkBorder: class ${className} selector ${CSSSelector} target ${targetElement}`);
-//	console.log(`blinkBorder: target1 ${targetElement1} target2 ${targetElement2}`);
+	let blinkState = 1; // toggle whether to add or remove blink class
+	let blinkCount = 10; // number of times to blink
+	let blinkDuration = 200; // milliseconds to blink
+	mgo.animationOn = true;
 
-//console.log('before pause');
-//
+// Double Timeout design from https://dev.to/akanksha_9560/why-not-to-use-setinterval--2na9 to insure blink duration without queue race problems.
+	let outerTimeout = setTimeout(
 
-//	console.log('starting Promise');
-//	sleep(3000).then(()=> {
-//		console.log('ending Promise');
-//	})
-console.log('starting blink loop for classname ' + className);
-function clickState(mgo) {
-	mgo.clickState = 3 - mgo.clickState;
-	return mgo.clickState;
-}
-let i = 1;
-let blinkState = 1;
-let blinkCount = 10;
-let outerTimeout = setTimeout(function run(){
-		if (blinkState === 1) {
-			targetElement.classList.add(CSSSelector);
-			blinkState = 3 - blinkState;
-		}	else {
-			targetElement.classList.remove(CSSSelector);
-			blinkState = 3 - blinkState;
-		}
-		let innerTimeout = setTimeout(run, 500);
-		blinkCount = blinkCount - 1;
-		if (blinkCount < 1) {
-			targetElement.classList.remove(CSSSelector);
-			clearTimeout(innerTimeout);
-			clearTimeout(outerTimeout);
-		}
-}, 500);
-/*
-( async () => {
-	for (let i=1; i<3; i++) {
-		console.log('turn red on');
-		await sleep(5000);
-	console.log('turn red off');
-	await sleep(5000);
-}
-})();
+			function run(){
+				// check blink state and add or remove selector.
+				if (blinkState === 1) {
+					targetElement.classList.add(CSSSelector);
+//					blinkState = 3 - blinkState;
+				}	else {
+					targetElement.classList.remove(CSSSelector);
+//					blinkState = 3 - blinkState;
+				}
+				blinkState = 3 - blinkState;
 
-//*/
-//	for (let i=0; i<10; i++) {
-//		targetElement.classList.add(CSSSelector);
-//		doSomething();
-//		targetElement.classList.remove(CSSSelector);
-//		doSomething();
-//	}
-//
-//pause(5000).then(() => {
-//	console.log('inside 5 second pause()');
-//			updateTally(+1, mgo);
-//		});
+				let innerTimeout = setTimeout(run, blinkDuration);
 
-//console.log('setting 5 sec');
-//setTimeout(function(){ console.log("Tick..."); }, 5000);
-//console.log('setting 3 sec');
-//setTimeout(function(){targetElement.classList.add(CSSSelector);}, 3000);
-//targetElement.classList.remove(CSSSelector);
-//console.log('after settimeout');
+				blinkCount = blinkCount - 1;
 
-// New JS only code without using CSS
-//	for (let i=0; i < 10; i++) {
-//		targetElement.classList.add(CSSSelector);
-//		let pauseTimeout = setInterval(function() {
+				if (blinkCount < 1 || mgo.animationBreak) {
+					targetElement.classList.remove(CSSSelector);
+					clearTimeout(innerTimeout);
+					clearTimeout(outerTimeout);
+					mgo.animationBreak = false;
+					mgo.animationOn = false;
 
-//		}, 5000);
+// don't do this if it is a match
+					setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);
 
-
-//	}
-
-// ------------------------------------------
-
-// At end of animation remove the associated class
-//		targetElement.addEventListener('animationend', function() {
-//			targetElement.classList.remove(CSSSelector);
-//			mgo.animationOn = false;
-//		});
-
-//		targetElement.addEventListener("animationiteration", function() {
-//			if (!mgo.clickState === 2) {
-//				event.target.classList.remove(CSSSelector);
-//				mgo.animationOn = false;
-//				console.log('interation ' + mgo.animationOn);
-//			}
-//		});
-
-/* Callback on each animation iteration to check for early terminiation
-		targetElement.addEventListener("animationiteration", function() {
-			if (!mgo.animationOn) {
-				event.target.classList.remove(CSSSelector);
-				mgo.animationOn = false;
-				console.log('interation ' + mgo.animationOn);
-			}
-		});
-//*/
+				}
+			}, blinkDuration);
 
 //		targetElement.classList.add(CSSSelector);
+ console.log('returning from blink');
 
 	return;
 }
