@@ -170,7 +170,7 @@ function setFrontCardHTML(mgo) {
 // Good example of animation callbacks at https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
 // toggleFace - turns faceup to face down
 //function blinkBorder(className, CSSSelector, toggleFace,mgo) {
-function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
+function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, postProcessing, mgo) {
 
 	let targetElement = document.querySelector(className);
 	let blinkState = 1; // toggle whether to add or remove blink class
@@ -207,7 +207,15 @@ mgo.animationOn = true;  // indicate that an animation is beginning
 // don't do this if it is a match
 //cardObj.faceUp = faceUp;
 //	mgo.cardMap.set(cardIdx, cardObj);
-					if (mgo.selectedCard) {
+// setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);
+//console.log(postProcessing);
+//	let func = new Function('mgo','setFace(mgo.cardMap.get("2"), false, mgo);');
+//	func(mgo);
+	postProcessing = "'mgo','setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);'";
+	let func = new Function(postProcessing);
+func(mgo);
+
+			if (mgo.selectedCard) {
 						setFace(mgo.cardMap.get(mgo.selectedCard), true, mgo);
 					} else {
 						setFace(mgo.cardMap.get(mgo.selectedCard), true, mgo);
@@ -822,14 +830,17 @@ let logicMap = new Map([
 
 // This is used to differentiate between the base64 and on disk image in test mode
 				let blinkFace = mgo.testMode ? '.back' : '.front';
+//				setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);
 
 				cardIdx.forEach(function(index) {
 //					mgo.animationOn = true;  // doing it a different way
-					blinkBorder('.card' + index + blinkFace, colorClass, 10, 200, mgo);
-
+					blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
+						"(() => { " +
+							 "setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);" +
+							 "})()",
+						mgo);
 				});
 
-//				setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);
 
 //				mgo.animationOn = false;  // using another method
 				return;
@@ -852,7 +863,7 @@ let logicMap = new Map([
 				clearInterval(mgo.gameTimerId);
 				setCardStates(true, false, mgo.selectedCard, mgo);
 
-				blinkBorder("reset", "reset-blink-red", 10, 200, mgo);
+				blinkBorder("reset", "reset-blink-red", 10, 200, "(() => {console.log('test')})()", mgo);
 
 				return;
 			}
@@ -887,7 +898,7 @@ let logicMap = new Map([
 			let handlerElement = document.getElementsByClassName('cards-container')[0];
 			handlerElement.removeEventListener('click', mgo.cardHandlerFunction, true);
 
-			blinkBorder('a.reset', 'reset-blink-red', 10, 200, mgo);
+			blinkBorder('a.reset', 'reset-blink-red', 10, 200, "(() => {console.log('test')})()", mgo);
 
 		return;
 		}
