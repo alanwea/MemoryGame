@@ -153,7 +153,6 @@ function setFrontCardHTML(mgo) {
 		let image = mgo.imageMap.get(imageIdx);
 
 		frontCardElement.src = image;
-
 	}
 }
 
@@ -168,6 +167,8 @@ function setFrontCardHTML(mgo) {
 
 // Blink the border by classname
 // Good example of animation callbacks at https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
+// toggleFace - turns faceup to face down
+//function blinkBorder(className, CSSSelector, toggleFace,mgo) {
 function blinkBorder(className, CSSSelector, mgo) {
 
 	let targetElement = document.querySelector(className);
@@ -179,7 +180,7 @@ function blinkBorder(className, CSSSelector, mgo) {
 // Double Timeout design from https://dev.to/akanksha_9560/why-not-to-use-setinterval--2na9 to insure blink duration without queue race problems.
 	let outerTimeout = setTimeout(
 
-			function run(){
+			function run() {
 				// check blink state and add or remove selector.
 				if (blinkState === 1) {
 					targetElement.classList.add(CSSSelector);
@@ -665,6 +666,7 @@ let logicMap = new Map([
 			const cardIdx = [];
 			cardIdx.push(selectedCardObj.cardIdx);
 			cardIdx.push(mgo.previousCard);
+			mgo.previousCard = selectedCardObj.cardIdx;
 			logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
 
 //			console.log('animation flag ' + mgo.animationOn );
@@ -707,13 +709,7 @@ let logicMap = new Map([
 	console.log('In 2001');
 		setFace(selectedCardObj, false, mgo);
 		updateTally(+1, mgo);
-//		setCardStates(true, false, selectedCardObj.cardIdx, mgo);
-// code that is in setCardStates.  On double click:
-//turn card face down, increment the tally.  Go back to initial state.
-//			mgo.firstCard = true;  // replaced by the clickstate toggle
-//			mgo.secondCard = false;  // replaced by the clickstate toggle
-//			mgo.previousCard = selectedCardObj.cardIdx;  // previous card stays bthe same
-//			mgo.previousFace = mgo.cardMap.get(selectedCardObj.cardIdx).faceUp; // why is this needed??
+
 		clickState(mgo);
 		return;
 		}
