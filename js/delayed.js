@@ -127,10 +127,11 @@ function cardsContainerHandler(mgo) {
 	(willMatch ? '1' : '0') +
 	(isDoubleClick ? '1' : '0');
 
-	if (mgo.testMode) {
+	//if (mgo.testMode) {
 		console.log(`key ${logicKey}: Already Matched? ${isAlreadyMatched} Matches previous ${willMatch} Double-clicked ${isDoubleClick}`);
 		console.log('logic key is ' + logicKey);
-	}
+//	}
+
 
 // Dispatch to the handler routine
 		logicMap.get(logicKey)['logic'](selectedCardObj, mgo);
@@ -169,42 +170,48 @@ function setFrontCardHTML(mgo) {
 // Good example of animation callbacks at https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
 // toggleFace - turns faceup to face down
 //function blinkBorder(className, CSSSelector, toggleFace,mgo) {
-function blinkBorder(className, CSSSelector, mgo) {
+function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
 
 	let targetElement = document.querySelector(className);
 	let blinkState = 1; // toggle whether to add or remove blink class
-	let blinkCount = 10; // number of times to blink
-	let blinkDuration = 200; // milliseconds to blink
-	mgo.animationOn = true;
+//	let blinkCount = 10; // number of times to blink
+//	let blinkDuration = 200; // milliseconds to blink
+
+mgo.animationOn = true;  // indicate that an animation is beginning
 
 // Double Timeout design from https://dev.to/akanksha_9560/why-not-to-use-setinterval--2na9 to insure blink duration without queue race problems.
 	let outerTimeout = setTimeout(
 
-			function run() {
-				// check blink state and add or remove selector.
+			function blinkAnimate() {
+				// Determine if the class should be added or removed
 				if (blinkState === 1) {
 					targetElement.classList.add(CSSSelector);
-//					blinkState = 3 - blinkState;
 				}	else {
 					targetElement.classList.remove(CSSSelector);
-//					blinkState = 3 - blinkState;
 				}
+
 				blinkState = 3 - blinkState;
 
-				let innerTimeout = setTimeout(run, blinkDuration);
+				let innerTimeout = setTimeout(blinkAnimate, blinkDuration);
 
 				blinkCount = blinkCount - 1;
 
+				// when animation count has run out or an external animation break has been signaled
 				if (blinkCount < 1 || mgo.animationBreak) {
 					targetElement.classList.remove(CSSSelector);
 					clearTimeout(innerTimeout);
 					clearTimeout(outerTimeout);
-					mgo.animationBreak = false;
+					mgo.animationBreak = false;  // reset animation flags
 					mgo.animationOn = false;
 
 // don't do this if it is a match
-					setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);
-
+//cardObj.faceUp = faceUp;
+//	mgo.cardMap.set(cardIdx, cardObj);
+					if (mgo.selectedCard) {
+						setFace(mgo.cardMap.get(mgo.selectedCard), true, mgo);
+					} else {
+						setFace(mgo.cardMap.get(mgo.selectedCard), true, mgo);
+					}
 				}
 			}, blinkDuration);
 
@@ -621,9 +628,9 @@ let logicMap = new Map([
 	['1010', {logic: (selectedCardObj, mgo) => {  //
 		console.log('In 1010');
 		toggleFace(selectedCardObj, mgo);
-																	setCardStates(false, true, mgo.selectedCard, mgo);
-																	return;
-																}}],
+		setCardStates(false, true, mgo.selectedCard, mgo);
+		return;
+	}}],
 	/*  Future expansion
 	['1011', {logic: (function() { return() => { console.log('Inside 1011 function');};})()}],
 
@@ -658,17 +665,30 @@ let logicMap = new Map([
 		// Not matched, not a double click, 2nd card click
 		['2000', {'logic': (selectedCardObj, mgo) => {
 			console.log('In 2000');
-//			console.log('turn 2nd card faceup');
+			console.log('turn 2nd card faceup');
 			setFace(selectedCardObj, true, mgo);
+			console.log('update tally');
 			updateTally(+1, mgo);
 
 			// blink the current and previous cards
+			console.log('create array of cards to be blinked');
+
 			const cardIdx = [];
 			cardIdx.push(selectedCardObj.cardIdx);
 			cardIdx.push(mgo.previousCard);
-			mgo.previousCard = selectedCardObj.cardIdx;
+			console.log('set previous card to the current card');
+//			mgo.previousCard = selectedCardObj.cardIdx;
+			console.log('jump to blink');
+			selectedCardObj.faceUp = false;  // right now a hack to indicate that second card should be facedown
+			mgo.cardMap.set(cardIdx, selectedCardObj);
 			logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
-
+			console.log('return from blink');
+			setCardStates(false, false, mgo.selectedCard, mgo);
+			mgo.previousCard = '1';
+			mgo.previousFace = false;
+			mgo.selectedCard = mgo.previousCard;
+//			clickState(mgo);
+			return;
 //			console.log('animation flag ' + mgo.animationOn );
 //			if (mgo.animationOn) {
 //				timeOut = 3000;
@@ -802,9 +822,10 @@ let logicMap = new Map([
 
 // This is used to differentiate between the base64 and on disk image in test mode
 				let blinkFace = mgo.testMode ? '.back' : '.front';
+
 				cardIdx.forEach(function(index) {
 //					mgo.animationOn = true;  // doing it a different way
-					blinkBorder('.card' + index + blinkFace, colorClass, mgo);
+					blinkBorder('.card' + index + blinkFace, colorClass, 10, 200, mgo);
 
 				});
 
@@ -831,7 +852,7 @@ let logicMap = new Map([
 				clearInterval(mgo.gameTimerId);
 				setCardStates(true, false, mgo.selectedCard, mgo);
 
-				blinkBorder("reset", "reset-blink-red", mgo);
+				blinkBorder("reset", "reset-blink-red", 10, 200, mgo);
 
 				return;
 			}
@@ -866,7 +887,7 @@ let logicMap = new Map([
 			let handlerElement = document.getElementsByClassName('cards-container')[0];
 			handlerElement.removeEventListener('click', mgo.cardHandlerFunction, true);
 
-			blinkBorder('a.reset', 'reset-blink-red', mgo);
+			blinkBorder('a.reset', 'reset-blink-red', 10, 200, mgo);
 
 		return;
 		}
