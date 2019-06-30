@@ -211,20 +211,25 @@ mgo.animationOn = true;  // indicate that an animation is beginning
 //console.log(postProcessing);
 //	let func = new Function('mgo','setFace(mgo.cardMap.get("2"), false, mgo);');
 //	func(mgo);
-if (postProcessing) {
-	let func = new Function(postProcessing);
-func(mgo);
+		if (postProcessing) {
+			postProcessing = "'mgo'," + "console.log('Wow!');";
+			postProcessing = "setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);";
 
-}
+			//			console.log(postProcessing);
+//			postProcessing = "'mgo',setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);";
+			let func = new Function('mgo', postProcessing);
+		func(mgo);
+		}
+
 //	postProcessing = "'mgo','setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);'";
 //	let func = new Function(postProcessing);
 //func(mgo);
 
-			if (mgo.selectedCard) {
-						setFace(mgo.cardMap.get(mgo.selectedCard), true, mgo);
-					} else {
-						setFace(mgo.cardMap.get(mgo.selectedCard), true, mgo);
-					}
+//			if (mgo.selectedCard) {
+//						setFace(mgo.cardMap.get(mgo.selectedCard), true, mgo);
+//					} else {
+//						setFace(mgo.cardMap.get(mgo.selectedCard), true, mgo);
+//					}
 				}
 			}, blinkDuration);
 
@@ -847,12 +852,17 @@ let logicMap = new Map([
 				console.log(cardIdx[0][0]);
 				console.log(cardIdx[0][1]);
 
-//				cardIdx.forEach(function(index) {
-					let cardNumber = '.card' + cardIdx[0][0] + blinkFace;
+				cardIdx.forEach(function(currentValue, index, arrObj ) {
+					let cardNumber = '.card' + cardIdx[index][0] + blinkFace;
+
+//				});
+//					let cardNumber = '.card' + cardIdx[0][0] + blinkFace;
 
 //					function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, postProcessing, mgo)
 
-					blinkBorder(('.card' + (cardIdx[0][0]) + blinkFace), colorClass, 10, 200, cardIdx[0][1], mgo);
+					blinkBorder(('.card' + (cardIdx[index][0]) + blinkFace), colorClass, 10, 200, cardIdx[index][1], mgo);
+				});
+
 /*											"(() => { " +
 												"setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);" +
 												"})()",
