@@ -211,9 +211,14 @@ mgo.animationOn = true;  // indicate that an animation is beginning
 //console.log(postProcessing);
 //	let func = new Function('mgo','setFace(mgo.cardMap.get("2"), false, mgo);');
 //	func(mgo);
-	postProcessing = "'mgo','setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);'";
+if (postProcessing) {
 	let func = new Function(postProcessing);
 func(mgo);
+
+}
+//	postProcessing = "'mgo','setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);'";
+//	let func = new Function(postProcessing);
+//func(mgo);
 
 			if (mgo.selectedCard) {
 						setFace(mgo.cardMap.get(mgo.selectedCard), true, mgo);
@@ -681,14 +686,22 @@ let logicMap = new Map([
 			// blink the current and previous cards
 			console.log('create array of cards to be blinked');
 
-			const cardIdx = [];
-			cardIdx.push(selectedCardObj.cardIdx);
-			cardIdx.push(mgo.previousCard);
-			console.log('set previous card to the current card');
+			let cardIdx = [];
+			cardIdx.push([mgo.previousCard, "'mgo'," + "console.log('Wow!');"]);
+			cardIdx.push([selectedCardObj.cardIdx,
+									 "'mgo','setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);'"
+									]);
+
+// prints '1 test test'
+//			console.log(cardIdx[0][1]);
+
+//			cardIdx.push(selectedCardObj.cardIdx);
+//			cardIdx.push(mgo.previousCard);
+//			console.log('set previous card to the current card');
 //			mgo.previousCard = selectedCardObj.cardIdx;
 			console.log('jump to blink');
-			selectedCardObj.faceUp = false;  // right now a hack to indicate that second card should be facedown
-			mgo.cardMap.set(cardIdx, selectedCardObj);
+//			selectedCardObj.faceUp = false;  // right now a hack to indicate that second card should be facedown
+//			mgo.cardMap.set(cardIdx, selectedCardObj);
 			logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
 			console.log('return from blink');
 			setCardStates(false, false, mgo.selectedCard, mgo);
@@ -831,15 +844,29 @@ let logicMap = new Map([
 // This is used to differentiate between the base64 and on disk image in test mode
 				let blinkFace = mgo.testMode ? '.back' : '.front';
 //				setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);
+				console.log(cardIdx[0][0]);
+				console.log(cardIdx[0][1]);
 
-				cardIdx.forEach(function(index) {
-//					mgo.animationOn = true;  // doing it a different way
-					blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
+//				cardIdx.forEach(function(index) {
+					let cardNumber = '.card' + cardIdx[0][0] + blinkFace;
+
+//					function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, postProcessing, mgo)
+
+					blinkBorder(('.card' + (cardIdx[0][0]) + blinkFace), colorClass, 10, 200, cardIdx[0][1], mgo);
+/*											"(() => { " +
+												"setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);" +
+												"})()",
+*/
+
+
+/*
+blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 						"(() => { " +
 							 "setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);" +
 							 "})()",
 						mgo);
-				});
+				*/
+//							});
 
 
 //				mgo.animationOn = false;  // using another method
