@@ -211,25 +211,10 @@ mgo.animationOn = true;  // indicate that an animation is beginning
 //console.log(postProcessing);
 //	let func = new Function('mgo','setFace(mgo.cardMap.get("2"), false, mgo);');
 //	func(mgo);
-		if (postProcessing) {
-			postProcessing = "'mgo'," + "console.log('Wow!');";
-			postProcessing = "setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);";
-
-			//			console.log(postProcessing);
-//			postProcessing = "'mgo',setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);";
-			let func = new Function('mgo', postProcessing);
-		func(mgo);
-		}
-
-//	postProcessing = "'mgo','setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);'";
-//	let func = new Function(postProcessing);
-//func(mgo);
-
-//			if (mgo.selectedCard) {
-//						setFace(mgo.cardMap.get(mgo.selectedCard), true, mgo);
-//					} else {
-//						setFace(mgo.cardMap.get(mgo.selectedCard), true, mgo);
-//					}
+					if (postProcessing) {
+						let func = new Function('mgo', postProcessing);
+						func(mgo);
+					}
 				}
 			}, blinkDuration);
 
@@ -692,9 +677,9 @@ let logicMap = new Map([
 			console.log('create array of cards to be blinked');
 
 			let cardIdx = [];
-			cardIdx.push([mgo.previousCard, "'mgo'," + "console.log('Wow!');"]);
+			cardIdx.push([mgo.previousCard, "console.log('Wow!');"]);
 			cardIdx.push([selectedCardObj.cardIdx,
-									 "'mgo','setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);'"
+									'setFace(mgo.cardMap.get("' + mgo.selectedCard + '"), false, mgo);'
 									]);
 
 // prints '1 test test'
