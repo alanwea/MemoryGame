@@ -58,8 +58,8 @@ function InitCardHandler(mgo) {
 		mgo.previousCard = '0';
 		mgo.previousFace = false;
 		mgo.clickState = 1;  // 1 indicates first card selection event of a pair
-		mgo.stars = 0;
-		dashboardSet('stars', whiteStar + whiteStar + whiteStar);
+//		mgo.stars = 0;
+//		dashboardSet('stars', whiteStar + whiteStar + whiteStar);
 
 // Start timer and store it in the game object
 		const seconds = timerCount(true);
