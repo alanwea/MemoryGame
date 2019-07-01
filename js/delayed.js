@@ -55,12 +55,11 @@ let masterImage = new Image();
 function InitCardHandler(mgo) {
 
 		mgo.initialCard = false;  // toggle so only executed once
-//		mgo.firstCard = true; // replaced by clickState
-//		mgo.secondCard = false; // replaced by clickstate
-
 		mgo.previousCard = '0';
 		mgo.previousFace = false;
 		mgo.clickState = 1;  // 1 indicates first card selection event of a pair
+		mgo.stars = 0;
+		dashboardSet('stars', whiteStar + whiteStar + whiteStar);
 
 // Start timer and store it in the game object
 		const seconds = timerCount(true);
@@ -69,10 +68,6 @@ function InitCardHandler(mgo) {
 		mgo.soundAlert = new AudioContext();
 
 	} // end of inital card processing
-
-	function terminiateAnimation(mgo) {
-		console.log('In terminate animation');
-	}
 
 // Consumes clicks and dispatches to handlers
 function cardsContainerHandler(mgo) {
@@ -100,9 +95,12 @@ function cardsContainerHandler(mgo) {
 
 // TODO: test here to see if this is a third click while processing still going on first two cards
 //
-	console.log('Test for third click; state is ' + mgo.clickState);
+	console.log('click 3 State is ' + mgo.clickState + ' animation flag = ' + mgo.animationOn + ' break ' + mgo.animationBreak);
+
 	if (mgo.animationOn) {
+		console.log('animation is on');
 		mgo.animationBreak = true;
+		setTimeout(function dummy(){},500);
 	}
 
 // Retrieve the card object associated with the current click, and its match card object
@@ -197,6 +195,8 @@ mgo.animationOn = true;  // indicate that an animation is beginning
 				blinkCount = blinkCount - 1;
 
 				// when animation count has run out or an external animation break has been signaled
+				console.log('blinkicount= ' + blinkCount + ' anamationbreak = ' + mgo.animationBreak);
+
 				if (blinkCount < 1 || mgo.animationBreak) {
 					targetElement.classList.remove(CSSSelector);
 					clearTimeout(innerTimeout);
@@ -204,17 +204,12 @@ mgo.animationOn = true;  // indicate that an animation is beginning
 					mgo.animationBreak = false;  // reset animation flags
 					mgo.animationOn = false;
 
-// don't do this if it is a match
-//cardObj.faceUp = faceUp;
-//	mgo.cardMap.set(cardIdx, cardObj);
-// setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);
-//console.log(postProcessing);
-//	let func = new Function('mgo','setFace(mgo.cardMap.get("2"), false, mgo);');
-//	func(mgo);
 					if (postProcessing) {
 						let func = new Function('mgo', postProcessing);
 						func(mgo);
+						return;
 					}
+					return;
 				}
 			}, blinkDuration);
 
