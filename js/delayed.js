@@ -924,10 +924,6 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 
 	]); // end of Map
 
-	function testMsg(msg) {
-		console.log(msg);
-	}
-
 // Returns the base64 representation of the masterImage
 // Used under academic license from https://www.google.com/search?q=high+resolution+pictures+mosaic&rlz=1C1CHBD_enUS834US834&source=lnms&tbm=isch&sa=X&ved=0ahUKEwjZq9qo-6zgAhWRMX0KHZHzBdEQ_AUIDigB&biw=920&bih=483#imgrc=-NIsMd9cV19d4M:
 function getMasterFrontImage() {
