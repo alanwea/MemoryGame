@@ -15,8 +15,8 @@ function initializeGame(rows, columns) {
 
 // TODO (future):  add tabindex=0 for accessibility
 // Template definition for front and back of card.  Backimage is used in both here, the front will be filled in with actual value in the delayed routine as part of the performance experiement with a base64 embedded image.
-	var htmlTemplate = (cardNumber, backImage) => `<img class='card card${cardNumber} back'  src='${backImage}' alt='Card ${cardNumber}'>
-	<img hidden class='card card${cardNumber} front' src='${backImage}' alt='Card ${cardNumber}'>`;
+	var htmlTemplate = (cardNumber, backImage) => `<img class='card card${cardNumber} back' data-match='00'  src='${backImage}' alt='Card ${cardNumber}'>
+	<img hidden class='card card${cardNumber} front' data-match='00' src='${backImage}' alt='Card ${cardNumber}'>`;
 
 // Memory Game Object(mgo) where the state of the game is stored.  Note: some pundits say map should be used instead, I chose an Object for experience, as I use a map elsewhere.
 // REMEMBER TO INITIALIZE VALUES IN BODY OF ROUTINE OR THEY WON'T SHOW UP IN OBJECT

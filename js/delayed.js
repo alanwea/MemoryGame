@@ -33,6 +33,7 @@ let masterImage = new Image();
 		mgo.cardMap = randomizeCardsToImages(mgo);
 
 		setFrontCardHTML(mgo);
+		populateHTMLClasses(mgo);
 
 // Attach the reset event handler
 	let resetButton = retrieveFirstClassValue('reset');
@@ -68,6 +69,41 @@ function InitCardHandler(mgo) {
 		mgo.soundAlert = new AudioContext();
 
 	} // end of inital card processing
+
+function populateHTMLClasses(mgo) {
+// retrieve all card elements
+// loop through populating classes from mgo information
+let cards = document.querySelectorAll('.card');
+
+console.log(`Stating at 0 index map length ${mgo.cardMap.size} cards length ${cards.length}`);
+
+	for (let idx=0; idx < mgo.cardMap.size; idx+=2) {
+		let back = cards[idx];
+		let front = cards[idx+1];
+
+		back.classList.add('faceDown');
+		front.classList.add('faceDown');
+//for (const v of mgo.cardMap.keys()) {
+//	console.log(v);
+//	let cardMapObj = mgo.cardMap.get((idx));
+//}
+
+		let cardObj = mgo.cardMap.get((idx+1).toString());
+		back.dataset.match = cardObj.matchCard;
+		front.dataset.match = cardObj.matchCard;
+
+		let matchObj = mgo.cardMap.get((cardObj.matchCard).toString());;
+		let matchBack = cards[matchObj.matchCard];
+		let matchFront = cards[matchIdx+1];
+		matchBack.dataset.match = cardObj.matchCard;
+		matchFront.dataset.match = cardObj.matchCard;
+		// let matchedCardObj = mgo.cardMap.get(selectedCardObj.matchCard);
+
+	};
+
+	return;
+}
+
 
 // Consumes clicks and dispatches to handlers
 function cardsContainerHandler(mgo) {
@@ -515,8 +551,7 @@ if (mgo.testMode) {
 	let { rows, columns} = mgo;
 
 	let cardsNeeded = rows * columns / 2;  // Halved because each card is matched
-//	let rowsNeeded = rows;
-//	let columnsNeeded = columns;
+
 	let frontCardWidth = imageSource.naturalWidth / columns; /* need this many images */
 	let frontCardHeight = imageSource.naturalHeight / rows;
 
@@ -555,7 +590,7 @@ function getRandom(bucket) {
 	return randomValue;
 }
 
-// Bespoke truth table to track <cardCount> face-up cards that signal game end.  Given two card index numbers, sets corresponding bits in the table.  The table is inverted to make testing for caller testing for the result easier.  That is, when all bits are set, the result is all bits unset.
+// Bespoke truth table to track <cardCount> face-up cards that signal game end.  Given two card index numbers, sets corresponding bits in the table.  The table is inverted to make testing for for the result easier.  That is, when all bits are set, the result is all bits unset.
 let updateTT = function(mgo) {
 
 	let {truthTable, previousCard, selectedCard} = mgo;
