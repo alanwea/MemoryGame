@@ -70,23 +70,25 @@ function InitCardHandler(mgo) {
 
 	} // end of inital card processing
 
-	function populateHTMLClasses(mgo) {
-// retrieve all card elements
-// loop through populating classes from mgo information
-let cards = document.querySelectorAll('.card');
-// let selectedCardClass = event.target.classList.value;
-for (let i=0; i< cards.length; i++) {
+function populateHTMLClasses(mgo) {
+	// retrieve all card elements
+	let cards = document.querySelectorAll('.card');
+
+	// loop through them
+	for (let i=0; i< cards.length; i++) {
+	// get HTML element for the ith card
 	let cardHTML = cards[i];
+	// get the classlist
 	let cardClasslist = cardHTML.classList.value;
+	// look for the card index in the classlist
 	let cardIdx = cardClasslist.match(/(?<=card)\d+/)[0];
-//	let cardIdxStr = cardIdx.value;
-	console.log('card index = ' + cardIdx);
-	// We have the HTML card index.  Get the correspoding card Object from the map.
+
+	// Use the card index to retrieve the cooresponding mapped card object
 	let cardObj = mgo.cardMap.get((cardIdx));
-	console.log('match idx = ' + cardObj.matchCard);
-	//cardHTML.classList.add('data-match' + cardObj.matchCard);
+
+	// retrieve the card that matches the current card and set it into the data-*
 	cardHTML.setAttribute('data-match', cardObj.matchCard);
-	console.log(cardHTML.classList.value);
+
 }
 
 	return;
