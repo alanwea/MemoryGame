@@ -89,65 +89,6 @@ for (let i=0; i< cards.length; i++) {
 	console.log(cardHTML.classList.value);
 }
 
-console.log(`Stating at 0 index map length ${mgo.cardMap.size} cards length ${cards.length}`);
-
-//console.log('cards[0] ' + cards[0].classList);
-//console.log('cards[1] ' + cards[1].classList);
-//console.log('cards[30] ' + cards[30].classList);
-//console.log('cards[31] ' + cards[31].classList);
-//let cardMapObj1 = mgo.cardMap.get(('1'));
-//console.log('match ' + cardMapObj1.matchCard);
-//let cardMapObj16 = mgo.cardMap.get(('16'));
-//console.log('match1 ' + cardMapObj1.matchCard);
-//console.log('match16 ' + cardMapObj16.matchCard)
-//console.log('cards[matchCard] ' + cards[cardMapObj1.matchCard].classList);
-//console.log('cards[matchCard] ' + cards[cardMapObj16.matchCard].classList);
-
-//loop through the HTML element node array
-	for (let idx=0; idx < mgo.cardMap.size; idx+=2) {
-
-		console.log(``);
-
-		// first card of each pair is the back image
-// second is the front image
-		let back = cards[idx];
-		let front = cards[idx+1];
-// add an indicator of whether card is faceup or facedown
-		back.classList.add('faceUp');
-		front.classList.add('faceDown');
-for (const v of mgo.cardMap.keys()) {
-	console.log(v);
-	let cardMapObj = mgo.cardMap.get((v));
-	console.log('cardMapObj ' + cardMapObj);
-	let cardsClass = document.querySelectorAll('.card' + v);
-	console.log('cardsClass = ' + cardsClass + ' size =' + cardsClass.length);
-	cardsClass.forEach( function (element, v) {
-	console.log('classes = ' + element.className );
-	element.classList.add('data-match' + v);
-	});
-}
-// figure out which card
-//	mgo.selectedCard = (selectedCardClass.match(/(?<=card)\d+/))[0];
-		let cardObj = mgo.cardMap.get((idx+1).toString());
-		back.dataset.match = cardObj.matchCard;
-		front.dataset.match = cardObj.matchCard;
-		console.log(`card obj match card ${cardObj.matchCard}`);
-
-		let matchIdx = cardObj.matchCard;
-		let matchObj = mgo.cardMap.get((cardObj.matchCard).toString());
-		back = cards[matchIdx];
-		front = cards[matchIdx];
-		back.dataset.match = cardObj.matchCard;
-		front.dataset.match = cardObj.matchCard;
-
-		//		let matchBack = cards[matchObj.matchCard];
-//		let matchFront = cards[matchIdx+1];
-//		matchBack.dataset.match = cardObj.matchCard;
-//		matchFront.dataset.match = cardObj.matchCard;
-		// let matchedCardObj = mgo.cardMap.get(selectedCardObj.matchCard);
-
-	};
-
 	return;
 }
 
