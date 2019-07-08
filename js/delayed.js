@@ -77,19 +77,19 @@ function populateHTMLClasses(mgo) {
 	// loop through them
 	for (let i=0; i< cards.length; i++) {
 	// get HTML element for the ith card
-	let cardHTML = cards[i];
+		let cardHTML = cards[i];
 	// get the classlist
-	let cardClasslist = cardHTML.classList.value;
+		let cardClasslist = cardHTML.classList.value;
 	// look for the card index in the classlist
-	let cardIdx = cardClasslist.match(/(?<=card)\d+/)[0];
+		let cardIdx = cardClasslist.match(/(?<=card)\d+/)[0];
 
 	// Use the card index to retrieve the cooresponding mapped card object
-	let cardObj = mgo.cardMap.get((cardIdx));
+		let cardObj = mgo.cardMap.get((cardIdx));
 
 	// retrieve the card that matches the current card and set it into the data-*
-	cardHTML.setAttribute('data-match', cardObj.matchCard);
+		cardHTML.setAttribute('data-match', cardObj.matchCard);
 
-}
+	}
 
 	return;
 }
