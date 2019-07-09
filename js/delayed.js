@@ -121,13 +121,15 @@ function cardsContainerHandler(mgo) {
 
 // TODO: test here to see if this is a third click while processing still going on first two cards
 //
-	console.log('click 3 State is ' + mgo.clickState + ' animation flag = ' + mgo.animationOn + ' break ' + mgo.animationBreak);
+	console.log(`click state(${mgo.clickState}) selected(${mgo.selectedCard}))`);
 
+/*
 	if (mgo.animationOn) {
 		console.log('animation is on');
 		mgo.animationBreak = true;
 		setTimeout(function dummy(){},500);
 	}
+//*/
 
 // Retrieve the card object associated with the current click, and its match card object
 	let selectedCardObj = mgo.cardMap.get(mgo.selectedCard);
