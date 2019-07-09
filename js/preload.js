@@ -44,7 +44,7 @@ function initializeGame(rows, columns) {
 
 		let cardHandlerFunction = '';
 
-		let clickState = 0; // first or second click
+		let clickState = 2; // first or second click
 
 		let testMode = false;  // indicates test mode
 

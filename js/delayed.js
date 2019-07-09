@@ -58,8 +58,7 @@ function InitCardHandler(mgo) {
 		mgo.initialCard = false;  // toggle so only executed once
 		mgo.previousCard = '0';
 		mgo.previousFace = false;
-		mgo.clickState = 1;  // 1 indicates first card selection event of a pair
-//		mgo.stars = 0;
+		mgo.clickState = 2; // because of way toggle routine works, starts at 2;
 //		dashboardSet('stars', whiteStar + whiteStar + whiteStar);
 
 // Start timer and store it in the game object
@@ -90,10 +89,8 @@ function populateHTMLClasses(mgo) {
 		cardHTML.setAttribute('data-match', cardObj.matchCard);
 
 	}
-
 	return;
 }
-
 
 // Consumes clicks and dispatches to handlers
 function cardsContainerHandler(mgo) {
@@ -119,17 +116,12 @@ function cardsContainerHandler(mgo) {
 // Extract the card number by matching one or more digits if preceeded by 'card', 'cardxx' -> xx
 	mgo.selectedCard = (selectedCardClass.match(/(?<=card)\d+/))[0];
 
+
 // TODO: test here to see if this is a third click while processing still going on first two cards
 //
+	clickState(mgo);  // if 1 becomes 2, if 2 becomes 1
 	console.log(`click state(${mgo.clickState}) selected(${mgo.selectedCard}))`);
 
-/*
-	if (mgo.animationOn) {
-		console.log('animation is on');
-		mgo.animationBreak = true;
-		setTimeout(function dummy(){},500);
-	}
-//*/
 
 // Retrieve the card object associated with the current click, and its match card object
 	let selectedCardObj = mgo.cardMap.get(mgo.selectedCard);
