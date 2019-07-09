@@ -120,16 +120,20 @@ function cardsContainerHandler(mgo) {
 // TODO: test here to see if this is a third click while processing still going on first two cards
 //
 	clickState(mgo);  // if 1 becomes 2, if 2 becomes 1
-	console.log(`click state(${mgo.clickState}) selected(${mgo.selectedCard}))`);
 
+	mgo.clickQueue.unshift(mgo.selectedCard);  // add to the trailing state array
 
 // Retrieve the card object associated with the current click, and its match card object
 	let selectedCardObj = mgo.cardMap.get(mgo.selectedCard);
 	let matchedCardObj = mgo.cardMap.get(selectedCardObj.matchCard);
 
-// If this is 2nd click of pair and card equals previous card, then this is a double click
-	let isDoubleClick = ( (mgo.selectedCard === mgo.previousCard)
-											&& mgo.clickState === 2) ? true : false;
+// The first card clicked and the last card from the previous pair match
+	let isDoubleClick = ( (mgo.clickQueue[0] === mgo.clickQueue[1])
+		&& mgo.clickState === 1) ? true : false;
+
+// The first card clicked and the second card clicked are the same
+	 isDoubleClick = ( (mgo.clickQueue[0] === mgo.clickQueue[1])
+		&& mgo.clickState === 2) ? true : false;
 
 // If current card and and match card are both faceup, then they have already matched
 	let isAlreadyMatched = (selectedCardObj.faceUp && matchedCardObj.faceUp) ? true : false;
@@ -145,11 +149,7 @@ function cardsContainerHandler(mgo) {
 	(willMatch ? '1' : '0') +
 	(isDoubleClick ? '1' : '0');
 
-	//if (mgo.testMode) {
-		console.log(`key ${logicKey}: Already Matched? ${isAlreadyMatched} Matches previous ${willMatch} Double-clicked ${isDoubleClick}`);
-		console.log('logic key is ' + logicKey);
-//	}
-
+		console.log(`key ${logicKey}: click state(${mgo.clickState}) selected(${mgo.selectedCard}) Already Matched(${isAlreadyMatched}) Will match(${willMatch}) Double-click(${isDoubleClick})`);
 
 // Dispatch to the handler routine
 		logicMap.get(logicKey)['logic'](selectedCardObj, mgo);
@@ -626,12 +626,11 @@ let logicMap = new Map([
 	// First card clicked of attempted match pair.
 	['1000', {logic: (selectedCardObj, mgo) => {
 		console.log('in 1000');
-//		mgo.animationOn = false;
 
 		setFace(selectedCardObj, true, mgo); // turn face-up
 
-		mgo.previousCard = selectedCardObj.cardIdx;
-		clickState(mgo);  // toggle the click state for the second card
+//		mgo.clickQueue.unshift(selectedCardObj.cardIdx);
+
 		return;
 		}}],
 
@@ -709,9 +708,9 @@ let logicMap = new Map([
 			logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
 			console.log('return from blink');
 			setCardStates(false, false, mgo.selectedCard, mgo);
-			mgo.previousCard = '1';
-			mgo.previousFace = false;
-			mgo.selectedCard = mgo.previousCard;
+//			mgo.previousCard = '1';
+//			mgo.previousFace = false;
+//			mgo.selectedCard = mgo.previousCard;
 //			clickState(mgo);
 			return;
 //			console.log('animation flag ' + mgo.animationOn );
@@ -755,7 +754,8 @@ let logicMap = new Map([
 		setFace(selectedCardObj, false, mgo);
 		updateTally(+1, mgo);
 
-		clickState(mgo);
+//		clickState(mgo);
+		mgo.clickQueue.shift(); // the double-click card
 		return;
 		}
 	}],
