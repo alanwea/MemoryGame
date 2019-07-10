@@ -35,8 +35,8 @@ function initializeGame(rows, columns) {
 
 		let selectedCard = '0';
 		let initialCard = true;
-		let previousCard = '0';
-		let previousFace = false;
+//		let previousCard = '0';
+//		let previousFace = false;
 		let gameTimer = 0;
 		let gameTimerId = 0;
 		let soundAlert = 0;
@@ -51,8 +51,8 @@ function initializeGame(rows, columns) {
 
 		let pauseState = false;
 
-		let animationBreak = false;
-		let animationOn = false;
+//		let animationBreak = false;
+//		let animationOn = false;
 
 	return {
 		}
@@ -109,8 +109,8 @@ function initializeGame(rows, columns) {
 		mgo.tally = 0;
 		mgo.initialCard = true;  // used to do pre-init in the card click handler
 //		mgo.firstCard = false; //
-		mgo.previousCard = '0'; // keeps track of the last card clicked
-		mgo.previousFace = false;
+//		mgo.previousCard = '0'; // keeps track of the last card clicked
+//		mgo.previousFace = false;
 		mgo.selectedCard = '0';  // contains the current card clicked
 		mgo.gameTimerId = 0;
 		mgo.gameTimer = 0;

@@ -195,7 +195,7 @@ function setFrontCardHTML(mgo) {
 // Good example of animation callbacks at https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
 // toggleFace - turns faceup to face down
 //function blinkBorder(className, CSSSelector, toggleFace,mgo) {
-function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, postProcessing, mgo) {
+function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
 
 	let targetElement = document.querySelector(className);
 	let blinkState = 1; // toggle whether to add or remove blink class
@@ -222,23 +222,23 @@ function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, postProc
 				blinkCount = blinkCount - 1;
 
 				// when animation count has run out or an external animation break has been signaled
-				console.log('blinkicount= ' + blinkCount + ' anamationbreak = ' + mgo.animationBreak);
-/*
-				if (blinkCount < 1 || mgo.animationBreak) {
+				console.log('blinkicount= ' + blinkCount);
+
+				if (blinkCount < 1 /* || mgo.animationBreak */) {
 					targetElement.classList.remove(CSSSelector);
 					clearTimeout(innerTimeout);
 					clearTimeout(outerTimeout);
-					mgo.animationBreak = false;
-					mgo.animationOn = false;
+	//				mgo.animationBreak = false;
+	//				mgo.animationOn = false;
 
-					if (postProcessing) {
-						let func = new Function('mgo', postProcessing);
-						func(mgo);
-						return;
-					}
+//					if (postProcessing) {
+//						let func = new Function('mgo', postProcessing);
+//						func(mgo);
+//						return;
+//					}
 					return;
 				}
-*/			}, blinkDuration);
+			}, blinkDuration);
 
 //		targetElement.classList.add(CSSSelector);
  console.log('returning from blink');
@@ -294,10 +294,10 @@ console.log('in resetButtonHandler----------------------------');
 //  Sets state to receive the next card event
 function setCardStates(card1, card2, cardSelected, mgo) {
 
-	mgo.firstCard = card1;
-	mgo.secondCard = card2;
-	mgo.previousCard = cardSelected;
-	mgo.previousFace = mgo.cardMap.get(cardSelected).faceUp;
+//	mgo.firstCard = card1;
+//	mgo.secondCard = card2;
+//	mgo.previousCard = cardSelected;
+//	mgo.previousFace = mgo.cardMap.get(cardSelected).faceUp;
 
 	return;
 }
@@ -699,66 +699,19 @@ let logicMap = new Map([
 			let cardIdx = [];
 			let firstCard = mgo.clickQueue.pop();
 			mgo.clickQueue.push(firstCard);
-			cardIdx.push([firstCard, "console.log('Wow!');"]);
-			cardIdx.push([selectedCardObj.cardIdx,
-									'setFace(mgo.cardMap.get("' + mgo.selectedCard + '"), false, mgo);'
-									]);
+			cardIdx.push(firstCard);
+			cardIdx.push(selectedCardObj.cardIdx);
 
-// prints '1 test test'
-//			console.log(cardIdx[0][1]);
-
-//			cardIdx.push(selectedCardObj.cardIdx);
-//			cardIdx.push(mgo.previousCard);
-//			console.log('set previous card to the current card');
-//			mgo.previousCard = selectedCardObj.cardIdx;
 			console.log('jump to blink');
-//			selectedCardObj.faceUp = false;  // right now a hack to indicate that second card should be facedown
-//			mgo.cardMap.set(cardIdx, selectedCardObj);
 			logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
 			console.log('return from blink');
 			setCardStates(false, false, mgo.selectedCard, mgo);
-// Rebuild clickQueue
-//			mgo.clickQueue = [];
-// 1st card is face up from the match, so its index should be in the clickQueue and we will change clickState to first card again, because it is faceup
 
 			mgo.clickQueue.shift(); // remove unmatched card from Q
-//			mgo.previousCard = '1';
-//			mgo.previousFace = false;
-//			mgo.selectedCard = mgo.previousCard;
+
 			clickState(mgo);
 			return;
-//			console.log('animation flag ' + mgo.animationOn );
-//			if (mgo.animationOn) {
-//				timeOut = 3000;
-//				setFace(selectedCardObj, false, mgo);
-//				mgo.animationOn = false;
-//			}
-//
-//			console.log('getting ready to pause');
-//			console.log('timeout = ' + timeOut + ' animation ' + mgo.animationOn);
-// pause to let player memorize the current card before tuning it over
-// Calls setTimeout milliseonds / 1000 times, each time checking if it should continue.  This is used to shortcut a timeout if a new click comes in too soon.
-// This timeout does not seem to work
-//	setTimeout(testMsg('In 10 sec pause'), 10000);
-// try recursive timeout
 
-//		let timerId = setTimeout(function tick() {
-//			console.log('tick...');
-//			timerId = setTimeout(tick, 2000);
-//		}, 2000);
-
-//				console.log('end of pause');
-//				pauseInterrupt(5000, mgo);
-//				setFace(selectedCardObj, false, mgo);
-	//			updateTally(+1, mgo);
-//				setCardStates(false, true, mgo.previousCard, mgo);
-
-//			let timeOut = 3000;
-//pause(timeOut).then(() => {
-//				setFace(selectedCardObj, false, mgo);
-//			updateTally(+1, mgo);
-//				setCardStates(false, true, mgo.previousCard, mgo);
-//		});
 	}}],
 
 	//* Handle a double click on same card
@@ -776,7 +729,7 @@ let logicMap = new Map([
 	}],
 	//*/
 
-// The cards match, but the second card is still facedown
+// Cards match
 	['2010', {'logic': (selectedCardObj, mgo) => {
 		console.log('in 2010');
 		setFace(selectedCardObj, true, mgo); // turn face-up
@@ -784,7 +737,6 @@ let logicMap = new Map([
 // if all cards are face-up, indicate and finish game
 // Using a truth table for experimental purposes
 			if (updateTT(mgo)) {
-//				const cardIdx = [];  // need this here??
 				updateTally(+1, mgo);
 				logicMap.get('allMatched')['logic'](mgo);
 				logicMap.get('endOfGame')['logic'](selectedCardObj, mgo);
@@ -797,7 +749,7 @@ let logicMap = new Map([
 			logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
 
 			setCardStates(true, false, mgo.selectedCard, mgo);
-			mgo.previousCard = selectedCardObj.cardIdx;
+//			mgo.previousCard = selectedCardObj.cardIdx;
 			updateTally(+1, mgo);
 			clickState(mgo); // toggle event ready state
 			mgo.clickQueue.pop(); // pop second card off of the queue
@@ -841,12 +793,12 @@ let logicMap = new Map([
 	//	}],
 	['2101', {logic: (selectedCardObj, mgo) => {  //
 		console.log('In 2101');
-													setFace(selectedCardObj, false, mgo);
-													updateTally(+1, mgo);
-													//												console.log('This is wrong?????  should it be 0???');
-													setCardStates(true, false, '0', mgo);
-													return;
-												}}],
+		setFace(selectedCardObj, false, mgo);
+		updateTally(+1, mgo);
+		//												console.log('This is wrong?????  should it be 0???');
+		setCardStates(true, false, '0', mgo);
+		return;
+		}}],
 
 	['2110', {logic: (selectedCardObj, mgo) => {
 		console.log('2110 state-already matched');
@@ -868,16 +820,23 @@ let logicMap = new Map([
 				console.log(cardIdx[0]);
 				console.log(cardIdx[1]);
 
-				cardIdx.forEach(function(currentValue, index, arrObj ) {
-					let cardNumber = '.card' + currentValue + blinkFace;
+				for (let i=0; i<cardIdx.length; i++) {
+					let cardNumber = '.card' + cardIdx[i] + blinkFace;
+
+					blinkBorder(cardNumber, colorClass, 10, 200, mgo);
+
+				}
+
+//				cardIdx.forEach(function(currentValue, index, arrObj ) {
+//					let cardNumber = '.card' + index + blinkFace;
 
 //				});
 //					let cardNumber = '.card' + cardIdx[0][0] + blinkFace;
 
 //					function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, postProcessing, mgo)
 
-					blinkBorder(cardNumber, colorClass, 10, 200, cardIdx[1], mgo);
-				});
+//					blinkBorder(cardNumber, colorClass, 10, 200, cardIdx[1], mgo);
+//				});
 
 /*											"(() => { " +
 												"setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);" +
@@ -951,7 +910,7 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 			let handlerElement = document.getElementsByClassName('cards-container')[0];
 			handlerElement.removeEventListener('click', mgo.cardHandlerFunction, true);
 
-			blinkBorder('a.reset', 'reset-blink-red', 10, 200, "(() => {console.log('test')})()", mgo);
+			blinkBorder('a.reset', 'reset-blink-red', 10, 200, mgo);
 
 		return;
 		}
