@@ -139,8 +139,10 @@ function cardsContainerHandler(mgo) {
 	let isAlreadyMatched = (selectedCardObj.faceUp && matchedCardObj.faceUp) ? true : false;
 
 // If on second click, the match card for the current card is equal, then the cards will match after being handled
-	let willMatch = (selectedCardObj.matchCard === mgo.previousCard)
-									&& mgo.clickState === 2 ? true : false;
+//	let willMatch = (selectedCardObj.matchCard === mgo.previousCard)
+//		&& mgo.clickState === 2 ? true : false;
+	let willMatch = (selectedCardObj.matchCard === mgo.clickQueue[1])
+		&& mgo.clickState === 2 ? true : false;
 
 // Create a dispatch key
 	let logicKey =
@@ -149,13 +151,18 @@ function cardsContainerHandler(mgo) {
 	(willMatch ? '1' : '0') +
 	(isDoubleClick ? '1' : '0');
 
-		console.log(`key ${logicKey}: click state(${mgo.clickState}) selected(${mgo.selectedCard}) Already Matched(${isAlreadyMatched}) Will match(${willMatch}) Double-click(${isDoubleClick})`);
+//			mgo.clickQueue.shift(); // get rid of trail, not needed now?
+
+		console.log(`Before: key ${logicKey}: click state(${mgo.clickState}) selected(${mgo.selectedCard}) Already Matched(${isAlreadyMatched}) Will match(${willMatch}) Double-click(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
 
 // Dispatch to the handler routine
 		logicMap.get(logicKey)['logic'](selectedCardObj, mgo);
 
 		if (mgo.testMode) {	console.log('Waiting........'); }
 
+//		mgo.clickQueue.shift();
+
+		console.log(`After: key ${logicKey}: click state(${mgo.clickState}) selected(${mgo.selectedCard}) Already Matched(${isAlreadyMatched}) Will match(${willMatch}) Double-click(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
 		return;
 
 } // End of cards container handler
@@ -195,7 +202,7 @@ function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, postProc
 //	let blinkCount = 10; // number of times to blink
 //	let blinkDuration = 200; // milliseconds to blink
 
-mgo.animationOn = true;  // indicate that an animation is beginning
+//mgo.animationOn = true;  // indicate that an animation is beginning
 
 // Double Timeout design from https://dev.to/akanksha_9560/why-not-to-use-setinterval--2na9 to insure blink duration without queue race problems.
 	let outerTimeout = setTimeout(
@@ -216,12 +223,12 @@ mgo.animationOn = true;  // indicate that an animation is beginning
 
 				// when animation count has run out or an external animation break has been signaled
 				console.log('blinkicount= ' + blinkCount + ' anamationbreak = ' + mgo.animationBreak);
-
+/*
 				if (blinkCount < 1 || mgo.animationBreak) {
 					targetElement.classList.remove(CSSSelector);
 					clearTimeout(innerTimeout);
 					clearTimeout(outerTimeout);
-					mgo.animationBreak = false;  // reset animation flags
+					mgo.animationBreak = false;
 					mgo.animationOn = false;
 
 					if (postProcessing) {
@@ -231,7 +238,7 @@ mgo.animationOn = true;  // indicate that an animation is beginning
 					}
 					return;
 				}
-			}, blinkDuration);
+*/			}, blinkDuration);
 
 //		targetElement.classList.add(CSSSelector);
  console.log('returning from blink');
@@ -577,9 +584,9 @@ function getRandom(bucket) {
 // Bespoke truth table to track <cardCount> face-up cards that signal game end.  Given two card index numbers, sets corresponding bits in the table.  The table is inverted to make testing for for the result easier.  That is, when all bits are set, the result is all bits unset.
 let updateTT = function(mgo) {
 
-	let {truthTable, previousCard, selectedCard} = mgo;
+//	let {truthTable, clickQueue, selectedCard} = mgo;
 
-	mgo.truthTable |= ((1 << Number(mgo.previousCard) - 1) | (1 << Number(mgo.selectedCard) - 1));
+	mgo.truthTable |= ((1 << Number(mgo.clickQueue[1]) - 1) | (1 << Number(mgo.selectedCard) - 1));
 	// Mask everything but the <cardCount> bits of the truth table
 	let isAllSet = ( parseInt(~mgo.truthTable & 0x0000FFFF, 10) === 0 ) ? true : false;
 	if (mgo.testMode) {
@@ -762,7 +769,8 @@ let logicMap = new Map([
 		updateTally(+1, mgo);
 
 //		clickState(mgo);
-//		mgo.clickQueue.pop(); // the double-click card
+		mgo.clickQueue.shift(); // the double-click card
+		mgo.clickQueue.shift(); // the double-click card
 		return;
 		}
 	}],
@@ -792,6 +800,7 @@ let logicMap = new Map([
 			mgo.previousCard = selectedCardObj.cardIdx;
 			updateTally(+1, mgo);
 			clickState(mgo); // toggle event ready state
+			mgo.clickQueue.pop(); // pop second card off of the queue
 			mgo.clickQueue.pop(); // pop second card off of the queue
 	//		updateTT(mgo);
 			return;
@@ -856,18 +865,18 @@ let logicMap = new Map([
 // This is used to differentiate between the base64 and on disk image in test mode
 				let blinkFace = mgo.testMode ? '.back' : '.front';
 //				setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);
-				console.log(cardIdx[0][0]);
-				console.log(cardIdx[0][1]);
+				console.log(cardIdx[0]);
+				console.log(cardIdx[1]);
 
 				cardIdx.forEach(function(currentValue, index, arrObj ) {
-					let cardNumber = '.card' + cardIdx[index][0] + blinkFace;
+					let cardNumber = '.card' + currentValue + blinkFace;
 
 //				});
 //					let cardNumber = '.card' + cardIdx[0][0] + blinkFace;
 
 //					function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, postProcessing, mgo)
 
-					blinkBorder(('.card' + (cardIdx[index][0]) + blinkFace), colorClass, 10, 200, cardIdx[index][1], mgo);
+					blinkBorder(cardNumber, colorClass, 10, 200, cardIdx[1], mgo);
 				});
 
 /*											"(() => { " +
