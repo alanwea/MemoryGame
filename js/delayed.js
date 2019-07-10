@@ -626,10 +626,10 @@ let logicMap = new Map([
 	// First card clicked of attempted match pair.
 	['1000', {logic: (selectedCardObj, mgo) => {
 		console.log('in 1000');
+		toggleFace(selectedCardObj, mgo);
+//		setFace(selectedCardObj, true, mgo); // turn face-up
 
-		setFace(selectedCardObj, true, mgo); // turn face-up
-
-//		mgo.clickQueue.unshift(selectedCardObj.cardIdx);
+//		mgo.clickQueue.shift();
 
 		return;
 		}}],
@@ -690,7 +690,9 @@ let logicMap = new Map([
 			console.log('create array of cards to be blinked');
 
 			let cardIdx = [];
-			cardIdx.push([mgo.previousCard, "console.log('Wow!');"]);
+			let firstCard = mgo.clickQueue.pop();
+			mgo.clickQueue.push(firstCard);
+			cardIdx.push([firstCard, "console.log('Wow!');"]);
 			cardIdx.push([selectedCardObj.cardIdx,
 									'setFace(mgo.cardMap.get("' + mgo.selectedCard + '"), false, mgo);'
 									]);
@@ -708,10 +710,15 @@ let logicMap = new Map([
 			logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
 			console.log('return from blink');
 			setCardStates(false, false, mgo.selectedCard, mgo);
+// Rebuild clickQueue
+//			mgo.clickQueue = [];
+// 1st card is face up from the match, so its index should be in the clickQueue and we will change clickState to first card again, because it is faceup
+
+			mgo.clickQueue.shift(); // remove unmatched card from Q
 //			mgo.previousCard = '1';
 //			mgo.previousFace = false;
 //			mgo.selectedCard = mgo.previousCard;
-//			clickState(mgo);
+			clickState(mgo);
 			return;
 //			console.log('animation flag ' + mgo.animationOn );
 //			if (mgo.animationOn) {
@@ -755,7 +762,7 @@ let logicMap = new Map([
 		updateTally(+1, mgo);
 
 //		clickState(mgo);
-		mgo.clickQueue.shift(); // the double-click card
+//		mgo.clickQueue.pop(); // the double-click card
 		return;
 		}
 	}],
@@ -785,6 +792,7 @@ let logicMap = new Map([
 			mgo.previousCard = selectedCardObj.cardIdx;
 			updateTally(+1, mgo);
 			clickState(mgo); // toggle event ready state
+			mgo.clickQueue.pop(); // pop second card off of the queue
 	//		updateTT(mgo);
 			return;
 	//			}
