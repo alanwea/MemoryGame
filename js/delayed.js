@@ -432,9 +432,33 @@ function showGameTimer(seconds) {
 function updateTally(value, mgo) {
 	mgo.tally = (parseInt(mgo.tally, 10) + value).toString();
 	dashboardSet('tally-count', mgo.tally);
+	let starRange=[1, 3, 6];
+	if (mgo.tally > starRange[0] && mgo.tally < starRange[1]) {
+		dashboardSet('stars', darkStar + whiteStar + whiteStar);
+	} else if (mgo.tally > starRange[1] && mgo.tally < starRange[2]) {
+		dashboardSet('stars', darkStar + darkStar + whiteStar);
+	} else if (mgo.tally > starRange[2]) {
+		dashboardSet('stars', darkStar + darkStar + darkStar);
+	}
+
 	return mgo.tally;
 };
 
+// TODO - Reset stars
+function resetStars() {
+	console.log("resetStars");
+	dashboardSet('stars', whiteStar + whiteStar + whiteStar);
+};
+
+function setStars(count) {
+	let stars = '';
+	for ( let i = 1; i<=count; i++) {
+		stars = stars + darkStar;
+	}
+
+	dashboardSet('stars', stars);
+	return;
+}
 //
 function randomizeCardsToImages(mgo) {
 
@@ -509,21 +533,7 @@ function pauseInterrupt(milliseconds, mgo) {
 	mgo.pauseState = false;
 }
 
-// TODO - Reset stars
-function resetStars() {
-	console.log("resetStars");
-	dashboardSet('stars', whiteStar + whiteStar + whiteStar);
-};
 
-function setStars(count) {
-	let stars = '';
-	for ( let i = 1; i<=count; i++) {
-		stars = stars + darkStar;
-	}
-
-	dashboardSet('stars', stars);
-	return;
-}
 
 // Break up a large image into smaller pieces.
 function apportionMasterImage(imageSource, mgo) {
