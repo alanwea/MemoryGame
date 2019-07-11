@@ -199,10 +199,6 @@ function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
 
 	let targetElement = document.querySelector(className);
 	let blinkState = 1; // toggle whether to add or remove blink class
-//	let blinkCount = 10; // number of times to blink
-//	let blinkDuration = 200; // milliseconds to blink
-
-//mgo.animationOn = true;  // indicate that an animation is beginning
 
 // Double Timeout design from https://dev.to/akanksha_9560/why-not-to-use-setinterval--2na9 to insure blink duration without queue race problems.
 	let outerTimeout = setTimeout(
@@ -532,8 +528,6 @@ function pauseInterrupt(milliseconds, mgo) {
 	mgo.pauseState = false;
 }
 
-
-
 // Break up a large image into smaller pieces.
 function apportionMasterImage(imageSource, mgo) {
 	// Retrieve a card class element to use for calculations
@@ -826,10 +820,17 @@ let logicMap = new Map([
 				console.log(cardIdx[0]);
 				console.log(cardIdx[1]);
 
-				for (let i=0; i<cardIdx.length; i++) {
-					let cardNumber = '.card' + cardIdx[i] + blinkFace;
+			for (let i=0; i<cardIdx.length; i++) {
+				let cardNumber = '.card' + cardIdx[i] + blinkFace;
 
-					blinkBorder(cardNumber, colorClass, 10, 200, mgo);
+//				backHtmlCard = document.querySelector('.back.card' + cardIdx[i]);
+//				frontHtmlCard = document.querySelector('.front.card' + cardIdx[i]);
+//				backHtmlCard.setAttribute('hidden', '');
+//				frontHtmlCard.removeAttribute('hidden');
+					highlightBorder(cardNumber, colorClass, true, mgo);
+
+
+//					blinkBorder(cardNumber, colorClass, 10, 200, mgo);
 
 				}
 
@@ -924,6 +925,22 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 	//*/
 
 	]); // end of Map
+
+/*
+function highlightBorder(cardNumber, colorClass, true, mgo) {
+
+				backHtmlCard = document.querySelector('.back.card' + cardNumber);
+				frontHtmlCard = document.querySelector('.front.card' + cardNumber);
+				backHtmlCard.setAttribute('hidden', '');
+				frontHtmlCard.removeAttribute('hidden');
+
+	if (blinkState === 1) {
+		targetElement.classList.add(CSSSelector);
+	}	else {
+		targetElement.classList.remove(CSSSelector);
+	}
+}
+//*/
 
 // Returns the base64 representation of the masterImage
 // Used under academic license from https://www.google.com/search?q=high+resolution+pictures+mosaic&rlz=1C1CHBD_enUS834US834&source=lnms&tbm=isch&sa=X&ved=0ahUKEwjZq9qo-6zgAhWRMX0KHZHzBdEQ_AUIDigB&biw=920&bih=483#imgrc=-NIsMd9cV19d4M:
