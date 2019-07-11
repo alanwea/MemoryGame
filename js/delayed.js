@@ -751,7 +751,7 @@ let logicMap = new Map([
 			setCardStates(true, false, mgo.selectedCard, mgo);
 //			mgo.previousCard = selectedCardObj.cardIdx;
 			updateTally(+1, mgo);
-			clickState(mgo); // toggle event ready state
+//			clickState(mgo); // toggle event ready state
 			mgo.clickQueue.pop(); // pop second card off of the queue
 			mgo.clickQueue.pop(); // pop second card off of the queue
 	//		updateTT(mgo);
@@ -768,7 +768,7 @@ let logicMap = new Map([
 	//*  1st card clicked on face down, 2nd card is already matched
 	['2100', {logic: (selectedCardObj, mgo) => { //second, up, down, no
 		console.log('In 2100');
-		setFace(selectedCardObj, true, mgo);
+//		setFace(selectedCardObj, true, mgo);
 	// 2nd card is already matched, and 1st card is not going to match
 	// blink green the 2nd card and its match card and continue in card 1 ready state
 		const cardIdx = [];
@@ -778,7 +778,8 @@ let logicMap = new Map([
 
 		setCardStates(true, false, mgo.previousCard, mgo);
 	//	mgo.previousCard = selectedCardObj.cardIdx;
-
+		mgo.clickQueue.shift();
+		clickState(mgo);
 	//	setCardStates(true, false, '0', mgo); // start at first click again
 		return;
 
