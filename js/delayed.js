@@ -322,7 +322,6 @@ function setFace(cardObj, faceUp, mgo) {
 			let base64Image = mgo.imageMap.get(cardObj.image);
 			// confusing here, but in testmode the back class card src is used for both the back image and the front image retrieved from the image map
 			document.querySelector('.back.card' + cardIdx).src = base64Image;
-
 		}
 
 		if (!cardObj.faceUp){	// faceup false, show card back
@@ -696,31 +695,27 @@ let logicMap = new Map([
 	//*/
 
 		// Not matched, not a double click, 2nd card click
-		['2000', {'logic': (selectedCardObj, mgo) => {
-			console.log('In 2000');
-			console.log('turn 2nd card faceup');
-			setFace(selectedCardObj, true, mgo);
-			console.log('update tally');
-			updateTally(+1, mgo);
+	['2000', {'logic': (selectedCardObj, mgo) => {
+		console.dir('2000', selectedCardObj);
+		setFace(selectedCardObj, true, mgo);
+		updateTally(+1, mgo);
 
-			// blink the current and previous cards
-			console.log('create array of cards to be blinked');
+		let cardIdx = [];
+		let firstCard = mgo.clickQueue.pop();
+		mgo.clickQueue.push(firstCard);
+		cardIdx.push(firstCard);
+		cardIdx.push(selectedCardObj.cardIdx);
 
-			let cardIdx = [];
-			let firstCard = mgo.clickQueue.pop();
-			mgo.clickQueue.push(firstCard);
-			cardIdx.push(firstCard);
-			cardIdx.push(selectedCardObj.cardIdx);
+		console.log('jump to blink');
+		logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
+		console.log('return from blink');
+		setCardStates(false, false, mgo.selectedCard, mgo);
+		setFace(selectedCardObj, false, mgo);
 
-			console.log('jump to blink');
-			logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
-			console.log('return from blink');
-			setCardStates(false, false, mgo.selectedCard, mgo);
+		mgo.clickQueue.shift(); // remove unmatched card from Q
 
-			mgo.clickQueue.shift(); // remove unmatched card from Q
-
-			clickState(mgo);
-			return;
+		clickState(mgo);
+		return;
 
 	}}],
 
