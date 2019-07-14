@@ -92,6 +92,43 @@ function populateHTMLClasses(mgo) {
 	return;
 }
 
+// short hand to get the card object from the index
+function getCardObj(cardIdx, mgo) {
+	let cardObj = mgo.cardMap.get(cardIdx);
+	return cardObj;
+}
+
+// short hand to get the card index from the card object
+function getCardIdx(cardObj, mgo) {
+	let cardIdx = cardObj.cardIdx;
+	return cardIdx;
+}
+
+//
+function removeHighlight(highlightClass) {
+
+	var c = document.getElementsByClassName("blinking-red");
+	console.log('highlightCards length is ' + c.length);
+	while (c.length) {
+		c[0].classlist.remove('blinking-red');
+	}
+//	[].forEach.call(c, function(el) {
+//		console.dir(el.classList);
+//		el.classlist.remove("blinking-red");
+//	});
+//		highlightCards.forEach(function (card) {
+//			card.classList.toggle('blinking-red');
+//		});
+
+//if (highlightCards.length > 0 ) {
+//		for (let iCard = highlightCards.length-1; iCard > 0; iCard-- ) {
+//			console.log(highlightCards[iCard].classList + ' i = ' + iCard);
+//			highlightCards[iCard].classList.remove('blinking-red');
+//		}
+//	}
+		return;
+}
+
 // Consumes clicks and dispatches to handlers
 function cardsContainerHandler(mgo) {
 
@@ -116,12 +153,15 @@ function cardsContainerHandler(mgo) {
 // Extract the card number by matching one or more digits if preceeded by 'card', 'cardxx' -> xx
 	mgo.selectedCard = (selectedCardClass.match(/(?<=card)\d+/))[0];
 
-
 // TODO: test here to see if this is a third click while processing still going on first two cards
-//
+
 	clickState(mgo);  // if 1 becomes 2, if 2 becomes 1
 
-	mgo.clickQueue.unshift(mgo.selectedCard);  // add to the trailing state array
+
+		let testCardObj = getCardObj('2', mgo);
+		let testCardIdx = getCardIdx(testCardObj, mgo);
+
+		mgo.clickQueue.unshift(mgo.selectedCard);  // add to the trailing state array
 
 // Retrieve the card object associated with the current click, and its match card object
 	let selectedCardObj = mgo.cardMap.get(mgo.selectedCard);
@@ -154,6 +194,14 @@ function cardsContainerHandler(mgo) {
 //			mgo.clickQueue.shift(); // get rid of trail, not needed now?
 
 		console.log(`Before: key ${logicKey}: click state(${mgo.clickState}) selected(${mgo.selectedCard}) Already Matched(${isAlreadyMatched}) Will match(${willMatch}) Double-click(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
+
+		//removeHighlight('blinking-red');
+//		[].forEach.call(document.querySelectorAll('blinking-red'), function (el) {
+//			el.classList.remove('blinking-red');
+//	});
+
+	highlightBorder('blinking-red', 'blinking-red', false, mgo);
+	highlightBorder('blinking-red', 'blinking-red', false, mgo);
 
 // Dispatch to the handler routine
 		logicMap.get(logicKey)['logic'](selectedCardObj, mgo);
@@ -629,6 +677,21 @@ function clickState(mgo) {
 }
 //*/
 
+function highlightBorder(cardSelector, colorClass, doHighlight, mgo) {
+// find card to change highlight but without class hidden
+let state = false;
+	let card = document.querySelector(cardSelector);
+	if (card) {
+	if (doHighlight) {
+		card.classList.add(colorClass);
+		state = true;
+	} else {
+		card.classList.remove(colorClass);
+	}
+}
+	return state;
+}
+
 // A very limited and simplistic state machine, implemented in a Map, to handle card operation logic.  The map keys correspond to a state initiated by a card container event.  Each key is mapped to related code to handle the state and determine the next state.  It's experimental and might have few advantages, except if implemented fully it would be a simple matter to write the map to local, or other, storage and restore the game in toto.
 // key: 1st or 2nd click, is a match flag, will match flag, double-click flag
 let logicMap = new Map([
@@ -704,7 +767,7 @@ let logicMap = new Map([
 		logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
 		console.log('return from blink');
 		setCardStates(false, false, mgo.selectedCard, mgo);
-		setFace(selectedCardObj, false, mgo);
+//		setFace(selectedCardObj, false, mgo);
 
 		mgo.clickQueue.shift(); // remove unmatched card from Q
 
@@ -812,7 +875,7 @@ let logicMap = new Map([
 	//*
 		['blink', { // Utility: blink border each card in the cardIdx array
 			logic:(colorClass, cardIdx, mgo) => {
-				console.log('Blink');
+				console.log('Highlight');
 
 // This is used to differentiate between the base64 and on disk image in test mode
 				let blinkFace = mgo.testMode ? '.back' : '.front';
@@ -821,17 +884,15 @@ let logicMap = new Map([
 				console.log(cardIdx[1]);
 
 			for (let i=0; i<cardIdx.length; i++) {
-				let cardNumber = '.card' + cardIdx[i] + blinkFace;
+				let cardSelector = '.card' + cardIdx[i] + blinkFace;
 
 //				backHtmlCard = document.querySelector('.back.card' + cardIdx[i]);
 //				frontHtmlCard = document.querySelector('.front.card' + cardIdx[i]);
 //				backHtmlCard.setAttribute('hidden', '');
 //				frontHtmlCard.removeAttribute('hidden');
-					highlightBorder(cardNumber, colorClass, true, mgo);
-
+					highlightBorder(cardSelector, colorClass, true, mgo);
 
 //					blinkBorder(cardNumber, colorClass, 10, 200, mgo);
-
 				}
 
 //				cardIdx.forEach(function(currentValue, index, arrObj ) {
