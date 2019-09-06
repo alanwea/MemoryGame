@@ -1,5 +1,32 @@
 'use strict';
 
+//*
+const testHarness = true;
+
+const testPattern = ['1','1', '999'];
+
+function* testClick(testPattern) {
+	let index = 0;
+	console.log('testClick ' + testPattern);
+	while (testPattern[index] != '999') {
+		if (testPattern[index] === 'P') {
+			setTimeout(
+				function(){
+					console.log('test harness pause')
+						// skip over the pause
+					index = index + 1;
+				}, 5000);
+			yield testPattern[index];
+			index = index + 1;
+		} else {
+			yield testPattern[index];
+			index = index + 1;
+		}
+	}
+}
+var genClick = testClick(testPattern);
+//*/
+
 /* Continue to initialize the game after the initial view has been displayed.
 A sound context is setup to support game related event feedback.
 An image object is created to hold the image used for the card faces.
@@ -44,6 +71,7 @@ let masterImage = new Image();
 		testModeButton.addEventListener("click", function(){testModeHandler(mgo)});
 
 //* Attaching anonymous function to event through a variable to facilitate removing it later when all cards have matched
+console.log('attach cardHandlerFunction');
 		mgo.cardHandlerFunction = function() {cardsContainerHandler(mgo)};
 		let cardsContainer = retrieveFirstClassValue('cards-container');
 		cardsContainer.addEventListener("click", mgo.cardHandlerFunction, true);
@@ -153,10 +181,25 @@ function cardsContainerHandler(mgo) {
 // Extract the card number by matching one or more digits if preceeded by 'card', 'cardxx' -> xx
 	mgo.selectedCard = (selectedCardClass.match(/(?<=card)\d+/))[0];
 
+// DEBUG TEST CLICK
+// get generator function, iterate array, get next array value, make selected card the new value
+	if (testHarness) {
+		mgo.selectedCard = genClick.next().value;
+		console.log('t e s t H a r n e e s ----------> ' + mgo.selectedCard);
+		if (mgo.selectedCard === 999) {
+			console.log('Exiting testHarness');
+			return;
+		};
+//		document.getElementById('Card' + mgo.selectedCard).click();
+		console.log('testHarness: clicking card ' + mgo.selectedCard);
+		document.getElementsByClassName('card' + mgo.selectedCard)[0].click();
+	}
+
+// END OF DEBUG TEST CLICK
+
 // TODO: test here to see if this is a third click while processing still going on first two cards
 
 	clickState(mgo);  // if 1 becomes 2, if 2 becomes 1
-
 
 		let testCardObj = getCardObj('2', mgo);
 		let testCardIdx = getCardIdx(testCardObj, mgo);
@@ -209,8 +252,10 @@ function cardsContainerHandler(mgo) {
 		if (mgo.testMode) {	console.log('Waiting........'); }
 
 //		mgo.clickQueue.shift();
-
+// reset isdoubleclick, should be set on next iteration, but do it here to be consistent with console.log output that follows
+	isDoubleClick = false;
 		console.log(`After: key ${logicKey}: click state(${mgo.clickState}) selected(${mgo.selectedCard}) Already Matched(${isAlreadyMatched}) Will match(${willMatch}) Double-click(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
+
 		return;
 
 } // End of cards container handler
@@ -698,26 +743,32 @@ let logicMap = new Map([
 
 	// First card clicked of attempted match pair.
 	['1000', {logic: (selectedCardObj, mgo) => {
-		console.log('in 1000');
+		console.log('1000 first click');
+
 		toggleFace(selectedCardObj, mgo);
-//		setFace(selectedCardObj, true, mgo); // turn face-up
+/*
+		//		setFace(selectedCardObj, true, mgo); // turn face-up
 
 //		mgo.clickQueue.shift();
-
+*/
 		return;
 		}}],
 
 		['1001', {logic: (selectedCardObj, mgo) => {  //
-			console.log('In 1001');
-																toggleFace(selectedCardObj, mgo);
-																setCardStates(true, false, mgo.selectedCard, mgo);
-																return;
+			console.log('1001 unknown');
+/*
+			toggleFace(selectedCardObj, mgo);
+			setCardStates(true, false, mgo.selectedCard, mgo);
+*/
+			return;
 		}}],
 
 	['1010', {logic: (selectedCardObj, mgo) => {  //
-		console.log('In 1010');
+		console.log('1010 unknown');
+/*
 		toggleFace(selectedCardObj, mgo);
 		setCardStates(false, true, mgo.selectedCard, mgo);
+*/
 		return;
 	}}],
 	/*  Future expansion
@@ -727,33 +778,41 @@ let logicMap = new Map([
 
 	//* Card already matched
 	['1100', {logic: (selectedCardObj, mgo) => {
-		console.log('In 1100');
+		console.log('1100 already matched');
+/*
 				const cardIdx = [];
 				cardIdx.push(selectedCardObj.cardIdx);
 				cardIdx.push(selectedCardObj.matchCard);
 				logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
 
 				setCardStates(true, false, mgo.selectedCard, mgo);
+*/
+				return;
 			}
 	}],
 	//*/
 
-	/*
+	//*
 	['1110', {logic: (selectedCardObj, mgo) => {
-			const cardIdx = [selectedCardObj.cardIdx, selectedCardObj.matchCard];
-			logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
+			console.log('1100 unused');
+
+//			const cardIdx = [selectedCardObj.cardIdx, selectedCardObj.matchCard];
+//			logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
+
+			return;
 		}
 	}],
 	//*/
 
-	/* Future expansion
-		['1101', {logic: (function() { return() => { console.log('Inside 1101 function');};})()}],
-		['1111', {logic: (function() { return() => { console.log('Inside 1111 function');};})()}],
+	//* Future expansion
+		['1101', {logic: (function() { return() => { console.log('1101 future');};})()}],
+		['1111', {logic: (function() { return() => { console.log('1111 future');};})()}],
 	//*/
 
 		// Not matched, not a double click, 2nd card click
 	['2000', {'logic': (selectedCardObj, mgo) => {
-		console.dir('2000', selectedCardObj);
+		console.dir('2000 2nd click', selectedCardObj);
+/*
 		setFace(selectedCardObj, true, mgo);
 		updateTally(+1, mgo);
 
@@ -772,6 +831,7 @@ let logicMap = new Map([
 		mgo.clickQueue.shift(); // remove unmatched card from Q
 
 		clickState(mgo);
+*/
 		return;
 
 	}}],
@@ -779,25 +839,28 @@ let logicMap = new Map([
 	//* Handle a double click on same card
 	['2001', {logic: (selectedCardObj, mgo) => {
 	//	let showFace = selectedCardObj.faceUp ? false : true;
-	console.log('In 2001');
+	console.log('2001 double click same card');
+
 		setFace(selectedCardObj, false, mgo);
 		updateTally(+1, mgo);
 
-//		clickState(mgo);
+		clickState(mgo);
 		mgo.clickQueue.shift(); // the double-click card
 		mgo.clickQueue.shift(); // the double-click card
+
 		return;
 		}
 	}],
 	//*/
 
 // Cards match
-	['2010', {'logic': (selectedCardObj, mgo) => {
-		console.log('in 2010');
-		setFace(selectedCardObj, true, mgo); // turn face-up
-
 // if all cards are face-up, indicate and finish game
 // Using a truth table for experimental purposes
+	['2010', {'logic': (selectedCardObj, mgo) => {
+		console.log('2010 cards match');
+	/*
+		setFace(selectedCardObj, true, mgo); // turn face-up
+
 			if (updateTT(mgo)) {
 				updateTally(+1, mgo);
 				logicMap.get('allMatched')['logic'](mgo);
@@ -817,73 +880,81 @@ let logicMap = new Map([
 			mgo.clickQueue.pop(); // pop second card off of the queue
 			mgo.clickQueue.pop(); // pop second card off of the queue
 	//		updateTT(mgo);
+	*/
 			return;
 	//			}
 			}}],
 
-	/* future expansion
-	['2001', {logic: (function() { return() => { console.log('Inside 2001 function');};})()}],
+//	 future expansion
+//	['2001', {logic: (function() { return() => { console.log('2001 future');};})()}],
 
-	['2011', {logic: (function() { return() => { console.log('Inside 2011 function');};})()}],
-	//*/
+	['2011', {logic: (function() { return() => { console.log('2011 future');};})()}],
 
 	//*  1st card clicked on face down, 2nd card is already matched
 	['2100', {logic: (selectedCardObj, mgo) => { //second, up, down, no
-		console.log('In 2100');
+		console.log('2100 1st click, 2nd up');
 //		setFace(selectedCardObj, true, mgo);
 	// 2nd card is already matched, and 1st card is not going to match
 	// blink green the 2nd card and its match card and continue in card 1 ready state
-		const cardIdx = [];
+
+	/*
+	const cardIdx = [];
 		cardIdx.push(selectedCardObj.cardIdx);
 		cardIdx.push(selectedCardObj.matchCard);
 		logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
 
 		setCardStates(true, false, mgo.previousCard, mgo);
-	//	mgo.previousCard = selectedCardObj.cardIdx;
+
 		mgo.clickQueue.shift();
 		clickState(mgo);
-	//	setCardStates(true, false, '0', mgo); // start at first click again
+*/
 		return;
-
 	}}],
 	//*/
 
 	// click on a card that is already face-up and matched card face-up
-	//	['2110', {logic: (selectedCardObj, mgo) => {
-	//		console.log('2110 state-already matched');
+		['2110', {logic: (selectedCardObj, mgo) => {
+			console.log('2110 up & match up');
 	//		logicMap.get('blink')['logic']('blinking-green');
-	//	}
-	//	}],
+	return;
+		}
+		}],
+
 	['2101', {logic: (selectedCardObj, mgo) => {  //
-		console.log('In 2101');
+		console.log('2101 unknown');
+/*
 		setFace(selectedCardObj, false, mgo);
 		updateTally(+1, mgo);
-		//												console.log('This is wrong?????  should it be 0???');
 		setCardStates(true, false, '0', mgo);
+*/
 		return;
 		}}],
 
 	['2110', {logic: (selectedCardObj, mgo) => {
-		console.log('2110 state-already matched');
+		console.log('2110 already matched');
+/*
 			const cardIdx = [];
 			cardIdx.push(selectedCardObj.cardIdx);
 			cardIdx.push(selectedCardObj.matchCard);
 			logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
+*/
+		return;
 		}
 	}],
 
 	//*
-		['blink', { // Utility: blink border each card in the cardIdx array
-			logic:(colorClass, cardIdx, mgo) => {
-				console.log('Highlight');
+	['blink', { // Utility: blink border each card in the cardIdx array
+		logic:(colorClass, cardIdx, mgo) => {
+		console.log('blink ' + cardIdx[0] + cardIdx[1]);
 
 // This is used to differentiate between the base64 and on disk image in test mode
 				let blinkFace = mgo.testMode ? '.back' : '.front';
 //				setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);
-				console.log(cardIdx[0]);
-				console.log(cardIdx[1]);
+//				console.log(cardIdx[0]);
+//				console.log(cardIdx[1]);
 
-			for (let i=0; i<cardIdx.length; i++) {
+/*
+for (let i=0; i<cardIdx.length; i++) {
 				let cardSelector = '.card' + cardIdx[i] + blinkFace;
 
 //				backHtmlCard = document.querySelector('.back.card' + cardIdx[i]);
@@ -894,7 +965,7 @@ let logicMap = new Map([
 
 //					blinkBorder(cardNumber, colorClass, 10, 200, mgo);
 				}
-
+*/
 //				cardIdx.forEach(function(currentValue, index, arrObj ) {
 //					let cardNumber = '.card' + index + blinkFace;
 
@@ -931,7 +1002,7 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 		//*
 		['allMatched', {logic:(mgo) => {
 			console.log('All Matched');
-
+/*
 				updateTally(+1, mgo);
 
 				let cardIdxAllMatched = [];
@@ -944,7 +1015,7 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 				setCardStates(true, false, mgo.selectedCard, mgo);
 
 				blinkBorder("reset", "reset-blink-red", 10, 200, "(() => {console.log('test')})()", mgo);
-
+*/
 				return;
 			}
 		}],
@@ -953,13 +1024,14 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 			['match', {
 				logic:(selectedCardObj, mgo) => {
 					console.log('match');
-
+/*
 				const cardIdx = [];
 				cardIdx.push(selectedCardObj.cardIdx);
 				cardIdx.push(selectedCardObj.matchCard);
 				logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
 				updateTT(mgo);
 				updateTally(+1, mgo);
+*/
 				return;
 			}
 			}],
@@ -968,7 +1040,7 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 		['endOfGame', {
 		logic:(selectedCardObj, mgo) => {
 			console.log('End of game');
-
+/*
 	// clear testmode
 	//
 			clearInterval(mgo.gameTimerId);
@@ -979,7 +1051,7 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 			handlerElement.removeEventListener('click', mgo.cardHandlerFunction, true);
 
 			blinkBorder('a.reset', 'reset-blink-red', 10, 200, mgo);
-
+*/
 		return;
 		}
 		}]
