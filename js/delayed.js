@@ -3,27 +3,21 @@
 //*
 const testHarness = true;
 
-const testPattern = ['1','1', '999'];
+const testPattern = ['1', '999'];
 
 function* testClick(testPattern) {
 	let index = 0;
-	console.log('testClick ' + testPattern);
+	console.log('testClick ' + testPattern + ' ' + index);
 	while (testPattern[index] != '999') {
 		if (testPattern[index] === 'P') {
-			setTimeout(
-				function(){
-					console.log('test harness pause')
-						// skip over the pause
-					index = index + 1;
-				}, 5000);
-			yield testPattern[index];
+			console.log('test harness pause');
+			pause(5000);
 			index = index + 1;
-		} else {
+		}
 			yield testPattern[index];
 			index = index + 1;
 		}
 	}
-}
 var genClick = testClick(testPattern);
 //*/
 
@@ -185,7 +179,7 @@ function cardsContainerHandler(mgo) {
 // get generator function, iterate array, get next array value, make selected card the new value
 	if (testHarness) {
 		mgo.selectedCard = genClick.next().value;
-		console.log('t e s t H a r n e e s ----------> ' + mgo.selectedCard);
+		console.log('t e s t H a r n e e s ----------> card= ' + mgo.selectedCard);
 		if (mgo.selectedCard === 999) {
 			console.log('Exiting testHarness');
 			return;
@@ -605,7 +599,7 @@ const pause = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
-// Interuptible pause
+// Interruptible pause
 function pauseInterrupt(milliseconds, mgo) {
 	let seconds = milliseconds / 1000;
 	mgo.pauseState = true;
