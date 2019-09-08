@@ -3,11 +3,11 @@
 //*
 const testHarness = true;
 
-const testPattern = ['1','P','1','999'];
+const testPattern = ['1','P','1','2','2','999'];
 
 function* testClick(testPattern) {
 	let index = 0;
-	console.log('testClick ' + testPattern + ' ' + index);
+	console.log('state ' + index + ' in ' + testPattern);
 	while (testPattern[index] != '999') {
 
 		if (testPattern[index] === 'P') {
@@ -81,13 +81,16 @@ let masterImage = new Image();
 		testModeButton.addEventListener("click", function(){testModeHandler(mgo)});
 
 //* Attaching anonymous function to event through a variable to facilitate removing it later when all cards have matched
-console.log('attach cardHandlerFunction');
+
+	if (testHarness) {console.log('attach card click event handler')};
 		mgo.cardHandlerFunction = function() {cardsContainerHandler(mgo)};
 		let cardsContainer = retrieveFirstClassValue('cards-container');
 
-		if (testHarness != true) {
 			cardsContainer.addEventListener("click", mgo.cardHandlerFunction, true);
-		}
+
+			if (testHarness != true) {
+
+			}
 
 		return;
 	}; // end of masterImage load callback
@@ -100,7 +103,7 @@ function InitCardHandler(mgo) {
 		mgo.initialCard = false;  // toggle so only executed once
 		mgo.previousCard = '0';
 		mgo.previousFace = false;
-		mgo.clickState = 2; // because of way toggle routine works, starts at 2;
+		mgo.clickState = 1; // start state;
 //		dashboardSet('stars', whiteStar + whiteStar + whiteStar);
 
 // Start timer and store it in the game object
@@ -202,18 +205,20 @@ function cardsContainerHandler(mgo) {
 		console.log('t e s t H a r n e e s ----------> card= ' + mgo.selectedCard);
 		if (mgo.selectedCard === 999) {
 			console.log('Exiting testHarness');
+			testHarness = false;
 			return;
 		};
 //		document.getElementById('Card' + mgo.selectedCard).click();
 		console.log('testHarness: clicking card ' + mgo.selectedCard);
-		document.getElementsByClassName('card' + mgo.selectedCard)[0].click();
+
+//		document.getElementsByClassName('card' + mgo.selectedCard)[0].click();
 	}
 
 // END OF DEBUG TEST CLICK
 
 // TODO: test here to see if this is a third click while processing still going on first two cards
 
-	clickState(mgo);  // if 1 becomes 2, if 2 becomes 1
+//	clickState(mgo);  // if 1 becomes 2, if 2 becomes 1
 
 		let testCardObj = getCardObj('2', mgo);
 		let testCardIdx = getCardIdx(testCardObj, mgo);
@@ -225,12 +230,14 @@ function cardsContainerHandler(mgo) {
 	let matchedCardObj = mgo.cardMap.get(selectedCardObj.matchCard);
 
 // The first card clicked and the last card from the previous pair match
-	let isDoubleClick = ( (mgo.clickQueue[0] === mgo.clickQueue[1])
-		&& mgo.clickState === 1) ? true : false;
+//	let isDoubleClick = ( (mgo.clickQueue[0] === mgo.clickQueue[1])
+//		&& mgo.clickState === 1) ? true : false;
 
 // The first card clicked and the second card clicked are the same
-	 isDoubleClick = ( (mgo.clickQueue[0] === mgo.clickQueue[1])
-		&& mgo.clickState === 2) ? true : false;
+//	 isDoubleClick = ( (mgo.clickQueue[0] === mgo.clickQueue[1])
+//		&& mgo.clickState === 2) ? true : false;
+
+		let isDoubleClick = ( (mgo.clickQueue[0] === mgo.clickQueue[1])) ? true : false;
 
 // If current card and and match card are both faceup, then they have already matched
 	let isAlreadyMatched = (selectedCardObj.faceUp && matchedCardObj.faceUp) ? true : false;
@@ -268,9 +275,13 @@ function cardsContainerHandler(mgo) {
 //		mgo.clickQueue.shift();
 // reset isdoubleclick, should be set on next iteration, but do it here to be consistent with console.log output that follows
 	isDoubleClick = false;
-		console.log(`After: key ${logicKey}: click state(${mgo.clickState}) selected(${mgo.selectedCard}) Already Matched(${isAlreadyMatched}) Will match(${willMatch}) Double-click(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
+		console.log(`After: key ${logicKey}: click state(${mgo.clickState}) selected(${mgo.selectedCard}) Already (${isAlreadyMatched}) Will (${willMatch}) 2-click(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
 
-		return;
+		if (testHarness) {
+			document.getElementsByClassName('card' + mgo.selectedCard)[0].click();
+		}
+
+//		return;
 
 } // End of cards container handler
 
@@ -757,9 +768,8 @@ let logicMap = new Map([
 		console.log('1000 first click');
 
 		toggleFace(selectedCardObj, mgo);
+		clickState(mgo);
 /*
-		//		setFace(selectedCardObj, true, mgo); // turn face-up
-
 //		mgo.clickQueue.shift();
 */
 		return;
@@ -856,7 +866,7 @@ let logicMap = new Map([
 		updateTally(+1, mgo);
 
 		clickState(mgo);
-		mgo.clickQueue.shift(); // the double-click card
+//		mgo.clickQueue.shift(); // the double-click card
 		mgo.clickQueue.shift(); // the double-click card
 
 		return;
