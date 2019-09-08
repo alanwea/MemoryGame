@@ -3,7 +3,7 @@
 //*
 const testHarness = true;
 
-const testPattern = ['1','P','1','2','2','999'];
+const testPattern = ['1','1','2','2','3','P','3','999'];
 
 function* testClick(testPattern) {
 	let index = 0;
@@ -177,13 +177,15 @@ function removeHighlight(highlightClass) {
 // Consumes clicks and dispatches to handlers
 function cardsContainerHandler(mgo) {
 
+	if (testHarness) {console.log('%%%%%%%% Click received %%%%%%%%')};
 	event.stopPropagation();
 
 	let selectedCardClass = event.target.classList.value;
 
 // if the card container has been clicked, but not a card, just return.
+	if (testHarness != true) {
 	if ( selectedCardClass === 'cards-container') { return};
-
+	}
 	// Verify that a card has been clicked
 	let isCard = (selectedCardClass.match(/\s*card\s*/) === null) ? false : true;
 
@@ -278,7 +280,9 @@ function cardsContainerHandler(mgo) {
 		console.log(`After: key ${logicKey}: click state(${mgo.clickState}) selected(${mgo.selectedCard}) Already (${isAlreadyMatched}) Will (${willMatch}) 2-click(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
 
 		if (testHarness) {
-			document.getElementsByClassName('card' + mgo.selectedCard)[0].click();
+			let testClass = document.getElementsByClassName('card' + mgo.selectedCard)[0];
+			console.log('at inserted click, class is ' + testClass);
+			document.getElementsByClassName('cards-container')[0].click();
 		}
 
 //		return;
