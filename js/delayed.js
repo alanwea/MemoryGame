@@ -3,22 +3,38 @@
 //*
 const testHarness = true;
 
-const testPattern = ['1', '999'];
+const testPattern = ['1','P','1','999'];
 
 function* testClick(testPattern) {
 	let index = 0;
 	console.log('testClick ' + testPattern + ' ' + index);
 	while (testPattern[index] != '999') {
+
 		if (testPattern[index] === 'P') {
-			console.log('test harness pause');
-			pause(5000);
+			console.log('<<<<<<<<<<<<<<< test harness pause>>>>>>>>>>>>>>>>');
+			testSleep1(5000);
 			index = index + 1;
 		}
-			yield testPattern[index];
-			index = index + 1;
-		}
+
+		yield testPattern[index];
+		index = index + 1;
+
 	}
-var genClick = testClick(testPattern);
+}
+
+	var genClick = testClick(testPattern);
+
+	function testSleep1(ms) {
+	var start = Date.now(), now = start;
+	while (now - start < ms) {
+		now = Date.now();
+	}
+}
+
+	// test routine to replace pause
+function sleep(milliseconds) {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
 //*/
 
 /* Continue to initialize the game after the initial view has been displayed.
@@ -68,7 +84,11 @@ let masterImage = new Image();
 console.log('attach cardHandlerFunction');
 		mgo.cardHandlerFunction = function() {cardsContainerHandler(mgo)};
 		let cardsContainer = retrieveFirstClassValue('cards-container');
-		cardsContainer.addEventListener("click", mgo.cardHandlerFunction, true);
+
+		if (testHarness != true) {
+			cardsContainer.addEventListener("click", mgo.cardHandlerFunction, true);
+		}
+
 		return;
 	}; // end of masterImage load callback
 //*/
@@ -329,10 +349,7 @@ function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
 	return;
 }
 
-// test routine to replace pause
-const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
+
 
 const doSomething = async () => {
 	await sleep(2000);
