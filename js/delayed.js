@@ -6,11 +6,12 @@ const testHarness = true;
 //const testPattern = ['1','P','1','P','2','P','2','3','P','3','999','999'];
 const testPattern = ['1','P','1','999'];
 
+
 function* testClick(testPattern) {
 	let index = 0;
 	let oldIndex = 0;
 
-	console.log('state ' + index + ' in ' + testPattern);
+	console.log('Generator: state(' + testPattern[index] + ') in ' + testPattern);
 
 	while (true) {
 		if (testPattern[index] === '999') {
@@ -20,7 +21,7 @@ function* testClick(testPattern) {
 
 		if (testPattern[index] === 'P') {
 			console.log('<<<<<<<<<<<<<<< test harness pause>>>>>>>>>>>>>>>>');
-			testSleep1(5000);
+			sleep(5000);
 			index = index + 1; // advance index to skip over Pause
 		}
 
@@ -32,16 +33,17 @@ function* testClick(testPattern) {
 	}
 } // end of generator
 
-	var genClick = testClick(testPattern);
+var genClick = testClick(testPattern);
 
-	function testSleep1(ms) {
-	var start = Date.now(), now = start;
+function sleep(ms) {
+var start = Date.now(), now = start;
+
 	while (now - start < ms) {
 		now = Date.now();
 	}
 }
 
-	// test routine to replace pause
+/* test routine to replace pause
 function sleep(milliseconds) {
   return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
@@ -56,24 +58,23 @@ When the callback triggers, the face image has been loaded and is then apportion
 After the remaining initialization is complete, event handlers are set up to handle card clicks bubbled to the card container, the dashboard handler and the reset button handler.
 */
 
-//  Load Memory Game Object from local storage, initializes variables, install event handlers.
+//  Called from HTML: load Memory Game Object, initialize variables, install event handlers.
 function initializeHandlers() {
 
 	let mgo = JSON.parse( localStorage.getItem('FEWD: Matching Game') );
 
 	// Retrieve the number of cards from localStorage
 	let cardCount = Number(mgo.rows) * Number(mgo.columns);
-//	console.log(`initialize handlers with cardCount of ${cardCount}`);
 
 //*
 	if (mgo.gameType === 'new') {
 // DO THIS ONLY WHEN ITS A NEW GAME, OTHERWISE THE MASTER IMAGE THUMBNAILS WILL COME FROM THE mgo
+		if (testHarness) console.log('NEW GAME INITIALIZING');
 
 // Setup a callback function to be triggered after the master Image has loaded
-//*
-let masterImage = new Image();
+	let masterImage = new Image();
 	masterImage.onload = function() {
-
+		if (testHarness) console.log('Loading master image');
 // Divide the master image into sub-images and create a map from them
 		mgo.imageMap = apportionMasterImage(masterImage, mgo);
 
@@ -90,7 +91,7 @@ let masterImage = new Image();
 		let testModeButton = retrieveFirstClassValue('udacity-logo');
 		testModeButton.addEventListener("click", function(){testModeHandler(mgo)});
 
-//* Attaching anonymous function to event through a variable to facilitate removing it later when all cards have matched
+// Attaching anonymous function to event through a variable to facilitate removing it later when all cards have matched
 
 	if (testHarness) {console.log('attach card click event handler')};
 
@@ -100,22 +101,20 @@ let masterImage = new Image();
 		cardsContainer.addEventListener("click", mgo.cardHandlerFunction, true);
 
 		if (testHarness != true) {
-
 		}
+		if (testHarness) console.log('Finished loading master image');
 
 		return;
 	};
 
 	// Trigger the front image load to start everything going
-	masterImage.src = getMasterFrontImage();
-	return;
-};
-
-return; // Important to prevent double call
+		masterImage.src = getMasterFrontImage();
+//		return;
+	};
+//*/
+//	return; // Important to prevent double call
 
 };  // end of initialize handlers
-	// end of masterImage load callback
-//*/
 
 // Called once when card click event handler is initialized
 // TODO must set stars in here too, when a reset happens
@@ -231,7 +230,7 @@ function cardsContainerHandler(mgo) {
 // get generator function, iterate array, get next array value, make selected card the new value
 	if (testHarness) {
 		mgo.selectedCard = genClick.next().value;
-		console.log('t e s t H a r n e e s ----------> card= ' + mgo.selectedCard);
+		console.log('t e s t H a r n e e s ----------> card = ' + mgo.selectedCard);
 		if (mgo.selectedCard === '999') {
 			console.log('Exiting testHarness');
 //			testHarness = false;
@@ -239,7 +238,7 @@ function cardsContainerHandler(mgo) {
 //			return;
 		};
 //		document.getElementById('Card' + mgo.selectedCard).click();
-		console.log('testHarness: clicking card ' + mgo.selectedCard);
+//		console.log('testHarness: clicking card ' + mgo.selectedCard);
 
 //		document.getElementsByClassName('card' + mgo.selectedCard)[0].click();
 	}
@@ -318,7 +317,7 @@ function cardsContainerHandler(mgo) {
 
 	}
 
-//		return;
+		return;
 
 } // End of cards container handler
 
@@ -342,7 +341,7 @@ function setFrontCardHTML(mgo) {
 //		return;
 //	};
 
-	return; // Important to prevent double call
+//	return; // Important to prevent double call
 
 //};  // end of initialize handlers
 
@@ -489,6 +488,7 @@ function setFace(cardObj, faceUp, mgo) {
 		}
 
 		if (!cardObj.faceUp){	// faceup false, show card back
+			if (testHarness) console.log('setFace: faceUp(' + cardObj.faceUp +') swapping hidden attribute');
 			document.querySelector('.back.card' + cardIdx).removeAttribute('hidden');
 			document.querySelector('.front.card' + cardIdx).setAttribute('hidden', '');
 		}
@@ -537,7 +537,7 @@ function setFace(cardObj, faceUp, mgo) {
 // in test to normal:  back cards set to back image and unhidden, front card images are all set to hidden
 function testModeHandler(mgo) {
 //TODO remove
-	console.log('In the testModeHandler');
+	console.log('testModeHandler: TEST TEST TEST TEST TEST TEST TEST TEST TEST ');
 
 	// Turn all cards face down
 	for (let i=1; i <= mgo.rows * mgo.columns; i++) {
@@ -578,6 +578,8 @@ function showGameTimer(seconds) {
 
 // Change running tally by 'value.'  For future expansion value could be negative to reward player
 function updateTally(value, mgo) {
+	if (testHarness) {console.log('updateTally: value(' + value + ')');}
+
 	mgo.tally = (parseInt(mgo.tally, 10) + value).toString();
 	dashboardSet('tally-count', mgo.tally);
 	let starRange=[1, 3, 6];
@@ -609,6 +611,7 @@ function setStars(count) {
 }
 //
 function randomizeCardsToImages(mgo) {
+	if (testHarness) {console.log('randomizeCardsToImages');}
 
 	let {rows, columns, imageMap} = mgo;
 
@@ -657,15 +660,16 @@ function updateAlt(firstCard, secondCard) {
 	return;
 }
 
-// Guaranted delay of execution - used in animation
+/* Guaranted delay of execution - used in animation
 // Derived from https://flaviocopes.com/javascript-sleep/
 // TODO:  NEED TO CHANGE THIS SO THAT IT CAN BE TERMINATED
 const pause = (milliseconds) => {
 		console.log('in pause(): milliseconds= ' + milliseconds);
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
+//*/
 
-// Interruptible pause
+/* Interruptible pause
 function pauseInterrupt(milliseconds, mgo) {
 	let seconds = milliseconds / 1000;
 	mgo.pauseState = true;
@@ -680,13 +684,14 @@ function pauseInterrupt(milliseconds, mgo) {
 	}
 	mgo.pauseState = false;
 }
+//*/
 
 // Break up a large image into smaller pieces.
 function apportionMasterImage(imageSource, mgo) {
 	// Retrieve a card class element to use for calculations
 	let card = document.getElementsByClassName('card')[0];
 
-if (mgo.testMode) {
+if (testHarness) {
 		console.log(`apportionMasterImage: Card: width (${card.width}) height (${card.height})`);
 	}
 
@@ -728,6 +733,8 @@ if (mgo.testMode) {
 // Passed an array, randomly removes one.  Zero return = empty array
 // Derived from https://stackoverflow.com/questions/12987719/javascript-how-to-randomly-sample-items-without-replacement
 function getRandom(bucket) {
+	if (testHarness) {console.log('getRandom: bucket(' + bucket + ')');}
+
 	let randomValue = 0;
 
 	if (Array.isArray(bucket) && bucket.length != 0) {
@@ -739,6 +746,7 @@ function getRandom(bucket) {
 
 // Bespoke truth table to track <cardCount> face-up cards that signal game end.  Given two card index numbers, sets corresponding bits in the table.  The table is inverted to make testing for the result easier.  That is, when all bits are set, the result is all bits unset.
 let updateTT = function(mgo) {
+	if (testHarness) {console.log('updateTT: ');}
 
 //	let {truthTable, clickQueue, selectedCard} = mgo;
 
@@ -777,6 +785,8 @@ function* timerCount(flag) {
 
 //* Fancy technique to toggle between 1 and 2.
 function clickState(mgo) {
+	if (testHarness) {console.log('clickState: value(' + mgo.clickState + ')');}
+
 	mgo.clickState = 3 - mgo.clickState;
 	return mgo.clickState;
 }
@@ -803,7 +813,7 @@ let logicMap = new Map([
 
 	// First card clicked of attempted match pair.
 	['1000', {logic: (selectedCardObj, mgo) => {
-		console.log('1000 first click');
+		if (testHarness) {console.log('1000 -------------------------------> first click');}
 
 		toggleFace(selectedCardObj, mgo);
 		clickState(mgo);
@@ -898,7 +908,7 @@ let logicMap = new Map([
 	//* Handle a double click on same card
 	['2001', {logic: (selectedCardObj, mgo) => {
 	//	let showFace = selectedCardObj.faceUp ? false : true;
-	console.log('2001 double click same card');
+	if (testHarness) {console.log('2001 -------------------------------------> double click same card');}
 
 		setFace(selectedCardObj, false, mgo);
 		updateTally(+1, mgo);
@@ -916,7 +926,7 @@ let logicMap = new Map([
 // if all cards are face-up, indicate and finish game
 // Using a truth table for experimental purposes
 	['2010', {'logic': (selectedCardObj, mgo) => {
-		console.log('2010 cards match');
+		console.log('2010 ----------------------------------------> cards match');
 	/*
 		setFace(selectedCardObj, true, mgo); // turn face-up
 
@@ -951,7 +961,7 @@ let logicMap = new Map([
 
 	//*  1st card clicked on face down, 2nd card is already matched
 	['2100', {logic: (selectedCardObj, mgo) => { //second, up, down, no
-		console.log('2100 1st click, 2nd up');
+		console.log('2100 ------------------------------------> 1st click, 2nd up');
 //		setFace(selectedCardObj, true, mgo);
 	// 2nd card is already matched, and 1st card is not going to match
 	// blink green the 2nd card and its match card and continue in card 1 ready state
@@ -973,14 +983,14 @@ let logicMap = new Map([
 
 	// click on a card that is already face-up and matched card face-up
 		['2110', {logic: (selectedCardObj, mgo) => {
-			console.log('2110 up & match up');
+			console.log('2110 -------------------------------------> up & match up');
 	//		logicMap.get('blink')['logic']('blinking-green');
 	return;
 		}
 		}],
 
 	['2101', {logic: (selectedCardObj, mgo) => {  //
-		console.log('2101 unknown');
+		console.log('2101 ------------------------------------> unknown');
 /*
 		setFace(selectedCardObj, false, mgo);
 		updateTally(+1, mgo);
@@ -990,7 +1000,7 @@ let logicMap = new Map([
 		}}],
 
 	['2110', {logic: (selectedCardObj, mgo) => {
-		console.log('2110 already matched');
+		console.log('2110 -------------------------------------> already matched');
 /*
 			const cardIdx = [];
 			cardIdx.push(selectedCardObj.cardIdx);
