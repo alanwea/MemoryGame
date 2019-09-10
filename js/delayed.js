@@ -93,17 +93,28 @@ let masterImage = new Image();
 //* Attaching anonymous function to event through a variable to facilitate removing it later when all cards have matched
 
 	if (testHarness) {console.log('attach card click event handler')};
+
 		mgo.cardHandlerFunction = function() {cardsContainerHandler(mgo)};
 		let cardsContainer = retrieveFirstClassValue('cards-container');
 
-			cardsContainer.addEventListener("click", mgo.cardHandlerFunction, true);
+		cardsContainer.addEventListener("click", mgo.cardHandlerFunction, true);
 
-			if (testHarness != true) {
+		if (testHarness != true) {
 
-			}
+		}
 
 		return;
-	}; // end of masterImage load callback
+	};
+
+	// Trigger the front image load to start everything going
+	masterImage.src = getMasterFrontImage();
+	return;
+};
+
+return; // Important to prevent double call
+
+};  // end of initialize handlers
+	// end of masterImage load callback
 //*/
 
 // Called once when card click event handler is initialized
@@ -327,13 +338,13 @@ function setFrontCardHTML(mgo) {
 }
 
 // Trigger the front image load to start everything going
-		masterImage.src = getMasterFrontImage();
-		return;
-	};
+//		masterImage.src = getMasterFrontImage();
+//		return;
+//	};
 
 	return; // Important to prevent double call
 
-};  // end of initialize handlers
+//};  // end of initialize handlers
 
 // Blink the border by classname
 // Good example of animation callbacks at https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
