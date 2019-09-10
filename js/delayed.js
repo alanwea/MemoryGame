@@ -3,24 +3,34 @@
 //*
 const testHarness = true;
 
-const testPattern = ['1','1','2','2','3','P','3','999'];
+//const testPattern = ['1','P','1','P','2','P','2','3','P','3','999','999'];
+const testPattern = ['1','P','1','999'];
 
 function* testClick(testPattern) {
 	let index = 0;
+	let oldIndex = 0;
+
 	console.log('state ' + index + ' in ' + testPattern);
-	while (testPattern[index] != '999') {
+
+	while (true) {
+		if (testPattern[index] === '999') {
+			console.log('Generator: END OF TEST PASS ' + testPattern[index]);
+			return testPattern[index];
+		}
 
 		if (testPattern[index] === 'P') {
 			console.log('<<<<<<<<<<<<<<< test harness pause>>>>>>>>>>>>>>>>');
 			testSleep1(5000);
-			index = index + 1;
+			index = index + 1; // advance index to skip over Pause
 		}
 
-		yield testPattern[index];
+		console.log('Generator: yields ' + testPattern[index]);
+		oldIndex = index;
 		index = index + 1;
 
+		yield testPattern[oldIndex];
 	}
-}
+} // end of generator
 
 	var genClick = testClick(testPattern);
 
@@ -177,15 +187,21 @@ function removeHighlight(highlightClass) {
 // Consumes clicks and dispatches to handlers
 function cardsContainerHandler(mgo) {
 
-	if (testHarness) {console.log('%%%%%%%% Click received %%%%%%%%')};
+	let selectedCardClass = 'card card0 back';
 	event.stopPropagation();
 
-	let selectedCardClass = event.target.classList.value;
+	if (testHarness) {
+		console.log('%%%%%%%% Test Click received %%%%%%%%');
+//		selectedCardClass = 'card card1 back';
+	} else {
+		event.stopPropagation();
+		selectedCardClass = event.target.classList.value;
+	}
 
 // if the card container has been clicked, but not a card, just return.
-	if (testHarness != true) {
+
 	if ( selectedCardClass === 'cards-container') { return};
-	}
+
 	// Verify that a card has been clicked
 	let isCard = (selectedCardClass.match(/\s*card\s*/) === null) ? false : true;
 
@@ -205,10 +221,11 @@ function cardsContainerHandler(mgo) {
 	if (testHarness) {
 		mgo.selectedCard = genClick.next().value;
 		console.log('t e s t H a r n e e s ----------> card= ' + mgo.selectedCard);
-		if (mgo.selectedCard === 999) {
+		if (mgo.selectedCard === '999') {
 			console.log('Exiting testHarness');
-			testHarness = false;
-			return;
+//			testHarness = false;
+			throw "TestHarness: end of test pass";
+//			return;
 		};
 //		document.getElementById('Card' + mgo.selectedCard).click();
 		console.log('testHarness: clicking card ' + mgo.selectedCard);
@@ -282,8 +299,13 @@ function cardsContainerHandler(mgo) {
 		if (testHarness) {
 			let testClass = document.getElementsByClassName('card' + mgo.selectedCard)[0];
 			console.log('at inserted click, class is ' + testClass);
-			document.getElementsByClassName('cards-container')[0].click();
-		}
+//			let cardsContainer = retrieveFirstClassValue('cards-container');
+//			cardsContainer.addEventListener("click", mgo.cardHandlerFunction, true);
+//			cardsContainer.click();
+			document.getElementsByClassName('cards-container')[0]
+				.dispatchEvent(new MouseEvent('click'));
+
+	}
 
 //		return;
 
@@ -420,6 +442,7 @@ function setCardStates(card1, card2, cardSelected, mgo) {
 // if card face is up make it down, and vice versa
 function toggleFace(selectedCardObj, mgo) {
 	let showFace = selectedCardObj.faceUp ? false : true;
+	if (testHarness) {console.log('Card is face ' + showFace);}
 	setFace(selectedCardObj, showFace, mgo);
 }
 
@@ -703,7 +726,7 @@ function getRandom(bucket) {
 	return randomValue;
 }
 
-// Bespoke truth table to track <cardCount> face-up cards that signal game end.  Given two card index numbers, sets corresponding bits in the table.  The table is inverted to make testing for for the result easier.  That is, when all bits are set, the result is all bits unset.
+// Bespoke truth table to track <cardCount> face-up cards that signal game end.  Given two card index numbers, sets corresponding bits in the table.  The table is inverted to make testing for the result easier.  That is, when all bits are set, the result is all bits unset.
 let updateTT = function(mgo) {
 
 //	let {truthTable, clickQueue, selectedCard} = mgo;
