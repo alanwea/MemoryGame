@@ -1,10 +1,13 @@
 'use strict';
 
 //*
-const testHarness = true;
+const testHarness = false;
 
-//const testPattern = ['1','P','1','P','2','P','2','3','P','3','999','999'];
-const testPattern = ['1','P','1','999'];
+
+//const testPattern = ['1','P','2','999']; // unmatched
+//const testPattern = ['1','P','1','999']; double click on same card
+const testPattern = ['1','P','2','P','2','999']; // unmatched, double click on second card
+//const testPattern = ['1','P','2','P','1','999']; // unmatched, double click on first card
 
 
 function* testClick(testPattern) {
@@ -20,8 +23,8 @@ function* testClick(testPattern) {
 		}
 
 		if (testPattern[index] === 'P') {
-			console.log('<<<<<<<<<<<<<<< test harness pause>>>>>>>>>>>>>>>>');
-			sleep(5000);
+			console.log('<<<<<<<<<<<<<<< Test Harness Pause >>>>>>>>>>>>>>>>');
+			sleep(2000);
 			index = index + 1; // advance index to skip over Pause
 		}
 
@@ -201,7 +204,8 @@ function cardsContainerHandler(mgo) {
 	event.stopPropagation();
 
 	if (testHarness) {
-		console.log('%%%%%%%% Test Click received %%%%%%%%');
+		console.log(`
+			%%%%%%%% Test Click Received %%%%%%%%`);
 //		selectedCardClass = 'card card1 back';
 	} else {
 		event.stopPropagation();
@@ -230,12 +234,12 @@ function cardsContainerHandler(mgo) {
 // get generator function, iterate array, get next array value, make selected card the new value
 	if (testHarness) {
 		mgo.selectedCard = genClick.next().value;
-		console.log('t e s t H a r n e e s ----------> card = ' + mgo.selectedCard);
+		console.log('testHarness: generator returned ------> card = ' + mgo.selectedCard);
 		if (mgo.selectedCard === '999') {
 			console.log('Exiting testHarness');
-//			testHarness = false;
-			throw "TestHarness: end of test pass";
-//			return;
+
+//			throw "TestHarness: end of test pass";
+			return;
 		};
 //		document.getElementById('Card' + mgo.selectedCard).click();
 //		console.log('testHarness: clicking card ' + mgo.selectedCard);
@@ -266,7 +270,7 @@ function cardsContainerHandler(mgo) {
 //	 isDoubleClick = ( (mgo.clickQueue[0] === mgo.clickQueue[1])
 //		&& mgo.clickState === 2) ? true : false;
 
-		let isDoubleClick = ( (mgo.clickQueue[0] === mgo.clickQueue[1])) ? true : false;
+	let isDoubleClick = ( (mgo.clickQueue[0] === mgo.clickQueue[1])) ? true : false;
 
 // If current card and and match card are both faceup, then they have already matched
 	let isAlreadyMatched = (selectedCardObj.faceUp && matchedCardObj.faceUp) ? true : false;
@@ -286,15 +290,15 @@ function cardsContainerHandler(mgo) {
 
 //			mgo.clickQueue.shift(); // get rid of trail, not needed now?
 
-		console.log(`Before: key ${logicKey}: click state(${mgo.clickState}) selected(${mgo.selectedCard}) Already Matched(${isAlreadyMatched}) Will match(${willMatch}) Double-click(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
+		console.log(`BEFORE dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
 
 		//removeHighlight('blinking-red');
 //		[].forEach.call(document.querySelectorAll('blinking-red'), function (el) {
 //			el.classList.remove('blinking-red');
 //	});
 
-	highlightBorder('blinking-red', 'blinking-red', false, mgo);
-	highlightBorder('blinking-red', 'blinking-red', false, mgo);
+//	highlightBorder('blinking-red', 'blinking-red', false, mgo);
+//	highlightBorder('blinking-red', 'blinking-red', false, mgo);
 
 // Dispatch to the handler routine
 		logicMap.get(logicKey)['logic'](selectedCardObj, mgo);
@@ -304,7 +308,9 @@ function cardsContainerHandler(mgo) {
 //		mgo.clickQueue.shift();
 // reset isdoubleclick, should be set on next iteration, but do it here to be consistent with console.log output that follows
 	isDoubleClick = false;
-		console.log(`After: key ${logicKey}: click state(${mgo.clickState}) selected(${mgo.selectedCard}) Already (${isAlreadyMatched}) Will (${willMatch}) 2-click(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
+
+//		console.log(`After: key ${logicKey}: click state(${mgo.clickState}) selected(${mgo.selectedCard}) Already (${isAlreadyMatched}) Will (${willMatch}) 2-click(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
+		console.log(`AFTER dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
 
 		if (testHarness) {
 			let testClass = document.getElementsByClassName('card' + mgo.selectedCard)[0];
@@ -465,6 +471,8 @@ function setFace(cardObj, faceUp, mgo) {
 	mgo.cardMap.set(cardIdx, cardObj);  // Update the cardObj with new face
 
 	if (mgo.testMode) {
+		if (testHarness) {console.log('setFace: old TESTMODE is turned on #######################');}
+
 		// update card image in RT from the image array
 		if (cardObj.faceUp) {
 			let base64Image = mgo.imageMap.get(cardObj.image);
@@ -824,16 +832,17 @@ let logicMap = new Map([
 		}}],
 
 		['1001', {logic: (selectedCardObj, mgo) => {  //
-			console.log('1001 unknown');
+			console.log('1001 unknown ????????????????????');
 /*
 			toggleFace(selectedCardObj, mgo);
 			setCardStates(true, false, mgo.selectedCard, mgo);
 */
+		mgo.clickQueue.shift();
 			return;
 		}}],
 
 	['1010', {logic: (selectedCardObj, mgo) => {  //
-		console.log('1010 unknown');
+		console.log('1010 unknown ?????????????? ');
 /*
 		toggleFace(selectedCardObj, mgo);
 		setCardStates(false, true, mgo.selectedCard, mgo);
@@ -863,7 +872,7 @@ let logicMap = new Map([
 
 	//*
 	['1110', {logic: (selectedCardObj, mgo) => {
-			console.log('1100 unused');
+			console.log('1100 unknown ??????????');
 
 //			const cardIdx = [selectedCardObj.cardIdx, selectedCardObj.matchCard];
 //			logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
@@ -874,33 +883,36 @@ let logicMap = new Map([
 	//*/
 
 	//* Future expansion
-		['1101', {logic: (function() { return() => { console.log('1101 future');};})()}],
-		['1111', {logic: (function() { return() => { console.log('1111 future');};})()}],
+		['1101', {logic: (function() { return() => { console.log('1101 unknown ??????????');};})()}],
+		['1111', {logic: (function() { return() => { console.log('1111 unknown ??????????');};})()}],
 	//*/
 
 		// Not matched, not a double click, 2nd card click
 	['2000', {'logic': (selectedCardObj, mgo) => {
 		console.dir('2000 2nd click', selectedCardObj);
-/*
+
 		setFace(selectedCardObj, true, mgo);
 		updateTally(+1, mgo);
+		console.log('sleeping after setface');
+		sleep(3000);
+		setTimeout(function(){setFace(selectedCardObj, false, mgo);},3000);
 
-		let cardIdx = [];
-		let firstCard = mgo.clickQueue.pop();
-		mgo.clickQueue.push(firstCard);
-		cardIdx.push(firstCard);
-		cardIdx.push(selectedCardObj.cardIdx);
+//		let cardIdx = [];
+//		let firstCard = mgo.clickQueue.pop();
+//		mgo.clickQueue.push(firstCard);
+//		cardIdx.push(firstCard);
+//		cardIdx.push(selectedCardObj.cardIdx);
 
-		console.log('jump to blink');
-		logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
-		console.log('return from blink');
-		setCardStates(false, false, mgo.selectedCard, mgo);
+//		console.log('jump to blink');
+//		logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
+//		console.log('return from blink');
+//		setCardStates(false, false, mgo.selectedCard, mgo);
 //		setFace(selectedCardObj, false, mgo);
 
 		mgo.clickQueue.shift(); // remove unmatched card from Q
 
-		clickState(mgo);
-*/
+//		clickState(mgo);
+
 		return;
 
 	}}],
@@ -915,6 +927,7 @@ let logicMap = new Map([
 
 		clickState(mgo);
 //		mgo.clickQueue.shift(); // the double-click card
+		mgo.clickQueue.shift(); // the double-click card
 		mgo.clickQueue.shift(); // the double-click card
 
 		return;
