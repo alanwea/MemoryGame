@@ -214,6 +214,22 @@ function cardsContainerHandler(mgo) {
 
 // if the card container has been clicked, but not a card, just return.
 
+/* Special ending state to avoid using timer to turn match card face down
+	if (mgo.clickState === 3) {
+		// get last card clicked from the click queue
+		let lastClick = mgo.clickQueue.shift();
+//		getCardObj(lastClick, mgo);
+
+		setFace(getCardObj(lastClick, mgo), false, mgo);
+
+		clickState(mgo,2);
+
+		console.log(`Special click handling: state(${mgo.clickState}) card(${mgo.selectedCard}) clickQ(${mgo.clickQueue})`);
+
+		return;  // short circut rest of routine to wait for next click
+	}
+//*/
+
 	if ( selectedCardClass === 'cards-container') { return};
 
 	// Verify that a card has been clicked
@@ -253,8 +269,25 @@ function cardsContainerHandler(mgo) {
 
 //	clickState(mgo);  // if 1 becomes 2, if 2 becomes 1
 
-		let testCardObj = getCardObj('2', mgo);
-		let testCardIdx = getCardIdx(testCardObj, mgo);
+//		let testCardObj = getCardObj('2', mgo);
+//		let testCardIdx = getCardIdx(testCardObj, mgo);
+
+//  Click on card 1, click on card 2, card 1 goes face down
+//
+		if (mgo.clickState === 2 && mgo.clickQueue[1] != mgo.selectedCard) {
+//			let secondCard = mgo.clickQueue.shift();
+//			setFace(getCardObj(secondCard, mgo), false, mgo);
+		}
+
+		if (mgo.clickState === 2 && mgo.clickQueue[0] === mgo.selectedCard) {
+//			let secondCard = mgo.clickQueue.shift();
+//			setFace(getCardObj(secondCard, mgo), false, mgo);
+		}
+
+//			mgo.clickQueue.unshift(mgo.selectedCard);
+			 // state 2 but first card clicked not second
+			// mgo.clickQueue[0] === mgo.clickQueue[1]
+//		}
 
 		mgo.clickQueue.unshift(mgo.selectedCard);  // add to the trailing state array
 
@@ -791,11 +824,14 @@ function* timerCount(flag) {
 }
 //*/
 
-//* Fancy technique to toggle between 1 and 2.
-function clickState(mgo) {
+//* Set state to newState, or if undefined, use fancy technique to toggle between 1 and 2.
+function clickState(mgo, newState) {
 	if (testHarness) {console.log('clickState: value(' + mgo.clickState + ')');}
-
+	if (newState === undefined) {
 	mgo.clickState = 3 - mgo.clickState;
+	} else {
+		mgo.clickState = newState;
+	}
 	return mgo.clickState;
 }
 //*/
@@ -831,6 +867,7 @@ let logicMap = new Map([
 		return;
 		}}],
 
+// First click
 		['1001', {logic: (selectedCardObj, mgo) => {  //
 			console.log('1001 unknown ????????????????????');
 /*
@@ -909,9 +946,15 @@ let logicMap = new Map([
 //		setCardStates(false, false, mgo.selectedCard, mgo);
 //		setFace(selectedCardObj, false, mgo);
 
-		mgo.clickQueue.shift(); // remove unmatched card from Q
+//		mgo.clickQueue.shift(); // remove unmatched card from Q
+if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
+	clickState(mgo, 1); // state for first card face up
+	mgo.clickQueue.shift(); // the double-click card
+} else {
+	clickState(mgo,2); // state for waiting for first card
+}
 
-//		clickState(mgo);
+//		clickState(mgo, 2);
 
 		return;
 
@@ -924,10 +967,18 @@ let logicMap = new Map([
 
 		setFace(selectedCardObj, false, mgo);
 		updateTally(+1, mgo);
+// double click on second card - card face is now down and tally updated
+// need to adjust state and queue
+// how to know if second card or first card?  should be in the clickQueue
+		if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
+			clickState(mgo, 1); // state for first card face up
+			mgo.clickQueue.shift(); // the double-click card
+		} else {
+			clickState(mgo,1); // state for waiting for first card
+		}
 
-		clickState(mgo);
+//		clickState(mgo);
 //		mgo.clickQueue.shift(); // the double-click card
-		mgo.clickQueue.shift(); // the double-click card
 		mgo.clickQueue.shift(); // the double-click card
 
 		return;
@@ -940,7 +991,7 @@ let logicMap = new Map([
 // Using a truth table for experimental purposes
 	['2010', {'logic': (selectedCardObj, mgo) => {
 		console.log('2010 ----------------------------------------> cards match');
-	/*
+//*
 		setFace(selectedCardObj, true, mgo); // turn face-up
 
 			if (updateTT(mgo)) {
@@ -961,8 +1012,9 @@ let logicMap = new Map([
 //			clickState(mgo); // toggle event ready state
 			mgo.clickQueue.pop(); // pop second card off of the queue
 			mgo.clickQueue.pop(); // pop second card off of the queue
-	//		updateTT(mgo);
-	*/
+			clickState(mgo,1); // set back to a start state
+		updateTT(mgo);
+//*/
 			return;
 	//			}
 			}}],
@@ -1027,17 +1079,16 @@ let logicMap = new Map([
 	//*
 	['blink', { // Utility: blink border each card in the cardIdx array
 		logic:(colorClass, cardIdx, mgo) => {
-		console.log('blink ' + cardIdx[0] + cardIdx[1]);
+		console.log('blink ' + cardIdx[0] + ' ' + cardIdx[1]);
 
 // This is used to differentiate between the base64 and on disk image in test mode
 				let blinkFace = mgo.testMode ? '.back' : '.front';
 //				setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);
-//				console.log(cardIdx[0]);
-//				console.log(cardIdx[1]);
+				if (testHarness) console.log(cardIdx[0] + ' : ' + cardIdx[1]);
 
-/*
-for (let i=0; i<cardIdx.length; i++) {
-				let cardSelector = '.card' + cardIdx[i] + blinkFace;
+
+				for (let i=0; i<cardIdx.length; i++) {
+					let cardSelector = '.card' + cardIdx[i] + blinkFace;
 
 //				backHtmlCard = document.querySelector('.back.card' + cardIdx[i]);
 //				frontHtmlCard = document.querySelector('.front.card' + cardIdx[i]);
@@ -1045,9 +1096,9 @@ for (let i=0; i<cardIdx.length; i++) {
 //				frontHtmlCard.removeAttribute('hidden');
 					highlightBorder(cardSelector, colorClass, true, mgo);
 
-//					blinkBorder(cardNumber, colorClass, 10, 200, mgo);
+					blinkBorder(cardNumber, colorClass, 10, 200, mgo);
 				}
-*/
+
 //				cardIdx.forEach(function(currentValue, index, arrObj ) {
 //					let cardNumber = '.card' + index + blinkFace;
 
@@ -1081,27 +1132,27 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 		}],
 	//*/
 
-		//*
+
 		['allMatched', {logic:(mgo) => {
 			console.log('All Matched');
-/*
-				updateTally(+1, mgo);
+//*
+			updateTally(+1, mgo);
 
-				let cardIdxAllMatched = [];
+			let cardIdxAllMatched = [];
 
-				for (let i=1; i <= mgo.rows * mgo.columns; i++) { cardIdxAllMatched.push(parseInt(i)); }
+			for (let i=1; i <= mgo.rows * mgo.columns; i++) { 	cardIdxAllMatched.push(parseInt(i)); }
 
-				logicMap.get('blink')['logic']('blinking-green', cardIdxAllMatched ,mgo);
+			logicMap.get('blink')['logic']('blinking-green', cardIdxAllMatched ,mgo);
 
-				clearInterval(mgo.gameTimerId);
-				setCardStates(true, false, mgo.selectedCard, mgo);
+			clearInterval(mgo.gameTimerId);
+			setCardStates(true, false, mgo.selectedCard, mgo);
 
-				blinkBorder("reset", "reset-blink-red", 10, 200, "(() => {console.log('test')})()", mgo);
-*/
-				return;
+			blinkBorder("reset", "reset-blink-red", 10, 200, "(() => {console.log('test')})()", mgo);
+//*/
+			return;
 			}
 		}],
-	//*/
+
 	//*
 			['match', {
 				logic:(selectedCardObj, mgo) => {
