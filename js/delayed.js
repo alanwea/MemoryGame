@@ -894,7 +894,7 @@ let logicMap = new Map([
 		setFace(selectedCardObj, true, mgo);
 		updateTally(+1, mgo);
 		console.log('sleeping after setface');
-		sleep(3000);
+//		sleep(3000);
 		setTimeout(function(){setFace(selectedCardObj, false, mgo);},3000);
 
 //		let cardIdx = [];
