@@ -3,7 +3,6 @@
 //*
 const testHarness = false;
 
-
 //const testPattern = ['1','P','2','999']; // unmatched
 //const testPattern = ['1','P','1','999']; double click on same card
 const testPattern = ['1','P','2','P','2','999']; // unmatched, double click on second card
@@ -273,23 +272,35 @@ function cardsContainerHandler(mgo) {
 //		let testCardIdx = getCardIdx(testCardObj, mgo);
 
 //  Click on card 1, click on card 2, card 1 goes face down
-//
-		if (mgo.clickState === 2 && mgo.clickQueue[1] != mgo.selectedCard) {
-//			let secondCard = mgo.clickQueue.shift();
-//			setFace(getCardObj(secondCard, mgo), false, mgo);
+// First card and second card are face up and both ar in the Q.  Third
+// click is on the first card:  The Q is 2 long from previous 2 clicks
+// --> third click comes in and matches a click in the click queue
+// if card 1 then turn 1 and 2 face down, clear Q and reset to start state
+// if card 2 then turn card 2 down, leave 1 in queue, and reset to start state
+	if (mgo.clickQueue.includes(mgo.selectedCard)) {
+		console.log('found click in the clickQ array: ' + mgo.clickQueue);
+		if (mgo.clickQueue.length > 1) {
+			console.log('clickQueue is > 1: ' + mgo.clickQueue);
 		}
+	}
 
-		if (mgo.clickState === 2 && mgo.clickQueue[0] === mgo.selectedCard) {
+
+	if (mgo.clickState === 2 && mgo.clickQueue[1] != mgo.selectedCard) {
+			console.log('state is ' + mgo.clickState + ' Q=' + mgo.clickQueue);
+			//			let secondCard = mgo.clickQueue.shift();
+//			setFace(getCardObj(secondCard, mgo), false, mgo);
+	}
+
+//		if (mgo.clickState === 2 && mgo.clickQueue[0] === mgo.selectedCard) {
 //			let secondCard = mgo.clickQueue.shift();
 //			setFace(getCardObj(secondCard, mgo), false, mgo);
-		}
+//		}
 
 //			mgo.clickQueue.unshift(mgo.selectedCard);
 			 // state 2 but first card clicked not second
 			// mgo.clickQueue[0] === mgo.clickQueue[1]
 //		}
 
-		mgo.clickQueue.unshift(mgo.selectedCard);  // add to the trailing state array
 
 // Retrieve the card object associated with the current click, and its match card object
 	let selectedCardObj = mgo.cardMap.get(mgo.selectedCard);
@@ -303,11 +314,36 @@ function cardsContainerHandler(mgo) {
 //	 isDoubleClick = ( (mgo.clickQueue[0] === mgo.clickQueue[1])
 //		&& mgo.clickState === 2) ? true : false;
 
-	let isDoubleClick = ( (mgo.clickQueue[0] === mgo.clickQueue[1])) ? true : false;
+// looks in Q to find if current click is same as previous click
+	let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard));
+
+	// old test - depended on position of clicks in Q
+	//	let isDoubleClick = ( (mgo.clickQueue[0] === mgo.clickQueue[1])) ? true : false;
 
 // If current card and and match card are both faceup, then they have already matched
 	let isAlreadyMatched = (selectedCardObj.faceUp && matchedCardObj.faceUp) ? true : false;
 
+// adjust click Q
+// The current click is not in the clickQ, and this is state 2, so first and second cards
+// are faceup and this is a new click that has come in.  Need to turn 2nd card face down
+// and turn new card faceup
+	if ((mgo.clickState === 1) && !(mgo.clickQueue.includes(mgo.selectedCard))) {
+// click state 2, first 2 clicks in Q, but now 3rd click is not in Q.  turn 2nd card facedown
+// turn new card faceup, adjust Q, contunue in state 2
+		console.log('clickstate 2 , third click not in Q');
+		// turn card 2 facedown
+		// replace card two with new card
+		mgo.clickQueue[0] = mgo.selectedCard;
+	};
+
+	if (mgo.clickState === 1) {
+		mgo.clickQueue.unshift(mgo.selectedCard);
+	}
+
+	if ( !isDoubleClick && mgo.clickState === 2) {
+		mgo.clickQueue.unshift(mgo.selectedCard);  // add to the trailing state array
+mgo.clickQueue[0] = mgo.selectedCard;
+	}
 // If on second click, the match card for the current card is equal, then the cards will match after being handled
 //	let willMatch = (selectedCardObj.matchCard === mgo.previousCard)
 //		&& mgo.clickState === 2 ? true : false;
