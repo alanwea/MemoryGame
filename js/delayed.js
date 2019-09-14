@@ -57,12 +57,12 @@ When the callback triggers, the face image has been loaded and is then apportion
 After the remaining initialization is complete, event handlers are set up to handle card clicks bubbled to the card container, the dashboard handler and the reset button handler.
 */
 
-//  Called from HTML: load Memory Game Object, initialize variables, install event handlers.
+//  Called from HTML: load Memory Game Object(mgo), initialize variables, install event handlers.
 function initializeHandlers() {
 
 	let mgo = JSON.parse( localStorage.getItem('FEWD: Matching Game') );
 
-	// Retrieve the number of cards from localStorage
+	// Retrieve the number of cards from the mgo localStorage
 	let cardCount = Number(mgo.rows) * Number(mgo.columns);
 
 //*
@@ -72,13 +72,18 @@ function initializeHandlers() {
 
 // Setup a callback function to be triggered after the master Image has loaded
 	let masterImage = new Image();
+
 	masterImage.onload = function() {
-		if (testHarness) console.log('Loading master image');
-// Divide the master image into sub-images and create a map from them
+
+	if (testHarness) console.log('Loading master image');
+
+// Given a 'master' image, divides it into 'shards' and creates a map object to hold them
 		mgo.imageMap = apportionMasterImage(masterImage, mgo);
 
+// From the card map object, randomize which image map images each card pair refers too
 		mgo.cardMap = randomizeCardsToImages(mgo);
 
+// ??????????????????????????????
 		setFrontCardHTML(mgo);
 		populateHTMLClasses(mgo);
 
