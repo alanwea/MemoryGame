@@ -1141,7 +1141,7 @@ if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 			cardIdx.push(selectedCardObj.matchCard);
 			logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
 
-			setCardStates(true, false, mgo.selectedCard, mgo);
+			//setCardStates(true, false, mgo.selectedCard, mgo);
 //			mgo.previousCard = selectedCardObj.cardIdx;
 			updateTally(+1, mgo);
 //			clickState(mgo); // toggle event ready state
@@ -1166,17 +1166,17 @@ if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 	// 2nd card is already matched, and 1st card is not going to match
 	// blink green the 2nd card and its match card and continue in card 1 ready state
 
-	/*
+
 	const cardIdx = [];
 		cardIdx.push(selectedCardObj.cardIdx);
 		cardIdx.push(selectedCardObj.matchCard);
 		logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
 
-		setCardStates(true, false, mgo.previousCard, mgo);
+//		setCardStates(true, false, mgo.previousCard, mgo);
 
 		mgo.clickQueue.shift();
-		clickState(mgo);
-*/
+		clickState(mgo,1);
+
 		return;
 	}}],
 	//*/
@@ -1287,7 +1287,7 @@ setFace(selectedCardObj, false, mgo);
 //				frontHtmlCard.removeAttribute('hidden');
 					highlightBorder(cardSelector, colorClass, true, mgo);
 
-					blinkBorder(cardNumber, colorClass, 10, 200, mgo);
+					blinkBorder(cardSelector, colorClass, 5, 200, mgo);
 				}
 
 //				cardIdx.forEach(function(currentValue, index, arrObj ) {
