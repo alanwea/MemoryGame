@@ -47,7 +47,7 @@ function initializeGame(rows, columns) {
 
 		let clickState = 2; // first or second click
 
-		let testMode = false;  // indicates test mode
+		let testMode = true;  // indicates test mode
 
 		let pauseState = false;
 

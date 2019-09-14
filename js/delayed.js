@@ -462,7 +462,7 @@ function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
 				blinkCount = blinkCount - 1;
 
 				// when animation count has run out or an external animation break has been signaled
-				console.log('blinkicount= ' + blinkCount);
+//				console.log('blinkicount= ' + blinkCount);
 
 				if (blinkCount < 1 /* || mgo.animationBreak */) {
 					targetElement.classList.remove(CSSSelector);
@@ -992,7 +992,8 @@ let logicMap = new Map([
 				cardIdx.push(selectedCardObj.matchCard);
 				logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
 
-				setCardStates(true, false, mgo.selectedCard, mgo);
+				//setCardStates(true, false, mgo.selectedCard, mgo);
+				clickState(mgo, 0);
 
 				return;
 			}
@@ -1266,7 +1267,22 @@ setFace(selectedCardObj, false, mgo);
 		return;
 		}
 	}],
+	['3101', {logic: (selectedCardObj, mgo) => {
+		console.log('3101 ----------> state 0, click, state 1, click on already matched');
 
+		const cardIdx = [];
+		cardIdx.push(selectedCardObj.cardIdx);
+		cardIdx.push(selectedCardObj.matchCard);
+		logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
+
+		setFace(selectedCardObj, false, mgo);
+
+			mgo.clickQueue.shift(); // the double-click card
+			clickState(mgo, 1);
+
+		return;
+		}
+	}],
 	//*
 	['blink', { // Utility: blink border each card in the cardIdx array
 		logic:(colorClass, cardIdx, mgo) => {
