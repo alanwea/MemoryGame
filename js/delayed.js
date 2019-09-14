@@ -921,7 +921,9 @@ let logicMap = new Map([
 	['1000', {logic: (selectedCardObj, mgo) => {
 		if (testHarness) {console.log('1000 -------------------------------> first click');}
 
-		toggleFace(selectedCardObj, mgo);
+//		toggleFace(selectedCardObj, mgo);
+		setFace(selectedCardObj, true, mgo);
+
 		clickState(mgo,1);
 /*
 //		mgo.clickQueue.shift();
@@ -982,14 +984,14 @@ let logicMap = new Map([
 	//* Card already matched
 	['1100', {logic: (selectedCardObj, mgo) => {
 		console.log('1100 already matched');
-/*
+
 				const cardIdx = [];
 				cardIdx.push(selectedCardObj.cardIdx);
 				cardIdx.push(selectedCardObj.matchCard);
 				logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
 
 				setCardStates(true, false, mgo.selectedCard, mgo);
-*/
+
 				return;
 			}
 	}],
@@ -1141,10 +1143,10 @@ if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 //			mgo.previousCard = selectedCardObj.cardIdx;
 			updateTally(+1, mgo);
 //			clickState(mgo); // toggle event ready state
-			mgo.clickQueue.pop(); // pop second card off of the queue
-			mgo.clickQueue.pop(); // pop second card off of the queue
-			clickState(mgo,1); // set back to a start state
-		updateTT(mgo);
+			mgo.clickQueue.shift(); // pop second card off of the queue
+			mgo.clickQueue.shift(); // pop second card off of the queue
+			clickState(mgo,0); // set back to a start state
+//		updateTT(mgo);
 //*/
 			return;
 	//			}
