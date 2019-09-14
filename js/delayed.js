@@ -3,12 +3,13 @@
 //*
 const testHarness = false;
 
+// debug testPatterns: number = card, P = pause, 999 = sentinel
 //const testPattern = ['1','P','2','999']; // unmatched
 //const testPattern = ['1','P','1','999']; double click on same card
 const testPattern = ['1','P','2','P','2','999']; // unmatched, double click on second card
 //const testPattern = ['1','P','2','P','1','999']; // unmatched, double click on first card
 
-
+// generator function to hold state of the test pattern
 function* testClick(testPattern) {
 	let index = 0;
 	let oldIndex = 0;
@@ -35,8 +36,10 @@ function* testClick(testPattern) {
 	}
 } // end of generator
 
+// variable to hold the generator object
 var genClick = testClick(testPattern);
 
+// guaranteed sleep for debugging - too CPU intensive for production, download from web
 function sleep(ms) {
 var start = Date.now(), now = start;
 
@@ -44,12 +47,6 @@ var start = Date.now(), now = start;
 		now = Date.now();
 	}
 }
-
-/* test routine to replace pause
-function sleep(milliseconds) {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
-//*/
 
 /* Continue to initialize the game after the initial view has been displayed.
 A sound context is setup to support game related event feedback.
