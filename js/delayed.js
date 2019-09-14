@@ -291,31 +291,35 @@ function cardsContainerHandler(mgo) {
 // looks in Q to find if current click is same as previous click
 let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard));
 // if true then current click same as a previous click.
-	if (isDoubleClick) {
-		console.log('Current card is duplicate of previous card');
+//	if (isDoubleClick) {
+//		console.log('Current card is duplicate of previous card');
 //		- Q has one entry, state is 1 -> turn card face down, clear Q array, state = 0
-	if (mgo.clickQueue.length === 1) {
+//	if (mgo.clickQueue.length === 1) {
 //		setFace(selectedCardObj, false, mgo);
 //		mgo.clickQueue.shift();
 //		mgo.clickState = 0; // the double-click card
-	}
-	if (mgo.clickQueue.length === 2) {
+//	}
+//		mgo.clickState = 2;
+
+//		let firstCardDouble = (mgo.clickQueue[0] === cardIdx) ? true : false;  // the first card has been clicked twice
+//		let secondCardDouble = (mgo.clickQueue[1] === cardIdx) ? true : false;// the second card has been clicked twice
+
+
 		//		setFace(selectedCardObj, false, mgo);
-		mgo.clickQueue.shift();
-		mgo.clickState = 2; // the double-click card
-	}
-} else { // neither card 1 or 2 were chosen.
-	if (mgo.clickQueue.length === 2) {
+//		mgo.clickQueue.shift();
+
+//} else { // neither card 1 or 2 were chosen.
+//	if (mgo.clickQueue.length === 2) {
 //		let thirdClick = (mgo.clickQueue.includes(mgo.selectedCard));
 //		if (thirdClick) {  // Turn new card faceup, no duplication, turn 2nd card face down
 //			setFace(selectedCardObj, true, mgo);
-			let oldSecondCard = getCardObj(mgo.clickQueue[0], mgo);
-			setFace(oldSecondCard, false, mgo);
-			mgo.clickQueue.shift();  // remove the 2nd card from clickQueue
-			mgo.clickState = 2;
+//			let oldSecondCard = getCardObj(mgo.clickQueue[0], mgo);
+//			setFace(oldSecondCard, false, mgo);
+//			mgo.clickQueue.shift();  // remove the 2nd card from clickQueue
+//			mgo.clickState = 2;
 //		}
-	}
-}
+//	}
+//}
 //		- Q has two entries, state is 2 -> new card = Q[0] which was second card clicked
 //					- turn new card face down, remove it's corrresponding entry from Q, state = 1
 //									- Q has just first card from before, and is in state 1 waiting for a second card
@@ -918,7 +922,7 @@ let logicMap = new Map([
 		if (testHarness) {console.log('1000 -------------------------------> first click');}
 
 		toggleFace(selectedCardObj, mgo);
-//		clickState(mgo,2);
+		clickState(mgo,1);
 /*
 //		mgo.clickQueue.shift();
 */
@@ -927,12 +931,38 @@ let logicMap = new Map([
 
 // First click
 		['1001', {logic: (selectedCardObj, mgo) => {  //
-			console.log('1001 unknown ????????????????????');
-/*
+			console.log('1001');
+
+//			if (mgo.clickQueue.length < 3 ) {console.log('Err Err Err Err Err ????????????????????????????');}
+
+			let selectedCardIdx = getCardIdx(selectedCardObj, mgo);
+
+			if (selectedCardIdx === mgo.clickQueue[2]) { // first card, then second card, then first card selected
+				setFace(selectedCardObj, false, mgo);
+//				let secondCardObj = getCardObj()
+				setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
+				mgo.clickQueue.shift(); // the double-click card
+				mgo.clickQueue.shift(); // the double-click card
+				mgo.clickQueue.shift(); // the double-click card
+				clickState(mgo, 0);
+
+			}
+
+			if (selectedCardIdx === mgo.clickQueue[1]) { // first card, then second card, then second card
+				setFace(selectedCardObj, false, mgo);
+//				setFace(getCardObj(mgo.clickQueue[1]), false, mgo);
+				mgo.clickQueue.shift(); // the double-click card
+				mgo.clickQueue.shift(); // the double-click card
+//				mgo.clickQueue.shift(); // the double-click card
+				clickState(mgo, 0);
+
+			}
+
+			/*
 			toggleFace(selectedCardObj, mgo);
 			setCardStates(true, false, mgo.selectedCard, mgo);
 */
-		mgo.clickQueue.shift();
+//		mgo.clickQueue.shift();
 			return;
 		}}],
 
@@ -1005,14 +1035,16 @@ let logicMap = new Map([
 //		setFace(selectedCardObj, false, mgo);
 
 //		mgo.clickQueue.shift(); // remove unmatched card from Q
+/*
 if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 	clickState(mgo, 1); // state for first card face up
 	mgo.clickQueue.shift(); // the double-click card
 } else {
-	clickState(mgo,2); // state for waiting for first card
+	clickState(mgo,0); // state for waiting for first card
 }
+//*/
 
-//		clickState(mgo, 2);
+		clickState(mgo, 2);
 
 		return;
 
@@ -1023,13 +1055,34 @@ if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 	//	let showFace = selectedCardObj.faceUp ? false : true;
 	if (testHarness) {console.log('2001 -------------------------------------> double click same card');}
 
-		setFace(selectedCardObj, false, mgo);
+//		setFace(selectedCardObj, false, mgo);
 		updateTally(+1, mgo);
 // double click on second card - card face is now down and tally updated
 // need to adjust state and queue
 // how to know if second card or first card?  should be in the clickQueue
 
 		let newCardIdx = getCardIdx(selectedCardObj, mgo);
+
+		if(mgo.clickQueue.length === 3) { // card 1, card 2, card 1 - turn all over, cler array, reset state
+			setFace(selectedCardObj, false, mgo); // turn the second card down
+			let otherCardObj = getCardObj(mgo.clickQueue[1], mgo);
+			setFace(otherCardObj, false, mgo); // turn the second card down
+			mgo.clickQueue.shift();
+			mgo.clickQueue.shift();
+			mgo.clickQueue.shift();
+			clickState(mgo,0);
+			return;
+		}
+
+		if (mgo.clickQueue.length === 2) { // card 1, card 2, card 1 - turn all over, cler array, reset state
+			if (mgo.clickQueue[0] === mgo.clickQueue[1]) { // double click on first card
+				setFace(selectedCardObj, false, mgo);
+				clickState(mgo,0);
+				mgo.clickQueue.shift();
+				mgo.clickQueue.shift(); // the double-click card
+				}
+		}
+/*
 		if (mgo.clickQueue[0] === mgo.clickQueue[1]) {
 			clickState(mgo,0);
 			mgo.clickQueue.shift();
@@ -1044,6 +1097,7 @@ if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 				}
 			}
 		}
+//*/
 		// if newCardIdx = Q[0] then
 
 /*		if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
@@ -1149,6 +1203,62 @@ if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 			cardIdx.push(selectedCardObj.matchCard);
 			logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
 */
+		return;
+		}
+	}],
+
+	['3000', {logic: (selectedCardObj, mgo) => {
+		console.log('3000 -------------------------------------> third click');
+		setFace(selectedCardObj, true, mgo);
+
+		setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
+		mgo.clickQueue.shift(); // the double-click card
+		mgo.clickQueue.shift(); // the double-click card
+		mgo.clickQueue.unshift(getCardIdx(selectedCardObj, mgo));
+		updateTally(+1, mgo);
+		clickState(mgo, 2);
+		/*
+setFace(selectedCardObj, false, mgo);
+//				let secondCardObj = getCardObj()
+				setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
+				mgo.clickQueue.shift(); // the double-click card
+//*/
+
+		return;
+		}
+	}],
+
+	['3001', {logic: (selectedCardObj, mgo) => {
+		console.log('3001 -------------------------------------> third click on second card - double');
+		setFace(selectedCardObj, false, mgo);
+
+		if (mgo.clickQueue[0] === mgo.clickQueue[1]) {
+			mgo.clickQueue.shift(); // the double-click card
+			mgo.clickQueue.shift(); // the double-click card
+			clickState(mgo, 1);
+		}
+
+		if (mgo.clickQueue[0] === mgo.clickQueue[2]) {
+			setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
+//			setFace(selectedCardObj, false, mgo);
+			mgo.clickQueue.shift(); // the double-click card
+			mgo.clickQueue.shift(); // the double-click card
+			mgo.clickQueue.shift(); // the double-click card
+			clickState(mgo, 0);
+		}
+
+		//		setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
+//		mgo.clickQueue.shift(); // the double-click card
+//		mgo.clickQueue.shift(); // the double-click card
+//		mgo.clickQueue.unshift(getCardIdx(selectedCardObj, mgo));
+//		updateTally(+1, mgo);
+		/*
+setFace(selectedCardObj, false, mgo);
+//				let secondCardObj = getCardObj()
+				setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
+				mgo.clickQueue.shift(); // the double-click card
+//*/
+
 		return;
 		}
 	}],
