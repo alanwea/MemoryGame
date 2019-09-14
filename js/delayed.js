@@ -1338,11 +1338,9 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 			}
 		}],
 	//*/
-
-
 		['allMatched', {logic:(mgo) => {
 			console.log('All Matched');
-//*
+
 			updateTally(+1, mgo);
 
 			let cardIdxAllMatched = [];
@@ -1352,10 +1350,8 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 			logicMap.get('blink')['logic']('blinking-green', cardIdxAllMatched ,mgo);
 
 			clearInterval(mgo.gameTimerId);
-			setCardStates(true, false, mgo.selectedCard, mgo);
 
-			blinkBorder("reset", "reset-blink-red", 10, 200, "(() => {console.log('test')})()", mgo);
-//*/
+			mgo.clickQueue = [];
 			return;
 			}
 		}],
