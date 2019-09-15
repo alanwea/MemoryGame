@@ -13,7 +13,7 @@ const testHarness = true;
 //const testPattern = ['1','P','1','999']; double click on same card
 //const testPattern = ['1','P','2','P','2','999']; // unmatched, double click on second card
 //const testPattern = ['1','P','2','P','1','999']; // unmatched, double click on first card
-const testPattern = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','999']; // Test mode MUST be on for this to work: click Udacity U, then click a card. Otherwise, just card 1 and 16 will turn faceup. Tests state when all cards are matched.
+const testPattern = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','999']; // Test mode MUST be on for this to work: click Udacity U, then click a card. Otherwise, only two just cards will turn faceup. Tests state when all cards are matched.
 
 // Generator stores current position in the testPattern, yields next position on each call
 function* testClick(testPattern) {
@@ -536,15 +536,15 @@ console.log('in resetButtonHandler----------------------------');
 
 // THIS ISNT USED ANYMORE
 //  Sets state to receive the next card event
-function setCardStates(card1, card2, cardSelected, mgo) {
+//function setCardStates(card1, card2, cardSelected, mgo) {
 
 //	mgo.firstCard = card1;
 //	mgo.secondCard = card2;
 //	mgo.previousCard = cardSelected;
 //	mgo.previousFace = mgo.cardMap.get(cardSelected).faceUp;
 
-	return;
-}
+//	return;
+//}
 
 // if card face is up make it down, and vice versa
 function toggleFace(selectedCardObj, mgo) {
