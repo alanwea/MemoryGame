@@ -1,13 +1,17 @@
 'use strict';
 
-//*
+//* Remove one slash to comment out to the next slash,slash,asterisk,slash
+
+// Test mode is set from web page, by clicking the Udacity 'U'.  Various messages will be logged to the debug console and the cards will be generated in matching pairs, that is, 1 matches 2, 3 matches 4, ...
+
+// Test harness used to automate card clicks for testing.  To create debug patterns use: number = card, P = pause, 999 = sentinel.
 const testHarness = false;
 
-// debug testPatterns: number = card, P = pause, 999 = sentinel
-//const testPattern = ['1','P','2','999']; // unmatched
+//const testPattern = ['1','2','999']; // unmatched, in testMode will match
 //const testPattern = ['1','P','1','999']; double click on same card
-const testPattern = ['1','P','2','P','2','999']; // unmatched, double click on second card
+//const testPattern = ['1','P','2','P','2','999']; // unmatched, double click on second card
 //const testPattern = ['1','P','2','P','1','999']; // unmatched, double click on first card
+const testPattern = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','999']; // must turn on testMode for this to work properly to simulate all cards matched
 
 // generator function to hold state of the test pattern
 function* testClick(testPattern) {
@@ -47,6 +51,7 @@ var start = Date.now(), now = start;
 		now = Date.now();
 	}
 }
+//*/
 
 /* Continue to initialize the game after the initial view has been displayed.
 A sound context is setup to support game related event feedback.
@@ -201,7 +206,10 @@ function removeHighlight(highlightClass) {
 // Consumes clicks and dispatches to handlers
 function cardsContainerHandler(mgo) {
 
+	// TODO: is this needed now????
 	let selectedCardClass = 'card card0 back';
+
+	// TODO: is this needed now???  Handled just below
 	event.stopPropagation();
 
 	if (testHarness) {
@@ -213,7 +221,7 @@ function cardsContainerHandler(mgo) {
 		selectedCardClass = event.target.classList.value;
 	}
 
-// if the card container has been clicked, but not a card, just return.
+// If the card container has been clicked, but not a card, just return.
 	if ( selectedCardClass === 'cards-container') { return};
 
 	// Verify that a card has been clicked
@@ -222,7 +230,8 @@ function cardsContainerHandler(mgo) {
 	// Could be more robust here, but wanted to see how assert worked
 	console.assert(isCard, isCard,'Could not find card class');
 
-	// Beginning of game setup
+	// Beginning of game setup, called once when game loads
+	// TODO: should not be called when restarting an old game
 	if (mgo.initialCard) {
 		InitCardHandler(mgo);
 	}
@@ -364,9 +373,11 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard));
 // If on second click, the match card for the current card is equal, then the cards will match after being handled
 //	let willMatch = (selectedCardObj.matchCard === mgo.previousCard)
 //		&& mgo.clickState === 2 ? true : false;
-	let willMatch = (selectedCardObj.matchCard === mgo.clickQueue[1])
-		&& mgo.clickState === 2 ? true : false;
-
+	let willMatch = ((selectedCardObj.matchCard === mgo.clickQueue[1])
+		&& (mgo.clickState === 2 || mgo.clickState === 3)) ? true : false;
+console.log(
+`${selectedCardObj.matchCard} : ${mgo.clickQueue[1]} : ${mgo.clickState} : ${willMatch}`
+);
 // Create a dispatch key
 	let logicKey =
 	(mgo.clickState) +
@@ -487,11 +498,12 @@ function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
 }
 
 
-
+/*
 const doSomething = async () => {
 	await sleep(2000);
 	console.log('return from sleep');
 }
+//*/
 
 // Handles reset button when clicked
 // Reset button has been clicked
@@ -528,6 +540,7 @@ console.log('in resetButtonHandler----------------------------');
 	// TODO need to stop timer and reset
 }
 
+// THIS ISNT USED ANYMORE
 //  Sets state to receive the next card event
 function setCardStates(card1, card2, cardSelected, mgo) {
 
@@ -555,7 +568,7 @@ function setFace(cardObj, faceUp, mgo) {
 	mgo.cardMap.set(cardIdx, cardObj);  // Update the cardObj with new face
 
 	if (mgo.testMode) {
-		if (testHarness) {console.log('setFace: old TESTMODE is turned on #######################');}
+		if (testHarness) {console.log('setFace: test mode and test harness are enabled #######################');}
 
 		// update card image in RT from the image array
 		if (cardObj.faceUp) {
@@ -1267,6 +1280,46 @@ setFace(selectedCardObj, false, mgo);
 		return;
 		}
 	}],
+
+	['3010', {logic: (selectedCardObj, mgo) => {
+
+		console.log('3010 ------------------------> third click match');
+
+/*
+		if (mgo.clickQueue[0] === mgo.clickQueue[1]) {
+			mgo.clickQueue.shift(); // the double-click card
+			mgo.clickQueue.shift(); // the double-click card
+			clickState(mgo, 1);
+		}
+//*/
+
+/*
+		if (mgo.clickQueue[0] === mgo.clickQueue[2]) {
+			setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
+			mgo.clickQueue.shift(); // the double-click card
+			mgo.clickQueue.shift(); // the double-click card
+			mgo.clickQueue.shift(); // the double-click card
+			clickState(mgo, 0);
+		}
+//*/
+
+//		setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
+//		mgo.clickQueue.shift(); // the double-click card
+//		mgo.clickQueue.shift(); // the double-click card
+//		mgo.clickQueue.unshift(getCardIdx(selectedCardObj, mgo));
+//		updateTally(+1, mgo);
+
+/*
+	setFace(selectedCardObj, false, mgo);
+	let secondCardObj = getCardObj()
+	setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
+	mgo.clickQueue.shift(); // the double-click card
+//*/
+
+		return;
+		}
+	}],
+
 	['3101', {logic: (selectedCardObj, mgo) => {
 		console.log('3101 ----------> state 0, click, state 1, click on already matched');
 
