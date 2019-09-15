@@ -97,16 +97,15 @@ REMEMBER TO INITIALIZE VALUES IN BODY OF ROUTINE OR THEY WON'T SHOW UP IN OBJECT
 		return s;
 	}(htmlTemplate, cardBackImage, rows * columns ));
 
-	document.getElementsByClassName('cards-container')[0].innerHTML = generatedHTML;
+//	document.getElementsByClassName('cards-container')[0].innerHTML = generatedHTML;
+// Does a bulk insert into the HTML of all the cards that were generated from the template
+retrieveFirstClassValue('cards-container').innerHTML = generatedHTML;
 
 		mgo.gameType = 'new';
 		mgo.rows = rows;
 		mgo.columns = columns;
 		mgo.tally = 0;
 		mgo.initialCard = true;  // used to do pre-init in the card click handler
-//		mgo.firstCard = false; //
-//		mgo.previousCard = '0'; // keeps track of the last card clicked
-//		mgo.previousFace = false;
 		mgo.selectedCard = '0';  // contains the current card clicked
 		mgo.gameTimerId = 0;
 		mgo.gameTimer = 0;
@@ -122,11 +121,10 @@ REMEMBER TO INITIALIZE VALUES IN BODY OF ROUTINE OR THEY WON'T SHOW UP IN OBJECT
 		mgo.pauseState = false;  // used to terminate a pause early
 
 		if (rows * columns % 2 != 0) {  // Is cardCount even?
-			console.log('cardCount is not even, terminiate');
 			cleanUpandExit('cardCount is not even, terminiate');
 		};
 
-		dashboardUpdateAll();
+		dashboardUpdateAll(); /* initialize stars, moves, reset and timer to initial values */
 
 		// Store the start state of the new game in localStorage
 		localStorage.setItem('FEWD: Matching Game', JSON.stringify(mgo));
@@ -140,11 +138,12 @@ function dashboardUpdateAll() {
 		document.getElementsByClassName('current-timer')[0].innerHTML = "00:00";
 }
 
-// Given a class name, sets the innerHTML to value
+// Given a class name for a dashboard element, sets the innerHTML to desired value
 function dashboardSet(dashboardClass, value) {
 
+// example of try..catch to show that I know about it
 try {
-		// Clears out the DIV then sets a new value
+
 		let dashboardElement = retrieveFirstClassValue(dashboardClass);
 		dashboardElement.innerHTML = ' ';
 		dashboardElement.innerHTML = value;
@@ -167,23 +166,13 @@ function retrieveFirstClassValue(className) {
 		}
 }
 
-/* HTML5 localStorage check - this is a less robust alternative to storageAvailable()
-function availableLocalStorage() {
-	try {
-		return 'localStorage' in window && window['localStorage'] != null;
-	}
-	catch(e) {
-		return false;
-	}
-}
-//*/
-
-function cleanUpandExit() {
-//	console.log("In the clean up and exit routine");
+// TODO:  minimal.  Used only if an error in this file
+function cleanUpandExit(arg) {
+	console.log(arg);
 }
 
 /* Check if localStorage is available and ready for use.
- Borrows in toto (except for "let"s) from https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+ Borrowed from (except for "let"s) from https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
 */
  function isStorageAvailable(type) {
 	try {
