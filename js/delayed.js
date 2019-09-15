@@ -160,13 +160,13 @@ function populateHTMLClasses(mgo) {
 	return;
 }
 
-// short hand to get the card object from the index
+// Convenience to retrieve the card object that corresponds to a given card index
 function getCardObj(cardIdx, mgo) {
 	let cardObj = mgo.cardMap.get(cardIdx);
 	return cardObj;
 }
 
-// short hand to get the card index from the card object
+// Convenience to retrieve the card index given a card object
 function getCardIdx(cardObj, mgo) {
 	let cardIdx = cardObj.cardIdx;
 	return cardIdx;
