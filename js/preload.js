@@ -9,17 +9,18 @@ const darkStar = "&#x02605";
 const whiteStar = "&#x02606";
 const semicircleArrow = "&#x21bb";
 
+// A template literal used to define HTML that will be injected for each card image element during initial page load.  The arrow syntax is used to defer resolution of the parameters until used below at runtime.  Change the literal here to change the injected HTML.
+
+// TODO add tabindex=0 for accessibility
+// Template definition for front and back of card.  Backimage is used in both here, the front will be filled in with actual value in the delayed.js code as part of the performance experiement with a base64 embedded image.
 function initializeGame(rows, columns) {
 
-// A template literal used to define HTML that will be injected for each card image element.  The arrow syntax is used to defer resolution of the parameters until used below at runtime.  Change the literal here to change the injected HTML.
-
-// TODO (future):  add tabindex=0 for accessibility
-// Template definition for front and back of card.  Backimage is used in both here, the front will be filled in with actual value in the delayed routine as part of the performance experiement with a base64 embedded image.
 	var htmlTemplate = (cardNumber, backImage) => `<img class='card card${cardNumber} back' data-match='00'  src='${backImage}' alt='Card ${cardNumber}'>
 	<img hidden class='card card${cardNumber} front' data-match='00' src='${backImage}' alt='Card ${cardNumber}'>`;
 
-// Memory Game Object(mgo) where the state of the game is stored.  Note: some pundits say map should be used instead, I chose an Object for experience, as I use a map elsewhere.
-// REMEMBER TO INITIALIZE VALUES IN BODY OF ROUTINE OR THEY WON'T SHOW UP IN OBJECT
+/* TODO need to fix this create function and then fill values model, or add a note why I am doing it this way.
+Memory Game Object(mgo) where the state of the game is stored.  Note: some pundits say map should be used instead, I chose an Object for experience, as I use a map elsewhere.
+REMEMBER TO INITIALIZE VALUES IN BODY OF ROUTINE OR THEY WON'T SHOW UP IN OBJECT */
 	var mgo = function() {
 		let tally = 0;
 		let gameType = "";
@@ -35,8 +36,6 @@ function initializeGame(rows, columns) {
 
 		let selectedCard = '0';
 		let initialCard = true;
-//		let previousCard = '0';
-//		let previousFace = false;
 		let gameTimer = 0;
 		let gameTimerId = 0;
 		let soundAlert = 0;
@@ -45,14 +44,11 @@ function initializeGame(rows, columns) {
 
 		let cardHandlerFunction = '';
 
-		let clickState = 2; // first or second click
+		let clickState = 2; // TODO set to 0 instead????
 
-		let testMode = true;  // indicates test mode
+		let testMode = true;  // used to indicate test mode when Udacity logo is clicked
 
 		let pauseState = false;
-
-//		let animationBreak = false;
-//		let animationOn = false;
 
 	return {
 		}
