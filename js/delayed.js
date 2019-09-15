@@ -11,9 +11,9 @@ const testHarness = true;
 
 //const testPattern = ['1','2','999']; // unmatched, in testMode will match
 //const testPattern = ['1','P','1','999']; double click on same card
-const testPattern = ['1','P','2','P','2','999']; // unmatched, double click on second card
+//const testPattern = ['1','P','2','P','2','999']; // unmatched, double click on second card
 //const testPattern = ['1','P','2','P','1','999']; // unmatched, double click on first card
-//const testPattern = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','999']; // Test mode must be on for this to work. Tests state when all cards are matched
+const testPattern = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','999']; // Test mode MUST be on for this to work: click Udacity U, then click a card. Otherwise, just card 1 and 16 will turn faceup. Tests state when all cards are matched.
 
 // Generator stores current position in the testPattern, yields next position on each call
 function* testClick(testPattern) {
@@ -74,22 +74,23 @@ function initializeHandlers() {
 // DO THIS ONLY WHEN ITS A NEW GAME, OTHERWISE THE MASTER IMAGE THUMBNAILS WILL COME FROM THE mgo
 		if (testHarness || testMode) console.log('NEW GAME INITIALIZING');
 
-// Setup a callback function to be triggered after the master Image has loaded
+/* masterImage might hold a large image that takes a while to load. This is the primary reason that the preload code is run during web page initialization. Setup a callback function to be triggered after the master Image has loaded
+*/
 	let masterImage = new Image();
 
 	masterImage.onload = function() {
 
-	if (testHarness) console.log('Loading master image');
+	if (mgo.testMode) console.log('Loading master image');
 
-// Given a 'master' image, divides it into 'shards' and creates a map object to hold them
+/* Given the 'master' image, divides it into pieces ('shards') and creates a map object to hold them.  This is done so that a single large image can be apportioned into images for the card fronts
+*/
 		mgo.imageMap = apportionMasterImage(masterImage, mgo);
 
-// From the card map object, randomize which image map images each card pair refers too
+// Using a map that holds cards, randomly connect card pairs to corresponding shards
 		mgo.cardMap = randomizeCardsToImages(mgo);
 
-// ??????????????????????????????
 		setFrontCardHTML(mgo);
-		populateHTMLClasses(mgo);
+		if (mgo.testMode) { populateHTMLClasses(mgo)} // Experimental, populate custom data in HTML
 
 // Attach the reset event handler
 	let resetButton = retrieveFirstClassValue('reset');
@@ -142,6 +143,7 @@ function InitCardHandler(mgo) {
 
 	} // end of inital card processing
 
+// TODO TEST CODE: this tests the use of custom data attributes created on card elements
 function populateHTMLClasses(mgo) {
 	// retrieve all card elements
 	let cards = document.querySelectorAll('.card');
