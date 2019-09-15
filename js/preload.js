@@ -133,7 +133,7 @@ retrieveFirstClassValue('cards-container').innerHTML = generatedHTML;
 // Set all dashboard elements to initial values
 function dashboardUpdateAll() {
 		dashboardSet('stars', whiteStar + whiteStar + whiteStar);
-		dashboardSet('tally', 0);
+		dashboardSet('tally-count', 0);
 		dashboardSet('reset', semicircleArrow);
 		document.getElementsByClassName('current-timer')[0].innerHTML = "00:00";
 }
@@ -149,9 +149,8 @@ try {
 		dashboardElement.innerHTML = value;
 	}
 	catch(err) {
-		cleanUpandExit("Unable to find the '" + dashboardClass + "' class", err);
+		cleanUpandExit("??? Unable to find the '" + dashboardClass + "' class", err);
 	}
-
 }
 
 // Given a className, that potentially returns multiple elements, returns just the first.

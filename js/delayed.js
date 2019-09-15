@@ -66,13 +66,13 @@ function initializeHandlers() {
 	// Retrieve game state from global object created in local storage during preload
 	let mgo = JSON.parse( localStorage.getItem('FEWD: Matching Game') );
 
-	// Retrieve the number of cards from the mgo localStorage
+	// Retrieve the number of cards
 	let cardCount = Number(mgo.rows) * Number(mgo.columns);
 
-//*
+// TODO: intention is to store away game state if game is terminiated early, and then be able to resume game later by loading from local storage during preload.  There is some partial implementation but it is not complete.  For now, mgo.gameType will always be 'new'
 	if (mgo.gameType === 'new') {
 // DO THIS ONLY WHEN ITS A NEW GAME, OTHERWISE THE MASTER IMAGE THUMBNAILS WILL COME FROM THE mgo
-		if (testHarness) console.log('NEW GAME INITIALIZING');
+		if (testHarness || testMode) console.log('NEW GAME INITIALIZING');
 
 // Setup a callback function to be triggered after the master Image has loaded
 	let masterImage = new Image();
@@ -119,7 +119,7 @@ function initializeHandlers() {
 		masterImage.src = getMasterFrontImage();
 //		return;
 	};
-//*/
+
 //	return; // Important to prevent double call
 
 };  // end of initialize handlers
