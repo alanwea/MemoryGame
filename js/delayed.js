@@ -534,18 +534,6 @@ console.log('in resetButtonHandler----------------------------');
 	// TODO need to stop timer and reset
 }
 
-// THIS ISNT USED ANYMORE
-//  Sets state to receive the next card event
-//function setCardStates(card1, card2, cardSelected, mgo) {
-
-//	mgo.firstCard = card1;
-//	mgo.secondCard = card2;
-//	mgo.previousCard = cardSelected;
-//	mgo.previousFace = mgo.cardMap.get(cardSelected).faceUp;
-
-//	return;
-//}
-
 // if card face is up make it down, and vice versa
 function toggleFace(selectedCardObj, mgo) {
 	let showFace = selectedCardObj.faceUp ? false : true;
@@ -969,22 +957,14 @@ let logicMap = new Map([
 
 			}
 
-			/*
-			toggleFace(selectedCardObj, mgo);
-			setCardStates(true, false, mgo.selectedCard, mgo);
-*/
-//		mgo.clickQueue.shift();
 			return;
-		}}],
+}}],
 
-	['1010', {logic: (selectedCardObj, mgo) => {  //
+['1010', {logic: (selectedCardObj, mgo) => {  //
 		console.log('1010 unknown ?????????????? ');
-/*
-		toggleFace(selectedCardObj, mgo);
-		setCardStates(false, true, mgo.selectedCard, mgo);
-*/
+
 		return;
-	}}],
+}}],
 	/*  Future expansion
 	['1011', {logic: (function() { return() => { console.log('Inside 1011 function');};})()}],
 
@@ -999,7 +979,6 @@ let logicMap = new Map([
 				cardIdx.push(selectedCardObj.matchCard);
 				logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
 
-				//setCardStates(true, false, mgo.selectedCard, mgo);
 				clickState(mgo, 0);
 
 				return;
@@ -1043,7 +1022,6 @@ let logicMap = new Map([
 //		console.log('jump to blink');
 //		logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
 //		console.log('return from blink');
-//		setCardStates(false, false, mgo.selectedCard, mgo);
 //		setFace(selectedCardObj, false, mgo);
 
 //		mgo.clickQueue.shift(); // remove unmatched card from Q
@@ -1149,7 +1127,6 @@ if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 			cardIdx.push(selectedCardObj.matchCard);
 			logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
 
-			//setCardStates(true, false, mgo.selectedCard, mgo);
 //			mgo.previousCard = selectedCardObj.cardIdx;
 			updateTally(+1, mgo);
 //			clickState(mgo); // toggle event ready state
@@ -1180,7 +1157,6 @@ if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 		cardIdx.push(selectedCardObj.matchCard);
 		logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
 
-//		setCardStates(true, false, mgo.previousCard, mgo);
 
 		mgo.clickQueue.shift();
 		clickState(mgo,1);
@@ -1199,11 +1175,6 @@ if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 
 	['2101', {logic: (selectedCardObj, mgo) => {  //
 		console.log('2101 ------------------------------------> unknown');
-/*
-		setFace(selectedCardObj, false, mgo);
-		updateTally(+1, mgo);
-		setCardStates(true, false, '0', mgo);
-*/
 		return;
 		}}],
 
