@@ -1,16 +1,12 @@
 /*
 TODO - update with correct information
 
-https://www.google.com/search?q=html+green+felt+background+free&rlz=1C1CHBD_enUS834US834&tbm=isch&source=iu&ictx=1&fir=BU5-3hJuehUS6M%253A%252C3axJgjSVWcf4fM%252C_&vet=1&usg=AI4_-kTguqiS-Hpq-lcsTmOQBrZtUbXO9Q&sa=X&ved=2ahUKEwj_u-2v2qXhAhUwZN8KHaSzBRIQ9QEwAHoECAkQBA#imgrc=BU5-3hJuehUS6M:
-
-Used with index.html from Project 2, Matching Game, in the Udacity Front-end Web Developer nanodegree program.
+This is source of the green felt background used on the gameboard.  Used under academic 'fair use.'
 
 Test/Development environments
 
-VS Code version 1.21.0, Shell 1.7.9, Renderer 58.0.3029.110 (64-bit)
-Firefox Quantum 58.0.2 (64-bit), devtools and browser.
+VS Code version 1.38.1
 Google Chrome 65.0.3325.146 (64-bit), devtools and browser.
-Paint.net 4.21.6589.7045
 
 Methodology
 
@@ -22,13 +18,8 @@ Note to reviewer:
 
 Primary references:
 
-https://zellwk.com/blog/viewport-based-typography/
-http://mathforum.org/library/drmath/view/60433.html
-https://www.madebymike.com.au/writing/precise-control-responsive-typography/
-https://css-tricks.com/snippets/css/a-guide-to-flexbox/
-https://css-tricks.com/snippets/css/complete-guide-grid/
-
-greenfelt.jpg:  https://www.onlinefabricstore.net/bright-green-felt-fabric-.htm
+	Used under academic 'fair use.'
+		greenfelt.jpg:  https://www.onlinefabricstore.net/bright-green-felt-fabric-.htm
 
 */
 
@@ -46,12 +37,11 @@ html {
 
 }
 
-/* Accessibility for image tab index border */
-/* not accessible */
+/* TODO: Accessibility */
+
 a:focus {outline: none;}
 button:focus {outline: none;}
 
-/*  Accessible but not working yet */
 .no-focus-outline a:focus,
 .no-focus-outline button:focus {
   outline: none;
@@ -67,7 +57,6 @@ Insure that box-sizing value, set in the html selector, is inherited by all chil
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: inherit;
    box-sizing: inherit;
-
 }
 
 .layout {
@@ -79,14 +68,7 @@ Insure that box-sizing value, set in the html selector, is inherited by all chil
 	grid-column-gap: 1%;
 	grid-row-gap: 0%;
 	grid-template-columns: 100%;
-	/*
-	grid-template-rows: auto auto 200px 50px 1fr 1fr;
-	grid-column-gap: 2%;
-	grid-row-gap: 2%;
-	grid-template-columns: 100px;
-	*/
 	justify-content: stretch;
-
 }
 
 .header-container {
@@ -97,8 +79,6 @@ Insure that box-sizing value, set in the html selector, is inherited by all chil
 	width: 100%;
 	text-align: center;
 	margin: 0 0 0 0;
-/*	min-height: 200px; */
-
 }
 
 .logo-container {
@@ -107,7 +87,7 @@ Insure that box-sizing value, set in the html selector, is inherited by all chil
 }
 
 /*
-Retrieved from https://worldvectorlogo.com/logo/udacity
+Retrieved from https://worldvectorlogo.com/logo/udacity, used under academic 'fair use.'
 */
 .udacity-logo {
 	width: 100%;
@@ -116,21 +96,21 @@ Retrieved from https://worldvectorlogo.com/logo/udacity
 	align-self: stretch;
 }
 
+/* Highlight Udacity logo when clicked to enter test mode */
 .test-mode {
 	background-color: #EA3556;
 }
 
+/* right padding same as logo width so name centers */
 .game-name-container {
 	width: 100%;
-	padding: 0 var(--logo-width) 0 0;  /* right padding same as logo width so name centers */
-
+	padding: 0 var(--logo-width) 0 0;
 }
 
 .game-name {
 
-/*	color: # */
-/*	font-family: "", ?????, sans-serif; */
-/* At a screen size of <--low-screen> the font is <--low-px>, at a screen size of <--high-screen> the font size is <--high-px>
+/* TODO: I pulled this from someones elses work.  I have have the reference somwhere, just need to add it here.
+At a screen size of <--low-screen> the font is <--low-px>, at a screen size of <--high-screen> the font size is <--high-px>
 */
 	--low-px: 45;
 	--high-px: 75;
@@ -144,19 +124,10 @@ Retrieved from https://worldvectorlogo.com/logo/udacity
 
 	font-size: var(--tempfs);
 	line-height: calc(var(--tempfs) + .5vw);
-
-/*
-	font-size: 4em;
-	width: auto;
-	height: auto;
-	text-align: center;
-	display: inline-block;
-*/
 }
 
 /**/
 .dashboard-container {
-
 		display: flex;
 		flex-direction: row;
 		width: 100%;
@@ -165,22 +136,20 @@ Retrieved from https://worldvectorlogo.com/logo/udacity
 		text-align: center;
 		align-items: center;
 
+/* NEEDED?????? */
 		--low-px: 30;
 		--high-px: 45;
 		--low-screen: 450;
 		--high-screen: 1300;
-
 	}
 
 .stars {
-
 	width: 15%;
 
 	--low-px: 30;
 	--high-px: 45;
 	--low-screen: 450;
 	--high-screen: 1300;
-
 }
 
 /* Need read-only field to count games played */
@@ -188,20 +157,17 @@ Retrieved from https://worldvectorlogo.com/logo/udacity
 	width: 5%;
 }
 
-/* */
+/* Reset button */
 .reset {
 
 	width: 15%;
-
 }
 
+/* Running timer */
 .current-timer {
 
-/*	line-height: 2vh; */
 	text-align: center;
-/*	background: green; */
 	width: 20%;
-
 }
 
 /* Variables defined in individual element styles */
@@ -216,17 +182,7 @@ Retrieved from https://worldvectorlogo.com/logo/udacity
 
 }
 
-/*
-.alerts-border {
-	border: 3px #ff0000 solid;
-	animation: blinkBorder 1s;
-	animation-iteration-count:  5;
-}
-*/
-
-/* @keyframes blinkBorder { 50% { border-color: yellow; } } */
-
-/* Don't display the two div's that contain the location of the card images */
+/* Supress display of the two div's that contain the locations of the card images */
 .card-front-image, .card-back-image {
 	display: none;
 }
@@ -251,7 +207,6 @@ Retrieved from https://worldvectorlogo.com/logo/udacity
 	min-width: 305px;
 	min-height: 329px;
 
-/*	height: 100%; */
 	width: 100%;
 	object-fit: contain;
 
@@ -265,24 +220,30 @@ Retrieved from https://worldvectorlogo.com/logo/udacity
 
 }
 
+/*  NEEDED?????
 .nomatch {
 	outline: 6px dashed yellow;
 	box-shadow: 0 0 0 8px;
 	animation: 1s animateBorder infinite;
 }
+*/
 
+/* NEEDED ???????
 .card-front-images {
 }
 
 .card-back-images {
 }
+*/
 
+/* NEEDED ??????
 @keyframes animateBorder {
 	to {
 		outline-color: #EA3556;
 		box-shadow: 0 0 0 6px yellow;
 	}
 }
+*/
 
 /*  ================================== */
 
@@ -303,38 +264,29 @@ Retrieved from https://worldvectorlogo.com/logo/udacity
 	}
 }
 
-@keyframes blinking-green {
-	0%{
-		background-color: #000000;
-/*		color: #ddd; */
-	}
-	100%{
-		background-color:  #00f05c;
-/*		color: #fff; */
-	}
-}
-
 /* */
 .blinking-red {
 	font-size: 1.3em;
 	font-weight: bold;
 	padding: 10px;
 	border: 20px solid red;
-/*	animation: blinking-red .3s linear 3;
-	animation-name: blinking-red;
-	animation-duration: .4s;
-	animation-timing-function: linear;
-	animation-delay: 0;
-	animation-iteration-count: 3;
-*/
 }
 
+@keyframes blinking-green {
+	0%{
+		background-color: #000000;
+	}
+	100%{
+		background-color:  #00f05c;
+	}
+}
+
+/* TODO border same as background color ?????? */
 .blinking-green {
 	font-size: 1.3em;
 	font-weight: bold;
 	padding: 10px;
 	border: 20px solid #7FFF00;
-/*	animation: blinking-green .3s 3; */
 }
 
 .reset-blink-red {
@@ -342,8 +294,4 @@ Retrieved from https://worldvectorlogo.com/logo/udacity
 	font-weight: bold;
 	padding: 10px;
 	animation: blinking-red .5s infinite;
-/*	animation-name: blinking-red;
-	animation-duration: .5s;
-	animation-iteration-count: infinite;
-*/
 }
