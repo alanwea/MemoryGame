@@ -1,17 +1,19 @@
 'use strict';
 
-//* Remove one slash to comment out to the next slash,slash,asterisk,slash
+// IMPORTANT: See notes in styles.css for usage notes and message to reviewer
 
 // Test mode is set from web page, by clicking the Udacity 'U'.  Various messages will be logged to the debug console and the cards will be generated in matching pairs, that is, 1 matches 2, 3 matches 4, ...
 
-// Test harness used to automate card clicks for testing.  To create debug patterns use: number = card, P = pause, 999 = sentinel.
+/*
+Test harness is used to automate card clicks for testing.  To create debug patterns use: number = card, P = pause, 999 = sentinel. To enter the test harness, set the testHarness constant to true, click on any card on the web page.  Note that 'test mode,' entered by clicking Udacity logo, and 'test harness,' enabled here, are two different debug modes that may optionally be run concurrently.
+*/
 const testHarness = false;
 
 //const testPattern = ['1','2','999']; // unmatched, in testMode will match
 //const testPattern = ['1','P','1','999']; double click on same card
 //const testPattern = ['1','P','2','P','2','999']; // unmatched, double click on second card
 //const testPattern = ['1','P','2','P','1','999']; // unmatched, double click on first card
-const testPattern = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','999']; // must turn on testMode for this to work properly to simulate all cards matched
+const testPattern = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','999']; // Udacity logo must be clicked to enter testMode in order for this to work
 
 // generator function to hold state of the test pattern
 function* testClick(testPattern) {
