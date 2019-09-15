@@ -2,50 +2,46 @@
 
 // IMPORTANT: See notes in styles.css for usage notes and message to reviewer
 
-// Test mode is set from web page, by clicking the Udacity 'U'.  Various messages will be logged to the debug console and the cards will be generated in matching pairs, that is, 1 matches 2, 3 matches 4, ...
-
 /*
+Test mode is set from web page by clicking the Udacity 'U'.
+
 Test harness is used to automate card clicks for testing.  To create debug patterns use: number = card, P = pause, 999 = sentinel. To enter the test harness, set the testHarness constant to true, click on any card on the web page.  Note that 'test mode,' entered by clicking Udacity logo, and 'test harness,' enabled here, are two different debug modes that may optionally be run concurrently.
 */
-const testHarness = false;
+const testHarness = true;
 
 //const testPattern = ['1','2','999']; // unmatched, in testMode will match
 //const testPattern = ['1','P','1','999']; double click on same card
-//const testPattern = ['1','P','2','P','2','999']; // unmatched, double click on second card
+const testPattern = ['1','P','2','P','2','999']; // unmatched, double click on second card
 //const testPattern = ['1','P','2','P','1','999']; // unmatched, double click on first card
-const testPattern = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','999']; // Udacity logo must be clicked to enter testMode in order for this to work
+//const testPattern = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','999']; // Test mode must be on for this to work. Tests state when all cards are matched
 
-// generator function to hold state of the test pattern
+// Generator stores current position in the testPattern, yields next position on each call
 function* testClick(testPattern) {
 	let index = 0;
-	let oldIndex = 0;
-
-	console.log('Generator: state(' + testPattern[index] + ') in ' + testPattern);
 
 	while (true) {
+
 		if (testPattern[index] === '999') {
-			console.log('Generator: END OF TEST PASS ' + testPattern[index]);
+			console.log('END OF TEST PASS FOR ' + testPattern);
 			return testPattern[index];
 		}
 
 		if (testPattern[index] === 'P') {
 			console.log('<<<<<<<<<<<<<<< Test Harness Pause >>>>>>>>>>>>>>>>');
 			sleep(2000);
-			index = index + 1; // advance index to skip over Pause
+			index++; // advance index to skip over Pause
 		}
 
 		console.log('Generator: yields ' + testPattern[index]);
-		oldIndex = index;
-		index = index + 1;
 
-		yield testPattern[oldIndex];
+		yield testPattern[index++];
 	}
-} // end of generator
+}
 
-// variable to hold the generator object
+// Variable that holds the testClick generator object
 var genClick = testClick(testPattern);
 
-// guaranteed sleep for debugging - too CPU intensive for production, download from web
+// guaranteed sleep for testHarness 'P': too CPU intensive for production, downloaded from the web
 function sleep(ms) {
 var start = Date.now(), now = start;
 
@@ -55,18 +51,19 @@ var start = Date.now(), now = start;
 }
 //*/
 
-/* Continue to initialize the game after the initial view has been displayed.
+/*
+Continue to initialize the game after the initial view has been displayed.
 A sound context is setup to support game related event feedback.
 An image object is created to hold the image used for the card faces.
 A callback is created that executes after the face image has been loaded.  This is where a load delay might occur, especially if images are retrieved from a server.
 
-When the callback triggers, the face image has been loaded and is then apportioned into sub-images that will be used for card faces.  For instance, with 16 cards the loaded image is divided into 8 subimages that are then assigned
-After the remaining initialization is complete, event handlers are set up to handle card clicks bubbled to the card container, the dashboard handler and the reset button handler.
+When the callback triggers, the face image has been loaded and is then apportioned into sub-images that will be used for card faces.  For instance, with 16 cards the loaded image is divided into 8 subimages that are then assigned. After the remaining initialization is complete, event handlers are set up to handle card clicks bubbled to the card container, the dashboard handler, and the reset button handler.
 */
 
-//  Called from HTML: load Memory Game Object(mgo), initialize variables, install event handlers.
+//  Called from HTML
 function initializeHandlers() {
 
+	// Retrieve game state from global object created in local storage during preload
 	let mgo = JSON.parse( localStorage.getItem('FEWD: Matching Game') );
 
 	// Retrieve the number of cards from the mgo localStorage
