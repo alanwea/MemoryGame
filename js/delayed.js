@@ -7,7 +7,7 @@ Test mode is set from web page by clicking the Udacity 'U'.
 
 Test harness is used to automate card clicks for testing.  To create debug patterns use: number = card, P = pause, 999 = sentinel. To enter the test harness, set the testHarness constant to true, click on any card on the web page.  Note that 'test mode,' entered by clicking Udacity logo, and 'test harness,' enabled here, are two different debug modes that may optionally be run concurrently.
 */
-const testHarness = false;
+const testHarness = true;
 
 //const testPattern = ['1','2','999']; // unmatched, in testMode will match
 //const testPattern = ['1','P','1','999']; double click on same card
@@ -1363,11 +1363,11 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 
 			let cardIdxAllMatched = [];
 
-			for (let i=1; i <= mgo.rows * mgo.columns; i++) { 	cardIdxAllMatched.push(parseInt(i)); }
+			for (let i=1; i <= mgo.rows * mgo.columns; i++) { cardIdxAllMatched.push(parseInt(i)); }
 
 			logicMap.get('blink')['logic']('blinking-green', cardIdxAllMatched ,mgo);
 
-			clearInterval(mgo.gameTimerId);
+//			clearInterval(mgo.gameTimerId);
 
 			mgo.clickQueue = [];
 			return;
@@ -1394,7 +1394,7 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 		['endOfGame', {
 		logic:(selectedCardObj, mgo) => {
 			console.log('End of game');
-/*
+
 	// clear testmode
 	//
 			clearInterval(mgo.gameTimerId);
@@ -1402,10 +1402,11 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 			// remove the card handler so only the reset button can be pushed.
 			// TODO problem here
 			let handlerElement = document.getElementsByClassName('cards-container')[0];
+// TODO Check if this works - doesn't seem to: in Chrome debugger, click on cards-contrainer element, look at event listener in right pane
 			handlerElement.removeEventListener('click', mgo.cardHandlerFunction, true);
 
 			blinkBorder('a.reset', 'reset-blink-red', 10, 200, mgo);
-*/
+
 		return;
 		}
 		}]

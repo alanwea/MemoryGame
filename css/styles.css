@@ -278,9 +278,10 @@ At a screen size of <--low-screen> the font is <--low-px>, at a screen size of <
 	border: 20px solid #7FFF00;
 }
 
+/* TODO Used for reset button background.  This also needs to be coordinated with padding of button */
 .reset-blink-red {
-	font-size: 1.3em;
+/*	font-size: 1.3em;
 	font-weight: bold;
-	padding: 10px;
+*/	padding: 10px;
 	animation: blinking-red .5s infinite;
 }
