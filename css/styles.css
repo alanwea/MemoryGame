@@ -125,7 +125,6 @@ At a screen size of <--low-screen> the font is <--low-px>, at a screen size of <
 		text-align: center;
 		align-items: center;
 
-/* NEEDED?????? */
 		--low-px: 30;
 		--high-px: 45;
 		--low-screen: 450;
@@ -135,10 +134,12 @@ At a screen size of <--low-screen> the font is <--low-px>, at a screen size of <
 .stars {
 	width: 15%;
 
+/* TODO - stars don't need this, remove on next commit
 	--low-px: 30;
 	--high-px: 45;
-	--low-screen: 450;
+	--low-screen: 750;
 	--high-screen: 1300;
+	*/
 }
 
 /* Need read-only field to count games played */
