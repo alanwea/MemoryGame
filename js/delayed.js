@@ -126,12 +126,13 @@ function initializeHandlers() {
 function InitCardHandler(mgo) {
 
 	mgo.initialCard = false;  // toggle so that click event handler only calls this once
-	mgo.previousCard = '0';  // TODO need this???
-	mgo.previousFace = false; // TODO need this ???
-	mgo.clickState = 0; // TODO should be set in preload, it's 2 now, should be 0 there start state;
+//	mgo.previousCard = '0';  // TODO need this???
+//	mgo.previousFace = false; // TODO need this ???
+//	mgo.clickState = 0; // TODO should be set in preload, it's 2 now, should be 0 there start state;
 
 // Start game timer and store it in the game object
 		const seconds = timerCount(true);
+// Store the game timer
 		mgo.gameTimerId = setInterval(showGameTimer, 1000, seconds );
 // Create and store an audio context for use in accessibility and for general feedback.
 		mgo.soundAlert = new AudioContext();
