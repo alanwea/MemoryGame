@@ -1099,44 +1099,20 @@ setFace(selectedCardObj, false, mgo);
 
 	['3010', {logic: (selectedCardObj, mgo) => {
 
-		console.log('3010 ------------------------> third click match');
-
-/*
-		if (mgo.clickQueue[0] === mgo.clickQueue[1]) {
-			mgo.clickQueue.shift(); // the double-click card
-			mgo.clickQueue.shift(); // the double-click card
-			clickState(mgo, 1);
-		}
-//*/
-
-/*
-		if (mgo.clickQueue[0] === mgo.clickQueue[2]) {
-			setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
-			mgo.clickQueue.shift(); // the double-click card
-			mgo.clickQueue.shift(); // the double-click card
-			mgo.clickQueue.shift(); // the double-click card
-			clickState(mgo, 0);
-		}
-//*/
+		if (testmode) {console.log('3010 ------------------------> third click match');}
 
 		setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
 		setFace(getCardObj(mgo.clickQueue[0], mgo), true, mgo);
 		mgo.clickQueue.shift();
 		mgo.clickQueue.shift();
 		mgo.clickQueue.unshift(getCardIdx(selectedCardObj, mgo));
-		updateTally(+1, mgo);
+//		updateTally(+1, mgo);
+		// clickQueue has been adjusted to look like a two card match, so call the 2 card match routine
 		logicMap.get('2010')['logic'](selectedCardObj ,mgo);
 		return;
 
-//*
-//	setFace(selectedCardObj, false, mgo);
-//	let secondCardObj = getCardObj()
-//	setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
-//	mgo.clickQueue.shift(); // the double-click card
-//*/
-	}
-}],
-
+		}
+	}],
 
 	['3101', {logic: (selectedCardObj, mgo) => {
 		console.log('3101 ----------> state 0, click, state 1, click on already matched');
