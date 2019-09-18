@@ -1232,7 +1232,7 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 		['allMatched', {logic:(mgo) => {
 			console.log('All Matched  !!!!!!!!!!!!!!!!!');
 
-			updateTally(+1, mgo);
+//			updateTally(+1, mgo);
 
 			let cardIdxAllMatched = [];
 
