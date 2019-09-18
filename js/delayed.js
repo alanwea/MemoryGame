@@ -100,7 +100,6 @@ function initializeHandlers() {
 		let testModeButton = retrieveFirstClassValue('udacity-logo');
 		testModeButton.addEventListener("click", function(){testModeHandler(mgo)});
 
-// TODO:  WHAT IS IS THIS FOR???? Attaching anonymous function to event through a variable to facilitate removing it later when all cards have matched
 		if (mgo.testMode) {console.log('Attaching card click event handler')};
 
 		mgo.cardHandlerFunction = function() {cardsContainerHandler(mgo)};
@@ -126,11 +125,10 @@ function initializeHandlers() {
 // TODO must set stars in here too, when a reset happens
 function InitCardHandler(mgo) {
 
-		mgo.initialCard = false;  // toggle so that click event handler only calls this once
-		mgo.previousCard = '0';  // TODO need this???
-		mgo.previousFace = false; // TODO need this ???
-		mgo.clickState = 0; // TODO should be set in preload, it's 2 now, should be 0 there start state;
-// TODO heres the star code but why was it commented out before?		dashboardSet('stars', whiteStar + whiteStar + whiteStar);
+	mgo.initialCard = false;  // toggle so that click event handler only calls this once
+	mgo.previousCard = '0';  // TODO need this???
+	mgo.previousFace = false; // TODO need this ???
+	mgo.clickState = 0; // TODO should be set in preload, it's 2 now, should be 0 there start state;
 
 // Start game timer and store it in the game object
 		const seconds = timerCount(true);
