@@ -1267,22 +1267,6 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 
 	]); // end of Map
 
-/*
-function highlightBorder(cardNumber, colorClass, true, mgo) {
-
-				backHtmlCard = document.querySelector('.back.card' + cardNumber);
-				frontHtmlCard = document.querySelector('.front.card' + cardNumber);
-				backHtmlCard.setAttribute('hidden', '');
-				frontHtmlCard.removeAttribute('hidden');
-
-	if (blinkState === 1) {
-		targetElement.classList.add(CSSSelector);
-	}	else {
-		targetElement.classList.remove(CSSSelector);
-	}
-}
-//*/
-
 // EXPERIMENTAL: in test mode, attaches match card index to HTML element custom data attribute
 function populateHTMLClasses(mgo) {
 	// retrieve all card elements
