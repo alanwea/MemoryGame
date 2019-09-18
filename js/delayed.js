@@ -1168,43 +1168,11 @@ logicMap.get('2010')['logic'](selectedCardObj ,mgo);
 				for (let i=0; i<cardIdx.length; i++) {
 					let cardSelector = '.card' + cardIdx[i] + blinkFace;
 
-//				backHtmlCard = document.querySelector('.back.card' + cardIdx[i]);
-//				frontHtmlCard = document.querySelector('.front.card' + cardIdx[i]);
-//				backHtmlCard.setAttribute('hidden', '');
-//				frontHtmlCard.removeAttribute('hidden');
 					highlightBorder(cardSelector, colorClass, true, mgo);
 
 					blinkBorder(cardSelector, colorClass, 5, 200, mgo);
 				}
 
-//				cardIdx.forEach(function(currentValue, index, arrObj ) {
-//					let cardNumber = '.card' + index + blinkFace;
-
-//				});
-//					let cardNumber = '.card' + cardIdx[0][0] + blinkFace;
-
-//					function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, postProcessing, mgo)
-
-//					blinkBorder(cardNumber, colorClass, 10, 200, cardIdx[1], mgo);
-//				});
-
-/*											"(() => { " +
-												"setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);" +
-												"})()",
-*/
-
-
-/*
-blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
-						"(() => { " +
-							 "setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);" +
-							 "})()",
-						mgo);
-				*/
-//							});
-
-
-//				mgo.animationOn = false;  // using another method
 				return;
 			}
 		}],
@@ -1220,7 +1188,7 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 
 			logicMap.get('blink')['logic']('blinking-green', cardIdxAllMatched ,mgo);
 
-//			clearInterval(mgo.gameTimerId);
+			clearInterval(mgo.gameTimerId);
 
 			mgo.clickQueue = [];
 			return;
