@@ -312,15 +312,6 @@ function setFrontCardHTML(mgo) {
 	}
 }
 
-// Trigger the front image load to start everything going
-//		masterImage.src = getMasterFrontImage();
-//		return;
-//	};
-
-//	return; // Important to prevent double call
-
-//};  // end of initialize handlers
-
 // Blink the border by classname
 // Good example of animation callbacks at https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
 // toggleFace - turns faceup to face down
