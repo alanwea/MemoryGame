@@ -1231,14 +1231,6 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 			['match', {
 				logic:(selectedCardObj, mgo) => {
 					console.log('match ??????????????????????????????????????');
-/*
-				const cardIdx = [];
-				cardIdx.push(selectedCardObj.cardIdx);
-				cardIdx.push(selectedCardObj.matchCard);
-				logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
-				updateTT(mgo);
-				updateTally(+1, mgo);
-*/
 				return;
 			}
 			}],
