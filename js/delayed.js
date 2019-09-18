@@ -180,20 +180,7 @@ function removeHighlight(highlightClass) {
 	while (c.length) {
 		c[0].classlist.remove('blinking-red');
 	}
-//	[].forEach.call(c, function(el) {
-//		console.dir(el.classList);
-//		el.classlist.remove("blinking-red");
-//	});
-//		highlightCards.forEach(function (card) {
-//			card.classList.toggle('blinking-red');
-//		});
 
-//if (highlightCards.length > 0 ) {
-//		for (let iCard = highlightCards.length-1; iCard > 0; iCard-- ) {
-//			console.log(highlightCards[iCard].classList + ' i = ' + iCard);
-//			highlightCards[iCard].classList.remove('blinking-red');
-//		}
-//	}
 		return;
 }
 
@@ -252,121 +239,22 @@ function cardsContainerHandler(mgo) {
 
 // END OF DEBUG TEST CLICK
 
-// TODO: test here to see if this is a third click while processing still going on first two cards
-
-//	clickState(mgo);  // if 1 becomes 2, if 2 becomes 1
-
-//		let testCardObj = getCardObj('2', mgo);
-//		let testCardIdx = getCardIdx(testCardObj, mgo);
-
-//  Click on card 1, click on card 2, card 1 goes face down
-// First card and second card are face up and both ar in the Q.  Third
-// click is on the first card:  The Q is 2 long from previous 2 clicks
-// --> third click comes in and matches a click in the click queue
-// if card 1 then turn 1 and 2 face down, clear Q and reset to start state
-// if card 2 then turn card 2 down, leave 1 in queue, and reset to start state
-/*	if (mgo.clickQueue.includes(mgo.selectedCard)) {
-		console.log('found click in the clickQ array: ' + mgo.clickQueue);
-		if (mgo.clickQueue.length > 1) {
-			console.log('clickQueue is > 1: ' + mgo.clickQueue);
-		}
-	}
-//*/
-
-//	if (mgo.clickState === 2 && mgo.clickQueue[1] != mgo.selectedCard) {
-//			console.log('state is ' + mgo.clickState + ' Q=' + mgo.clickQueue);
-//	}
-
-//			setFace(getCardObj(secondCard, mgo), false, mgo);
-
 // Retrieve the card object associated with the current click, and its match card object
 	let selectedCardObj = mgo.cardMap.get(mgo.selectedCard);
 	let matchedCardObj = mgo.cardMap.get(selectedCardObj.matchCard);
-
-// The first card clicked and the last card from the previous pair match
-//	let isDoubleClick = ( (mgo.clickQueue[0] === mgo.clickQueue[1])
-//		&& mgo.clickState === 1) ? true : false;
-
-// The first card clicked and the second card clicked are the same
-//	 isDoubleClick = ( (mgo.clickQueue[0] === mgo.clickQueue[1])
-//		&& mgo.clickState === 2) ? true : false;
 
 // Increment the click state - start is 0, first click is 1, second click is 2
 	mgo.clickState = mgo.clickState + 1;
 // looks in Q to find if current click is same as previous click
 let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard));
-// if true then current click same as a previous click.
-//	if (isDoubleClick) {
-//		console.log('Current card is duplicate of previous card');
-//		- Q has one entry, state is 1 -> turn card face down, clear Q array, state = 0
-//	if (mgo.clickQueue.length === 1) {
-//		setFace(selectedCardObj, false, mgo);
-//		mgo.clickQueue.shift();
-//		mgo.clickState = 0; // the double-click card
-//	}
-//		mgo.clickState = 2;
-
-//		let firstCardDouble = (mgo.clickQueue[0] === cardIdx) ? true : false;  // the first card has been clicked twice
-//		let secondCardDouble = (mgo.clickQueue[1] === cardIdx) ? true : false;// the second card has been clicked twice
-
-
-		//		setFace(selectedCardObj, false, mgo);
-//		mgo.clickQueue.shift();
-
-//} else { // neither card 1 or 2 were chosen.
-//	if (mgo.clickQueue.length === 2) {
-//		let thirdClick = (mgo.clickQueue.includes(mgo.selectedCard));
-//		if (thirdClick) {  // Turn new card faceup, no duplication, turn 2nd card face down
-//			setFace(selectedCardObj, true, mgo);
-//			let oldSecondCard = getCardObj(mgo.clickQueue[0], mgo);
-//			setFace(oldSecondCard, false, mgo);
-//			mgo.clickQueue.shift();  // remove the 2nd card from clickQueue
-//			mgo.clickState = 2;
-//		}
-//	}
-//}
-//		- Q has two entries, state is 2 -> new card = Q[0] which was second card clicked
-//					- turn new card face down, remove it's corrresponding entry from Q, state = 1
-//									- Q has just first card from before, and is in state 1 waiting for a second card
-//		- Q has two entries Q[2,1], state is 2, new card = Q[1], the first card from before
-//					- if previous statement check for new card = Q[0] was false then it must be Q[1], the first card that is the duplicate
-//									- turn Q[0] face down, turn Q[1] facedown, clear Q[], set state to 0
-// if false then current click is not duplicate of previous 1 or 2 clicks
-/*
-		 Q[] + state 1 + card 1 + not duplicate + Q[1] -> 1000 state 2
-		 Q[1] + state 2 + card 1 + is duplicate + Q[1,1] -> 1001 state 1
-		 Q[1] + state 2 + card 2 + not duplicate + Q[2,1] -> 2000 state 1  unmatched
-		 Q[1,2] + state 1 + card 3 + not duplicate + Q[3,2,1] -> ????? state 1, remove 2 Q[3,1]
-
-*/
 
 // If current card and and match card are both faceup, then they have already matched
 	let isAlreadyMatched = (selectedCardObj.faceUp && matchedCardObj.faceUp) ? true : false;
-
-// adjust click Q
-// The current click is not in the clickQ, and this is state 2, so first and second cards
-// are faceup and this is a new click that has come in.  Need to turn 2nd card face down
-// and turn new card faceup
-//	if ((mgo.clickState === 1) && !(mgo.clickQueue.includes(mgo.selectedCard))) {
-// click state 2, first 2 clicks in Q, but now 3rd click is not in Q.  turn 2nd card facedown
-// turn new card faceup, adjust Q, contunue in state 2
-//		console.log('clickstate 2 , third click not in Q');
-		// turn card 2 facedown
-		// replace card two with new card
-//		mgo.clickQueue[0] = mgo.selectedCard;
-//	};
 
 //	if (mgo.clickState === 1) {
 		mgo.clickQueue.unshift(mgo.selectedCard);
 //	}
 
-//	if ( !isDoubleClick && mgo.clickState === 2) {
-//		mgo.clickQueue.unshift(mgo.selectedCard);  // add to the trailing state array
-//			mgo.clickQueue[0] = mgo.selectedCard;
-//	}
-// If on second click, the match card for the current card is equal, then the cards will match after being handled
-//	let willMatch = (selectedCardObj.matchCard === mgo.previousCard)
-//		&& mgo.clickState === 2 ? true : false;
 	let willMatch = ((selectedCardObj.matchCard === mgo.clickQueue[1])
 		&& (mgo.clickState === 2 || mgo.clickState === 3)) ? true : false;
 console.log(
@@ -380,14 +268,6 @@ console.log(
 	(isDoubleClick ? '1' : '0');
 
 		console.log(`BEFORE dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
-
-		//removeHighlight('blinking-red');
-//		[].forEach.call(document.querySelectorAll('blinking-red'), function (el) {
-//			el.classList.remove('blinking-red');
-//	});
-
-//	highlightBorder('blinking-red', 'blinking-red', false, mgo);
-//	highlightBorder('blinking-red', 'blinking-red', false, mgo);
 
 // Dispatch to the handler routine
 		logicMap.get(logicKey)['logic'](selectedCardObj, mgo);
