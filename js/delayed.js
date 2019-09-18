@@ -1125,6 +1125,8 @@ setFace(selectedCardObj, false, mgo);
 		mgo.clickQueue.shift();
 		mgo.clickQueue.unshift(getCardIdx(selectedCardObj, mgo));
 		updateTally(+1, mgo);
+		logicMap.get('2010')['logic'](selectedCardObj ,mgo);
+		return;
 
 //*
 //	setFace(selectedCardObj, false, mgo);
@@ -1132,11 +1134,9 @@ setFace(selectedCardObj, false, mgo);
 //	setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
 //	mgo.clickQueue.shift(); // the double-click card
 //*/
-logicMap.get('2010')['logic'](selectedCardObj ,mgo);
+	}
+}],
 
-		return;
-		}
-	}],
 
 	['3101', {logic: (selectedCardObj, mgo) => {
 		console.log('3101 ----------> state 0, click, state 1, click on already matched');
@@ -1179,6 +1179,7 @@ logicMap.get('2010')['logic'](selectedCardObj ,mgo);
 	//*/
 		['allMatched', {logic:(mgo) => {
 			if (testMode) console.log('All Matched  !!!!!!!!!!!!!!!!!');
+
 
 			let cardIdxAllMatched = [];
 
