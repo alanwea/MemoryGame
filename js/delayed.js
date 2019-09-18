@@ -139,26 +139,6 @@ function InitCardHandler(mgo) {
 
 } // end of inital card processing
 
-// EXPERIMENTAL: in test mode, attaches match card index to HTML element custom data attribute
-function populateHTMLClasses(mgo) {
-	// retrieve all card elements
-	let cards = document.querySelectorAll('.card');
-	// loop through them
-	for (let i=0; i< cards.length; i++) {
-	// get HTML element for the ith card
-		let cardHTML = cards[i];
-	// get the classlist
-		let cardClasslist = cardHTML.classList.value;
-	// look for the card index in the classlist
-		let cardIdx = cardClasslist.match(/(?<=card)\d+/)[0];
-	// Use the card index to retrieve the cooresponding mapped card object
-		let cardObj = mgo.cardMap.get((cardIdx));
-	// retrieve the card that matches the current card and set it into the 'data-match' attribute. Can be viewed by examining the card elements in the debugger
-		cardHTML.setAttribute('data-match', cardObj.matchCard);
-	}
-	return;
-}
-
 // Convenience to retrieve the card object that corresponds to a given card index
 function getCardObj(cardIdx, mgo) {
 	let cardObj = mgo.cardMap.get(cardIdx);
@@ -1302,6 +1282,26 @@ function highlightBorder(cardNumber, colorClass, true, mgo) {
 	}
 }
 //*/
+
+// EXPERIMENTAL: in test mode, attaches match card index to HTML element custom data attribute
+function populateHTMLClasses(mgo) {
+	// retrieve all card elements
+	let cards = document.querySelectorAll('.card');
+	// loop through them
+	for (let i=0; i< cards.length; i++) {
+	// get HTML element for the ith card
+		let cardHTML = cards[i];
+	// get the classlist
+		let cardClasslist = cardHTML.classList.value;
+	// look for the card index in the classlist
+		let cardIdx = cardClasslist.match(/(?<=card)\d+/)[0];
+	// Use the card index to retrieve the cooresponding mapped card object
+		let cardObj = mgo.cardMap.get((cardIdx));
+	// retrieve the card that matches the current card and set it into the 'data-match' attribute. Can be viewed by examining the card elements in the debugger
+		cardHTML.setAttribute('data-match', cardObj.matchCard);
+	}
+	return;
+}
 
 // Returns the base64 representation of the masterImage
 // Used under academic license from https://www.google.com/search?q=high+resolution+pictures+mosaic&rlz=1C1CHBD_enUS834US834&source=lnms&tbm=isch&sa=X&ved=0ahUKEwjZq9qo-6zgAhWRMX0KHZHzBdEQ_AUIDigB&biw=920&bih=483#imgrc=-NIsMd9cV19d4M:
