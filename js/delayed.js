@@ -1246,10 +1246,8 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 	//*
 		['endOfGame', {
 		logic:(selectedCardObj, mgo) => {
-			console.log('End of game');
+			if (testMode) {console.log('End of game');}
 
-	// clear testmode
-	//
 			clearInterval(mgo.gameTimerId);
 
 			// remove the card handler so only the reset button can be pushed.
@@ -1257,7 +1255,7 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 			let handlerElement = document.getElementsByClassName('cards-container')[0];
 // TODO Check if this works - doesn't seem to: in Chrome debugger, click on cards-contrainer element, look at event listener in right pane
 			handlerElement.removeEventListener('click', mgo.cardHandlerFunction, true);
-
+// TODO Starts blinking and then stops
 			blinkBorder('a.reset', 'reset-blink-red', 10, 200, mgo);
 
 		return;
