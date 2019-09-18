@@ -1178,9 +1178,7 @@ logicMap.get('2010')['logic'](selectedCardObj ,mgo);
 		}],
 	//*/
 		['allMatched', {logic:(mgo) => {
-			console.log('All Matched  !!!!!!!!!!!!!!!!!');
-
-//			updateTally(+1, mgo);
+			if (testMode) console.log('All Matched  !!!!!!!!!!!!!!!!!');
 
 			let cardIdxAllMatched = [];
 
