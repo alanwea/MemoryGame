@@ -255,9 +255,10 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard));
 		mgo.clickQueue.unshift(mgo.selectedCard);
 //	}
 
-	let willMatch = ((selectedCardObj.matchCard === mgo.clickQueue[1])
+	let willMatch = ((selectedCardObj.matchCard === mgo.clickQueue[2])
 		&& (mgo.clickState === 2 || mgo.clickState === 3)) ? true : false;
-console.log(
+
+		console.log(
 `${selectedCardObj.matchCard} : ${mgo.clickQueue[1]} : ${mgo.clickState} : ${willMatch}`
 );
 // Create a dispatch key
@@ -1148,18 +1149,20 @@ setFace(selectedCardObj, false, mgo);
 		}
 //*/
 
-//		setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
-//		mgo.clickQueue.shift(); // the double-click card
-//		mgo.clickQueue.shift(); // the double-click card
-//		mgo.clickQueue.unshift(getCardIdx(selectedCardObj, mgo));
-//		updateTally(+1, mgo);
+		setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
+		setFace(getCardObj(mgo.clickQueue[0], mgo), true, mgo);
+		mgo.clickQueue.shift();
+		mgo.clickQueue.shift();
+		mgo.clickQueue.unshift(getCardIdx(selectedCardObj, mgo));
+		updateTally(+1, mgo);
 
-/*
-	setFace(selectedCardObj, false, mgo);
-	let secondCardObj = getCardObj()
-	setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
-	mgo.clickQueue.shift(); // the double-click card
+//*
+//	setFace(selectedCardObj, false, mgo);
+//	let secondCardObj = getCardObj()
+//	setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
+//	mgo.clickQueue.shift(); // the double-click card
 //*/
+logicMap.get('2010')['logic'](selectedCardObj ,mgo);
 
 		return;
 		}
@@ -1237,7 +1240,7 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 		}],
 	//*/
 		['allMatched', {logic:(mgo) => {
-			console.log('All Matched');
+			console.log('All Matched  !!!!!!!!!!!!!!!!!');
 
 			updateTally(+1, mgo);
 
@@ -1257,7 +1260,7 @@ blinkBorder('.card' + index + blinkFace, colorClass, 10, 200,
 	//*
 			['match', {
 				logic:(selectedCardObj, mgo) => {
-					console.log('match');
+					console.log('match ??????????????????????????????????????');
 /*
 				const cardIdx = [];
 				cardIdx.push(selectedCardObj.cardIdx);
