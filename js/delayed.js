@@ -72,51 +72,51 @@ function initializeHandlers() {
 // TODO: intention is to store away game state if game is terminiated early, and then be able to resume game later by loading from local storage during preload.  There is some partial implementation but it is not complete.  For now, mgo.gameType will always be 'new'
 	if (mgo.gameType === 'new') {
 // DO THIS ONLY WHEN ITS A NEW GAME, OTHERWISE THE MASTER IMAGE THUMBNAILS WILL COME FROM THE mgo
-	if (testHarness || mgo.testMode) console.log('NEW GAME INITIALIZING');
+		if (testHarness || mgo.testMode) console.log('NEW GAME INITIALIZING');
 
 /* masterImage might hold a large image that takes a while to load. This is the primary reason that the preload code is run during web page initialization. Setup a callback function to be triggered after the master Image has loaded
 */
-	let masterImage = new Image();
+		let masterImage = new Image();
 
-	masterImage.onload = function() {
+		masterImage.onload = function() {
 
-	if (mgo.testMode) console.log('Loading master image');
+		if (mgo.testMode) console.log('Loading master image');
 
 /* Given the 'master' image, divides it into pieces ('shards') and creates a map object to hold them.  This is done so that a single large image can be apportioned into individual images for the card fronts.  Just doing it this way as a challenge and to learn canvas manipulation
 */
-	mgo.imageMap = apportionMasterImage(masterImage, mgo);
+		mgo.imageMap = apportionMasterImage(masterImage, mgo);
 
 // Using a map that holds cards, randomly connect card pairs to corresponding shards
-	mgo.cardMap = randomizeCardsToImages(mgo);
+		mgo.cardMap = randomizeCardsToImages(mgo);
 
-	setFrontCardHTML(mgo);
-	if (mgo.testMode) { populateHTMLClasses(mgo)} // Experimental, populate custom data in HTML
+		setFrontCardHTML(mgo);
+		if (mgo.testMode) { populateHTMLClasses(mgo)} // Experimental, populate custom data in HTML
 
 // Attach the reset event handler
-	let resetButton = retrieveFirstClassValue('reset');
-	resetButton.addEventListener("click", function(){resetButtonHandler(mgo)}, false);
+		let resetButton = retrieveFirstClassValue('reset');
+		resetButton.addEventListener("click", function(){resetButtonHandler(mgo)}, false);
 
 // Attach the test mode event handler that is embedded in the logo
-	let testModeButton = retrieveFirstClassValue('udacity-logo');
-	testModeButton.addEventListener("click", function(){testModeHandler(mgo)});
+		let testModeButton = retrieveFirstClassValue('udacity-logo');
+		testModeButton.addEventListener("click", function(){testModeHandler(mgo)});
 
 // TODO:  WHAT IS IS THIS FOR???? Attaching anonymous function to event through a variable to facilitate removing it later when all cards have matched
-	if (mgo.testMode) {console.log('Attaching card click event handler')};
+		if (mgo.testMode) {console.log('Attaching card click event handler')};
 
-	mgo.cardHandlerFunction = function() {cardsContainerHandler(mgo)};
-	let cardsContainer = retrieveFirstClassValue('cards-container');
+		mgo.cardHandlerFunction = function() {cardsContainerHandler(mgo)};
+		let cardsContainer = retrieveFirstClassValue('cards-container');
 
-	cardsContainer.addEventListener("click", mgo.cardHandlerFunction, true);
+		cardsContainer.addEventListener("click", mgo.cardHandlerFunction, true);
 
-	if (mgo.testMode) console.log('Finished loading master image');
+		if (mgo.testMode) console.log('Finished loading master image');
 
-	return;
+		return;
 	};
 
 	// Trigger to start front image load
-		masterImage.src = getMasterFrontImage();
-// TODO:  need this?		return;
-};  // TODO tabbing off here
+	masterImage.src = getMasterFrontImage();
+
+};
 
 // TODO	need this anymore???? return; // Important to prevent double call
 
