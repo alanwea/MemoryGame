@@ -255,7 +255,7 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard));
 		mgo.clickQueue.unshift(mgo.selectedCard);
 //	}
 
-	let willMatch = ((selectedCardObj.matchCard === mgo.clickQueue[2])
+	let willMatch = ((selectedCardObj.matchCard === mgo.clickQueue[mgo.clickQueue.length-1])
 		&& (mgo.clickState === 2 || mgo.clickState === 3)) ? true : false;
 
 		console.log(
