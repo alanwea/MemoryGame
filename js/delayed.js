@@ -7,7 +7,7 @@ Test mode is set from web page by clicking the Udacity 'U'.
 
 Test harness is used to automate card clicks for testing.  To create debug patterns use: number = card, P = pause, 999 = sentinel. To enter the test harness, set the testHarness constant to true, click on any card on the web page.  Note that 'test mode,' entered by clicking Udacity logo, and 'test harness,' enabled here, are two different debug modes that may optionally be run concurrently.
 */
-const testHarness = true;
+const testHarness = false;
 
 //const testPattern = ['1','2','999']; // unmatched, in testMode will match
 //const testPattern = ['1','P','1','999']; double click on same card
