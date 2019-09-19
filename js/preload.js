@@ -24,7 +24,7 @@ REMEMBER TO INITIALIZE VALUES IN BODY OF ROUTINE OR THEY WON'T SHOW UP IN OBJECT
 	var mgo = function() {
 		let tally = 0;
 		let gameType = "";
-		let gameDate = 0;
+//		let gameDate = 0;
 		let rows = 0;
 		let columns = 0;
 
@@ -46,9 +46,9 @@ REMEMBER TO INITIALIZE VALUES IN BODY OF ROUTINE OR THEY WON'T SHOW UP IN OBJECT
 
 		let clickState = 2; // TODO set to 0 instead????
 
-		let testMode = true;  // used to indicate test mode when Udacity logo is clicked
+		let testMode = false;  // used to indicate test mode when Udacity logo is clicked
 
-		let pauseState = false;
+//		let pauseState = false;
 
 	return {
 		}
@@ -114,11 +114,11 @@ retrieveFirstClassValue('cards-container').innerHTML = generatedHTML;
 		mgo.imageMap = new Map; // maps face card image shards
 		mgo.cardMap = new Map; // maps card objects
 		mgo.cardBackImage = cardBackImage;  // holds the URI reference to the card back image
-		mgo.clickQueue = [];
+		mgo.clickQueue = []; // // The clickQueue contains up to the last three selected cards.
 		mgo.cardHandlerFunction = '';
 		mgo.clickState = 0;	// initial state set in card click handler
 		mgo.testMode = false;
-		mgo.pauseState = false;  // used to terminate a pause early
+//		mgo.pauseState = false;  // used to terminate a pause early
 
 		if (rows * columns % 2 != 0) {  // Is cardCount even?
 			cleanUpandExit('cardCount is not even, terminiate');

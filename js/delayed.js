@@ -213,7 +213,6 @@ function cardsContainerHandler(mgo) {
 	mgo.clickState = mgo.clickState + 1;
 		if (mgo.clickState > 3) {throw 'Invalid click state'};
 
-// The clickQueue contains up to the last three selected cards.  If the card just clicked, matches a cards in the queue then this is a double click
 // If the current card its match card are faceup, then they have already matched
 let isAlreadyMatched = (selectedCardObj.faceUp && matchedCardObj.faceUp) ? true : false;
 
@@ -223,8 +222,8 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard) && !isAlreadyMatc
 // Add the new card to the front of the click queue
 		mgo.clickQueue.unshift(mgo.selectedCard);
 
-/* When in card face-up state 2 or 3, if the current selected card equals the last card in the queue, then they will match
- */
+		//		If the card just clicked, matches a cards in the queue then this is a double click
+// Two or three cards are faceup: if current match card equals the last card in the queue, they will match
 	let willMatch = ((selectedCardObj.matchCard === mgo.clickQueue[mgo.clickQueue.length-1])
 		&& (mgo.clickState === 2 || mgo.clickState === 3)) ? true : false;
 
@@ -239,7 +238,7 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard) && !isAlreadyMatc
 	(willMatch ? '1' : '0') +
 	(isDoubleClick ? '1' : '0');
 
-		if (mgo.testMode) {console.log(`BEFORE dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
+	if (mgo.testMode) {console.log(`BEFORE dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
 	}
 
 // Before indexing into the logic map, make sure the key is valid.  This would occur if a card container state was not anticipated during development.
