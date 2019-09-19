@@ -554,32 +554,6 @@ function updateAlt(firstCard, secondCard) {
 	return;
 }
 
-/* Guaranted delay of execution - used in animation
-// Derived from https://flaviocopes.com/javascript-sleep/
-// TODO:  NEED TO CHANGE THIS SO THAT IT CAN BE TERMINATED
-const pause = (milliseconds) => {
-		console.log('in pause(): milliseconds= ' + milliseconds);
-  return new Promise(resolve => setTimeout(resolve, milliseconds))
-}
-//*/
-
-/* Interruptible pause
-function pauseInterrupt(milliseconds, mgo) {
-	let seconds = milliseconds / 1000;
-	mgo.pauseState = true;
-	console.log("Start pause loop");
-
-	for (let i=0; i<seconds; i++) {
-		setTimeout(function(){console.log("in setInterval " + i);}, 5000);
-		if (!mgo.pauseState) {
-				console.log('break loop ' + mgo.pauseState);
-			break;
-		}  // If the pause is to stop then abort early
-	}
-	mgo.pauseState = false;
-}
-//*/
-
 // Takes a large 'master' image and uses canvas to break it into pieces for card fronts.
 function apportionMasterImage(imageSource, mgo) {
 
