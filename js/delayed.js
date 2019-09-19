@@ -214,10 +214,11 @@ function cardsContainerHandler(mgo) {
 		if (mgo.clickState > 3) {throw 'Invalid click state'};
 
 // The clickQueue contains up to the last three selected cards.  If the card just clicked, matches a cards in the queue then this is a double click
-let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard));
-
 // If the current card its match card are faceup, then they have already matched
-	let isAlreadyMatched = (selectedCardObj.faceUp && matchedCardObj.faceUp) ? true : false;
+let isAlreadyMatched = (selectedCardObj.faceUp && matchedCardObj.faceUp) ? true : false;
+
+// If the current card is not part of a matched pair then there has been a double click
+let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard) && !isAlreadyMatched);
 
 // Add the new card to the front of the click queue
 		mgo.clickQueue.unshift(mgo.selectedCard);
@@ -241,7 +242,7 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard));
 		if (mgo.testMode) {console.log(`BEFORE dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
 	}
 
-	// Before indexing into the logic map, make sure the key is valid.  This would occur if a card container state was not anticipated during development.
+// Before indexing into the logic map, make sure the key is valid.  This would occur if a card container state was not anticipated during development.
 //	For testing: logicKey = '9999';
 	if (!logicMap.has(logicKey)) {
 		throw ('Invalid logic map key: ' + logicKey);
@@ -249,9 +250,6 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard));
 
 // Dispatch to the handler routine
 		logicMap.get(logicKey)['logic'](selectedCardObj, mgo);
-
-// reset isdoubleclick, should be set on next iteration, but do it here to be consistent with console.log output that follows
-//	isDoubleClick = false;
 
 	if (mgo.testMode) {console.log(`AFTER dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
 	};
@@ -762,7 +760,7 @@ let logicMap = new Map([
 		}}],
 
 	['1000', {logic: (selectedCardObj, mgo) => {
-		if (testHarness) {console.log('1000 -------------------------------> first click');}
+		if (mgo.testMode) {console.log('1000 -------------------------------> first click');}
 
 //		toggleFace(selectedCardObj, mgo);
 		setFace(selectedCardObj, true, mgo);
@@ -816,7 +814,7 @@ let logicMap = new Map([
 	['1011', {logic: (function() { return() => { console.log('Inside 1011 function');};})()}],
 //*/
 
-	//* Card already matched
+	//* Click on cards that are already matched
 	['1100', {logic: (selectedCardObj, mgo) => {
 		console.log('1100 already matched');
 
@@ -826,6 +824,7 @@ let logicMap = new Map([
 				logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
 
 				clickState(mgo, 0);
+				mgo.clickQueue = [];
 
 				return;
 			}
@@ -855,6 +854,11 @@ let logicMap = new Map([
 
 		setFace(selectedCardObj, true, mgo);
 		updateTally(+1, mgo);
+		const cardIdx = [];
+		cardIdx.push(mgo.clickQueue[0]);
+		cardIdx.push(mgo.clickQueue[1]);
+		logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
+
 //		console.log('sleeping after setface');
 //		sleep(3000);
 //		setTimeout(function(){setFace(selectedCardObj, false, mgo);},3000);
@@ -1041,11 +1045,13 @@ if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 		setFace(selectedCardObj, true, mgo);
 
 		setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
-		mgo.clickQueue.shift(); // the double-click card
-		mgo.clickQueue.shift(); // the double-click card
+		mgo.clickQueue.shift();
+		mgo.clickQueue.shift();
 		mgo.clickQueue.unshift(getCardIdx(selectedCardObj, mgo));
-		updateTally(+1, mgo);
-		clickState(mgo, 2);
+//		updateTally(+1, mgo);
+//		clickState(mgo, 2);
+		// clickQueue has been adjusted to look like a two card match, so call the 2 card unmatched routine
+		logicMap.get('2000')['logic'](selectedCardObj ,mgo);
 
 		return;
 		}
@@ -1129,36 +1135,30 @@ if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 			}
 		}],
 	//*/
-		['allMatched', {logic:(mgo) => {
-			if (testMode) console.log('All Matched  !!!!!!!!!!!!!!!!!');
-
+	['allMatched', {logic:(mgo) => {
+		if (mgo.testMode) console.log('All cards are matched');
 
 			let cardIdxAllMatched = [];
-
+// Populate the array with all of the card indexes and pass it to the blink routine
 			for (let i=1; i <= mgo.rows * mgo.columns; i++) { cardIdxAllMatched.push(parseInt(i)); }
-
 			logicMap.get('blink')['logic']('blinking-green', cardIdxAllMatched ,mgo);
-
-			clearInterval(mgo.gameTimerId);
 
 			mgo.clickQueue = [];
 			return;
 			}
-		}],
+	}],
 
 	//*
-		['endOfGame', {
-		logic:(selectedCardObj, mgo) => {
-			if (testMode) {console.log('End of game');}
+	['endOfGame', { logic:(selectedCardObj, mgo) => {
+			if (mgo.testMode) {console.log('End of game');}
 
 			clearInterval(mgo.gameTimerId);
 
-			// remove the card handler so only the reset button can be pushed.
-			// TODO problem here
+// remove the card handler so only the reset button can be pushed.
 			let handlerElement = document.getElementsByClassName('cards-container')[0];
-// TODO Check if this works - doesn't seem to: in Chrome debugger, click on cards-contrainer element, look at event listener in right pane
 			handlerElement.removeEventListener('click', mgo.cardHandlerFunction, true);
-// TODO Starts blinking and then stops
+
+			// TODO Starts blinking and then stops
 			blinkBorder('a.reset', 'reset-blink-red', 10, 200, mgo);
 
 		return;
