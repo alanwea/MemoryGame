@@ -1170,10 +1170,17 @@ if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 
 		return;
 		}
-		}]
+	}]
 	//*/
+]); // end of Map
 
-	]); // end of Map
+let logicMapProxy = new Proxy(logicMap, {
+	get: { function (target) {
+					console.log('Undefined logic state ???????????????????????????????');
+					return target;
+				}
+	},
+});
 
 // EXPERIMENTAL: in test mode, attaches match card index to HTML element custom data attribute
 function populateHTMLClasses(mgo) {
