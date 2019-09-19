@@ -98,7 +98,8 @@ Retrieved from https://worldvectorlogo.com/logo/udacity, used under academic 'fa
 
 .game-name {
 
-/* TODO: I pulled this from someones elses work.  I have have the reference somwhere, just need to add it here.
+/*
+TODO: I pulled this from someones else's work.  I have  the reference somwhere, just need to add it here.
 At a screen size of <--low-screen> the font is <--low-px>, at a screen size of <--high-screen> the font size is <--high-px>
 */
 	--low-px: 45;
@@ -133,29 +134,20 @@ At a screen size of <--low-screen> the font is <--low-px>, at a screen size of <
 
 .stars {
 	width: 15%;
-
-/* TODO - stars don't need this, remove on next commit
-	--low-px: 30;
-	--high-px: 45;
-	--low-screen: 750;
-	--high-screen: 1300;
-	*/
 }
 
-/* Need read-only field to count games played */
+
 .tally-count {
 	width: 5%;
 }
 
 /* Reset button */
 .reset {
-
 	width: 15%;
 }
 
 /* Running timer */
 .current-timer {
-
 	text-align: center;
 	width: 20%;
 }
@@ -172,7 +164,7 @@ At a screen size of <--low-screen> the font is <--low-px>, at a screen size of <
 
 }
 
-/* Supress display of the two div's that contain the locations of the card images */
+/* Suppress display of the two div's that contain the locations of the card images */
 .card-front-image, .card-back-image {
 	display: none;
 }
@@ -207,54 +199,22 @@ At a screen size of <--low-screen> the font is <--low-px>, at a screen size of <
 	padding: 10px 0 10px 0;
 	position: relative;
 	background-size: cover;
-
 }
-
-/*  NEEDED?????
-.nomatch {
-	outline: 6px dashed yellow;
-	box-shadow: 0 0 0 8px;
-	animation: 1s animateBorder infinite;
-}
-*/
-
-/* NEEDED ???????
-.card-front-images {
-}
-
-.card-back-images {
-}
-*/
-
-/* NEEDED ??????
-@keyframes animateBorder {
-	to {
-		outline-color: #EA3556;
-		box-shadow: 0 0 0 6px yellow;
-	}
-}
-*/
-
-/*  ================================== */
 
 .blink {
 	animation: blinking .5s 3;
 }
-/*  ================================== */
-
 
 @keyframes blinking-red {
 	0%{
 		background-color: #000000;
-/*		color: #ddd; */
 	}
 	100%{
 		background-color: #ff3d50;
-/*		color: #fff; */
 	}
 }
 
-/* */
+
 .blinking-red {
 	font-size: 1.3em;
 	font-weight: bold;
