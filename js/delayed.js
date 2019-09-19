@@ -823,38 +823,9 @@ let logicMap = new Map([
 		cardIdx.push(mgo.clickQueue[0]);
 		cardIdx.push(mgo.clickQueue[1]);
 		logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
-
-//		console.log('sleeping after setface');
-//		sleep(3000);
-//		setTimeout(function(){setFace(selectedCardObj, false, mgo);},3000);
-
-//		let cardIdx = [];
-//		let firstCard = mgo.clickQueue.pop();
-//		mgo.clickQueue.push(firstCard);
-//		cardIdx.push(firstCard);
-//		cardIdx.push(selectedCardObj.cardIdx);
-
-//		console.log('jump to blink');
-//		logicMap.get('blink')['logic']('blinking-red', cardIdx ,mgo);
-//		console.log('return from blink');
-//		setFace(selectedCardObj, false, mgo);
-
-//		mgo.clickQueue.shift(); // remove unmatched card from Q
-/*
-if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
-	clickState(mgo, 1); // state for first card face up
-	mgo.clickQueue.shift(); // the double-click card
-} else {
-	clickState(mgo,0); // state for waiting for first card
-}
-//*/
-
 		clickState(mgo, 2);
-
 		return;
-
 	}}],
-
 	//* Handle a double click on same card
 	['2001', {logic: (selectedCardObj, mgo) => {
 	//	let showFace = selectedCardObj.faceUp ? false : true;
@@ -887,39 +858,10 @@ if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 				mgo.clickQueue.shift(); // the double-click card
 				}
 		}
-/*
-		if (mgo.clickQueue[0] === mgo.clickQueue[1]) {
-			clickState(mgo,0);
-			mgo.clickQueue.shift();
-			mgo.clickQueue.shift(); // the double-click card
-		} else {
-			if (mgo.clickQueue[0] != mgo.clickQueue[1]) { // there are two clicks in the Q and they are different
-				if (newCardIdx === mgo.clickQueue[0]) {  // the new click is a duplicate of the second card
-					setFace(selectedCardObj, false, mgo); // turn the second card down
-					// remove it from the click queue
-					clickState(mgo,1);
-					mgo.clickQueue.shift(); // the double-click card
-				}
-			}
-		}
-//*/
-		// if newCardIdx = Q[0] then
-
-/*		if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
-			clickState(mgo, 1); // state for first card face up
-			mgo.clickQueue.shift(); // the double-click card
-		} else {
-			clickState(mgo,1); // state for waiting for first card
-		}
-*/
-
-//		clickState(mgo);
-//		mgo.clickQueue.shift(); // the double-click card
-//		mgo.clickQueue.shift(); // the double-click card
 
 		return;
-		}
-	}],
+	}
+}],
 	//*/
 
 // Cards match
