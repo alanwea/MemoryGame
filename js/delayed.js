@@ -708,62 +708,36 @@ let state = false;
 // key: 1st or 2nd click, is a match flag, will match flag, double-click flag
 let logicMap = new Map([
 
-// NEEDED ANYMORE???????????????????????
-	// First card clicked, second card clicked. The two crads are the same.
-	/*
-	['0001', {logic: (selectedCardObj, mgo) => {
-		if (testHarness) {console.log('0001 -------------------------------> first click');}
-
-		toggleFace(selectedCardObj, mgo);
-		clickState(mgo, 0);
-		mgo.clickQueue.shift();
-		mgo.clickQueue.shift();
-
-//		mgo.clickQueue.shift();
-
-		return;
-		}}],
-//*/
 	['1000', {logic: (selectedCardObj, mgo) => {
 		if (mgo.testMode) {console.log('1000 -------------------------------> first click');}
 
-//		toggleFace(selectedCardObj, mgo);
 		setFace(selectedCardObj, true, mgo);
 
 		clickState(mgo,1);
-/*
-//		mgo.clickQueue.shift();
-*/
+
 		return;
 		}}],
 
 // First click
 		['1001', {logic: (selectedCardObj, mgo) => {  //
-			console.log('1001');
-
-//			if (mgo.clickQueue.length < 3 ) {console.log('Err Err Err Err Err ????????????????????????????');}
+			if (testMode) console.log('1001 first card click twice');
 
 			let selectedCardIdx = getCardIdx(selectedCardObj, mgo);
 
 			if (selectedCardIdx === mgo.clickQueue[2]) { // first card, then second card, then first card selected
 				setFace(selectedCardObj, false, mgo);
-//				let secondCardObj = getCardObj()
 				setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
 				mgo.clickQueue.shift(); //
 				mgo.clickQueue.shift(); //
 				mgo.clickQueue.shift(); //
 				clickState(mgo, 0);
-
 			}
 
 			if (selectedCardIdx === mgo.clickQueue[1]) { // first card, then second card, then second card
 				setFace(selectedCardObj, false, mgo);
-//				setFace(getCardObj(mgo.clickQueue[1]), false, mgo);
 				mgo.clickQueue.shift(); //
 				mgo.clickQueue.shift(); //
-//				mgo.clickQueue.shift(); // the double-click card
 				clickState(mgo, 0);
-
 			}
 
 			return;
