@@ -303,10 +303,11 @@ function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
 }
 
 function resetButtonHandler(mgo) {
+	if (mgo.testMode) {console.log('resetButtonHandler');}
 
 	event.stopPropagation();
-console.log('in resetButtonHandler----------------------------');
-// REMOVE THE BLINK HERE
+
+	// REMOVE THE BLINK HERE
 //	blinkBorder("reset", "border-blink-red", mgo);
 	let targetElement = document.getElementsByClassName('reset')[0];
 	// Class would exist when all cards are matched
@@ -330,11 +331,13 @@ console.log('in resetButtonHandler----------------------------');
 	// TODO need to stop timer and reset
 }
 
-// if card face is up make it down, and vice versa
+// if card face is up make it down, and vice versa.  Not used, left in for demoinstration purposes
 function toggleFace(selectedCardObj, mgo) {
 	let showFace = selectedCardObj.faceUp ? false : true;
-	if (testHarness) {console.log('Card is face ' + showFace);}
+	if (mgo.testMode) {console.log('toggleFace ' + showFace);}
 	setFace(selectedCardObj, showFace, mgo);
+
+	return;
 }
 
 /*
@@ -374,7 +377,7 @@ function setFace(cardObj, faceUp, mgo) {
 			document.querySelector('.back.card' + cardIdx).removeAttribute('hidden');
 			document.querySelector('.front.card' + cardIdx).setAttribute('hidden', '');
 		}
-}
+	}
 
 	return;
 }
