@@ -796,23 +796,6 @@ let logicMap = new Map([
 	}],
 	//*/
 
-	//*
-//	['1110', {logic: (selectedCardObj, mgo) => {
-//			if (mgo.testMode) {console.log('1100 unknown ??????????');}
-
-//			const cardIdx = [selectedCardObj.cardIdx, selectedCardObj.matchCard];
-//			logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
-
-//			return;
-//		}
-//	}],
-	//*/
-
-	/* Future expansion
-		['1101', {logic: (function() { return() => { console.log('1101 unknown ??????????');};})()}],
-		['1111', {logic: (function() { return() => { console.log('1111 unknown ??????????');};})()}],
-	//*/
-
 		// Not matched, not a double click, 2nd card click
 	['2000', {'logic': (selectedCardObj, mgo) => {
 		console.dir('2000 2nd click', selectedCardObj);
@@ -829,7 +812,7 @@ let logicMap = new Map([
 
 	// Handle a double click on same card
 	['2001', {logic: (selectedCardObj, mgo) => {
-	if (testHarness) {console.log('2001 -------------------------------------> double click same card');}
+	if (testMode) {console.log('2001 double click same card');}
 
 		updateTally(+1, mgo);
 
