@@ -176,7 +176,7 @@ function cardsContainerHandler(mgo) {
 	let selectedCardClass = event.target.classList.value;
 
 // If the card container has been clicked, but not a card, just return.
-	if ( selectedCardClass === 'cards-container') { return};
+	if ( selectedCardClass === 'cards-container') {return};
 
 	// Verify that a card has been clicked
 	let isCard = (selectedCardClass.match(/\s*card\s*/) === null) ? false : true;
@@ -204,10 +204,6 @@ function cardsContainerHandler(mgo) {
 //			throw "TestHarness: end of test pass";
 			return;
 		};
-//		document.getElementById('Card' + mgo.selectedCard).click();
-//		console.log('testHarness: clicking card ' + mgo.selectedCard);
-
-//		document.getElementsByClassName('card' + mgo.selectedCard)[0].click();
 	}
 
 // END OF DEBUG TEST CLICK
