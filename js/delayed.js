@@ -913,40 +913,39 @@ let logicMap = new Map([
 		}
 	}],
 
-	['3010', {logic: (selectedCardObj, mgo) => {
+	['3010', {logic: (selectedCardObj, mgo) =>
+		{
+			if (mgo.testmode) {console.log('3010 ------------------------> third click match');}
 
-		if (mgo.testmode) {console.log('3010 ------------------------> third click match');}
-
-		setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
-		setFace(getCardObj(mgo.clickQueue[0], mgo), true, mgo);
-		mgo.clickQueue.shift();
-		mgo.clickQueue.shift();
-		mgo.clickQueue.unshift(getCardIdx(selectedCardObj, mgo));
-//		updateTally(+1, mgo);
+			setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
+			setFace(getCardObj(mgo.clickQueue[0], mgo), true, mgo);
+			mgo.clickQueue.shift();
+			mgo.clickQueue.shift();
+			mgo.clickQueue.unshift(getCardIdx(selectedCardObj, mgo));
 		// clickQueue has been adjusted to look like a two card match, so call the 2 card match routine
 		logicMap.get('2010')['logic'](selectedCardObj ,mgo);
-		return;
 
+		return;
 		}
 	}],
 
-	['3101', {logic: (selectedCardObj, mgo) => {
-		console.log('3101 ----------> state 0, click, state 1, click on already matched');
+	['3101', {logic: (selectedCardObj, mgo) =>
+		{
+			if (mgo.testMode) {console.log('3101 double-click on already matched');}
 
-		const cardIdx = [];
-		cardIdx.push(selectedCardObj.cardIdx);
-		cardIdx.push(selectedCardObj.matchCard);
-		logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
+			const cardIdx = [];
+			cardIdx.push(selectedCardObj.cardIdx);
+			cardIdx.push(selectedCardObj.matchCard);
+			logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
 
-		setFace(selectedCardObj, false, mgo);
-
+			setFace(selectedCardObj, false, mgo);
 			mgo.clickQueue.shift(); // the double-click card
 			clickState(mgo, 1);
 
 		return;
 		}
 	}],
-	//*
+
 	['blink', { // Utility: blink border each card in the cardIdx array
 		logic:(colorClass, cardIdx, mgo) => {
 		console.log('blink ' + cardIdx[0] + ' ' + cardIdx[1]);
