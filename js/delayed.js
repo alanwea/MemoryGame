@@ -639,18 +639,17 @@ function getRandom(bucket) {
 }
 
 // Bespoke truth table to track <cardCount> face-up cards that signal game end.  Given two card index numbers, sets corresponding bits in the table.  The table is inverted to make testing for the result easier.  That is, when all bits are set, the result is all bits unset.
-let updateTT = function(mgo) {
+let updateTT = function(card1, card2, mgo) {
 	if (mgo.testMode) {console.log(
-	`updateTT before ${Number(mgo.clickQueue[1])} ${Number(mgo.selectedCard)} ${mgo.truthTable.toString(2)}`);}
+	`updateTT before ${card1} ${card2} ${mgo.truthTable.toString(2)}`);}
 
 	// Set corresponding bit for the selected card and for the following card
-	mgo.truthTable |= ((1 << Number(mgo.clickQueue[1]) - 1) | (1 << Number(mgo.selectedCard) - 1));
-	// Invert TT for easier true/false comparison and mask unneeded bits
-	let isAllSet = ( parseInt(~mgo.truthTable & 0x0000FFFF, 10) === 0 ) ? true : false;
+	mgo.truthTable |= ((1 << card1 - 1) | (1 << card2 - 1));
 
 	if (mgo.testMode) {console.log('updateTT: after ' + mgo.truthTable.toString(2));}
 
-	return isAllSet;
+	// Invert TT for easier true/false comparison and mask unneeded bits
+		return ( parseInt(~mgo.truthTable & 0x0000FFFF, 10) === 0 ) ? true : false;
 }
 
 // TODO Simple, but annoying, beep for sound feedback
@@ -808,14 +807,13 @@ let logicMap = new Map([
 
 // Cards match
 // if all cards are face-up, indicate and finish game
-// Using a truth table for experimental purposes
 	['2010', {'logic': (selectedCardObj, mgo) =>
 		{
 			if (mgo.testMode) {console.log('2010 cards match');}
 
-		setFace(selectedCardObj, true, mgo);
-
-			if (updateTT(mgo)) {
+			setFace(selectedCardObj, true, mgo);
+			// updateTT before ${Number(mgo.clickQueue[1])} ${Number(mgo.selectedCard)} $
+			if (updateTT(Number(mgo.clickQueue[1]), Number(mgo.selectedCard),mgo)) {
 				updateTally(+1, mgo);
 				logicMap.get('allMatched')['logic'](mgo);
 				logicMap.get('endOfGame')['logic'](selectedCardObj, mgo);
