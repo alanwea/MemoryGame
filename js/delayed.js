@@ -836,8 +836,6 @@ let logicMap = new Map([
 			return;
 		}}],
 
-	['2011', {logic: (function() { return() => { console.log('2011 future');};})()}],
-
 	//*  1st card clicked on face down, 2nd card is already matched
 	['2100', {logic: (selectedCardObj, mgo) =>
 		{ //second, up, down, no
