@@ -857,25 +857,6 @@ let logicMap = new Map([
 	}}],
 	//*/
 
-	// click on a card that is already face-up and matched card face-up
-//		['2110', {logic: (selectedCardObj, mgo) => {
-//			console.log('2110 -------------------------------------> up & match up');
-	//		logicMap.get('blink')['logic']('blinking-green');
-//	return;
-//		}
-//		}],
-/*
-	['2101', {logic: (selectedCardObj, mgo) => {  //
-		console.log('2101 ------------------------------------> unknown');
-		return;
-		}}],
-
-		['2110', {logic: (selectedCardObj, mgo) => {
-		console.log('2110 -------------------------------------> already matched');
-		return;
-		}
-	}],
-//*/
 	['3000', {logic: (selectedCardObj, mgo) => {
 		if (mgo.testMode) {console.log('3000 third click');}
 
