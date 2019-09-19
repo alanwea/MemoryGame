@@ -580,12 +580,13 @@ function pauseInterrupt(milliseconds, mgo) {
 }
 //*/
 
-// Break up a large image into smaller pieces.
+// Takes a large 'master' image and uses canvas to break it into pieces for card fronts.
 function apportionMasterImage(imageSource, mgo) {
+
 	// Retrieve a card class element to use for calculations
 	let card = document.getElementsByClassName('card')[0];
 
-if (testHarness) {
+if (mgo.testMode) {
 		console.log(`apportionMasterImage: Card: width (${card.width}) height (${card.height})`);
 	}
 
@@ -594,6 +595,7 @@ if (testHarness) {
 	canvas.setAttribute("height", card.naturalHeight);
 	let ctx = canvas.getContext('2d');
 
+	// Don't care for this because it is confusing, but trying it here for education
 	let { rows, columns} = mgo;
 
 	let cardsNeeded = rows * columns / 2;  // Halved because each card is matched
