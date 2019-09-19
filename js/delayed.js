@@ -193,20 +193,16 @@ function cardsContainerHandler(mgo) {
 // Extract the card number by matching one or more digits if preceeded by 'card', 'cardxx' -> xx
 	mgo.selectedCard = (selectedCardClass.match(/(?<=card)\d+/))[0];
 
-// DEBUG TEST CLICK
-// get generator function, iterate array, get next array value, make selected card the new value
+// testHarness to simulate clicks using a generator function, that iterates test patterns
 	if (testHarness) {
 		mgo.selectedCard = genClick.next().value;
-		console.log('testHarness: generator returned ------> card = ' + mgo.selectedCard);
+		console.log('testHarness: simulated click on card: ' + mgo.selectedCard);
 		if (mgo.selectedCard === '999') {
-			console.log('Exiting testHarness');
-
-//			throw "TestHarness: end of test pass";
-			return;
+//			console.log('Exiting testHarness');
+			throw "testHarness: end of test pass";
+//			return;
 		};
 	}
-
-// END OF DEBUG TEST CLICK
 
 // Retrieve the card object associated with the current click, and its match card object
 	let selectedCardObj = mgo.cardMap.get(mgo.selectedCard);
