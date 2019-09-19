@@ -624,10 +624,10 @@ if (testHarness) {
 	return imageMap;
 }
 
-// Passed an array, randomly removes one.  Zero return = empty array
+// Randomly removes one value from array on each call until array is empty
 // Derived from https://stackoverflow.com/questions/12987719/javascript-how-to-randomly-sample-items-without-replacement
 function getRandom(bucket) {
-	if (testHarness) {console.log('getRandom: bucket(' + bucket + ')');}
+	if (mgo.testMode) {console.log('getRandom: bucket(' + bucket + ')');}
 
 	let randomValue = 0;
 
