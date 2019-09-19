@@ -768,16 +768,6 @@ let logicMap = new Map([
 
 			return;
 }}],
-/*
-['1010', {logic: (selectedCardObj, mgo) => {
-		console.log('1010 unknown ?????????????? ');
-
-		return;
-}}],
-
-  Future expansion
-	['1011', {logic: (function() { return() => { console.log('Inside 1011 function');};})()}],
-//*/
 
 	//* Click on a card that is already matched
 	['1100', {logic: (selectedCardObj, mgo) => {
