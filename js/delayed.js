@@ -255,18 +255,11 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard) && !isAlreadyMatc
 	};
 
 // When the test harness is used, simulated mouse clicks are issued here
-		if (testHarness) {
-//			let testClass = document.getElementsByClassName('card' + mgo.selectedCard)[0];
-//			console.log('at inserted click, class is ' + testClass);
-//			let cardsContainer = retrieveFirstClassValue('cards-container');
-//			cardsContainer.addEventListener("click", mgo.cardHandlerFunction, true);
-//			cardsContainer.click();
-			document.getElementsByClassName('cards-container')[0].dispatchEvent(new MouseEvent('click'));
+	if (testHarness) {
+		document.getElementsByClassName('cards-container')[0].dispatchEvent(new MouseEvent('click'));
 
 	}
-
 		return;
-
 }
 
 //
@@ -285,12 +278,10 @@ function setFrontCardHTML(mgo) {
 }
 
 // Blink the border by classname
-// Good example of animation callbacks at https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
-// toggleFace - turns faceup to face down
-//function blinkBorder(className, CSSSelector, toggleFace,mgo) {
 function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
 
 	let targetElement = document.querySelector(className);
+	// TODO why is this needed??????????????????????
 	let blinkState = 1; // toggle whether to add or remove blink class
 
 // Double Timeout design from https://dev.to/akanksha_9560/why-not-to-use-setinterval--2na9 to insure blink duration without queue race problems.
@@ -310,26 +301,14 @@ function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
 
 				blinkCount = blinkCount - 1;
 
-				// when animation count has run out or an external animation break has been signaled
-//				console.log('blinkicount= ' + blinkCount);
-
 				if (blinkCount < 1 /* || mgo.animationBreak */) {
 					targetElement.classList.remove(CSSSelector);
 					clearTimeout(innerTimeout);
 					clearTimeout(outerTimeout);
-	//				mgo.animationBreak = false;
-	//				mgo.animationOn = false;
-
-//					if (postProcessing) {
-//						let func = new Function('mgo', postProcessing);
-//						func(mgo);
-//						return;
-//					}
-					return;
+			return;
 				}
 			}, blinkDuration);
 
-//		targetElement.classList.add(CSSSelector);
  console.log('returning from blink');
 
 	return;
