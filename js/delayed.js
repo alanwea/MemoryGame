@@ -810,16 +810,16 @@ let logicMap = new Map([
 
 			return;
 }}],
-
-['1010', {logic: (selectedCardObj, mgo) => {  //
+/*
+['1010', {logic: (selectedCardObj, mgo) => {
 		console.log('1010 unknown ?????????????? ');
 
 		return;
 }}],
-	/*  Future expansion
-	['1011', {logic: (function() { return() => { console.log('Inside 1011 function');};})()}],
 
-	//*/
+  Future expansion
+	['1011', {logic: (function() { return() => { console.log('Inside 1011 function');};})()}],
+//*/
 
 	//* Card already matched
 	['1100', {logic: (selectedCardObj, mgo) => {
@@ -1051,12 +1051,6 @@ if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 		mgo.clickQueue.unshift(getCardIdx(selectedCardObj, mgo));
 		updateTally(+1, mgo);
 		clickState(mgo, 2);
-		/*
-setFace(selectedCardObj, false, mgo);
-//				let secondCardObj = getCardObj()
-				setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
-				mgo.clickQueue.shift(); // the double-click card
-//*/
 
 		return;
 		}
@@ -1076,23 +1070,10 @@ setFace(selectedCardObj, false, mgo);
 			setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
 //			setFace(selectedCardObj, false, mgo);
 			mgo.clickQueue.shift(); // the double-click card
-			mgo.clickQueue.shift(); // the double-click card
-			mgo.clickQueue.shift(); // the double-click card
+			mgo.clickQueue.shift(); //
+			mgo.clickQueue.shift(); //
 			clickState(mgo, 0);
 		}
-
-		//		setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
-//		mgo.clickQueue.shift(); // the double-click card
-//		mgo.clickQueue.shift(); // the double-click card
-//		mgo.clickQueue.unshift(getCardIdx(selectedCardObj, mgo));
-//		updateTally(+1, mgo);
-		/*
-setFace(selectedCardObj, false, mgo);
-//				let secondCardObj = getCardObj()
-				setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
-				mgo.clickQueue.shift(); // the double-click card
-//*/
-
 		return;
 		}
 	}],
