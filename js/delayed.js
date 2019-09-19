@@ -166,7 +166,7 @@ function cardsContainerHandler(mgo) {
 	// Primer values for the first
 //	let selectedCardClass = 'card card0 back';
 
-	if (testHarness || testMode) {
+	if (testHarness || mgo.testMode) {
 		console.log(`
 			%%%%%%%% Test Click Received %%%%%%%%`);
 //		selectedCardClass = 'card card1 back';
@@ -227,7 +227,7 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard));
 	let willMatch = ((selectedCardObj.matchCard === mgo.clickQueue[mgo.clickQueue.length-1])
 		&& (mgo.clickState === 2 || mgo.clickState === 3)) ? true : false;
 
-	if (testMode) {	console.log(
+	if (mgo.testMode) {	console.log(
 		`${selectedCardObj.matchCard} : ${mgo.clickQueue[1]} : ${mgo.clickState} : ${willMatch}`);
 	}
 
@@ -238,7 +238,7 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard));
 	(willMatch ? '1' : '0') +
 	(isDoubleClick ? '1' : '0');
 
-		if (testMode) {console.log(`BEFORE dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
+		if (mgo.testMode) {console.log(`BEFORE dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
 	}
 
 	// Before indexing into the logic map, make sure the key is valid.  This would occur if a card container state was not anticipated during development.
@@ -253,7 +253,7 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard));
 // reset isdoubleclick, should be set on next iteration, but do it here to be consistent with console.log output that follows
 //	isDoubleClick = false;
 
-	if (testMode) {console.log(`AFTER dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
+	if (mgo.testMode) {console.log(`AFTER dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
 	};
 
 // When the test harness is used, simulated mouse clicks are issued here
@@ -1075,7 +1075,7 @@ if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 
 	['3010', {logic: (selectedCardObj, mgo) => {
 
-		if (testmode) {console.log('3010 ------------------------> third click match');}
+		if (mgo.testmode) {console.log('3010 ------------------------> third click match');}
 
 		setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
 		setFace(getCardObj(mgo.clickQueue[0], mgo), true, mgo);
