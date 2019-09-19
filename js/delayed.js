@@ -908,7 +908,6 @@ let logicMap = new Map([
 	// 2nd card is already matched, and 1st card is not going to match
 	// blink green the 2nd card and its match card and continue in card 1 ready state
 
-
 	const cardIdx = [];
 		cardIdx.push(selectedCardObj.cardIdx);
 		cardIdx.push(selectedCardObj.matchCard);
@@ -923,30 +922,24 @@ let logicMap = new Map([
 	//*/
 
 	// click on a card that is already face-up and matched card face-up
-		['2110', {logic: (selectedCardObj, mgo) => {
-			console.log('2110 -------------------------------------> up & match up');
+//		['2110', {logic: (selectedCardObj, mgo) => {
+//			console.log('2110 -------------------------------------> up & match up');
 	//		logicMap.get('blink')['logic']('blinking-green');
-	return;
-		}
-		}],
-
+//	return;
+//		}
+//		}],
+/*
 	['2101', {logic: (selectedCardObj, mgo) => {  //
 		console.log('2101 ------------------------------------> unknown');
 		return;
 		}}],
 
-	['2110', {logic: (selectedCardObj, mgo) => {
+		['2110', {logic: (selectedCardObj, mgo) => {
 		console.log('2110 -------------------------------------> already matched');
-/*
-			const cardIdx = [];
-			cardIdx.push(selectedCardObj.cardIdx);
-			cardIdx.push(selectedCardObj.matchCard);
-			logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
-*/
 		return;
 		}
 	}],
-
+//*/
 	['3000', {logic: (selectedCardObj, mgo) => {
 		console.log('3000 -------------------------------------> third click');
 		setFace(selectedCardObj, true, mgo);
