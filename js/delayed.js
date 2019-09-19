@@ -157,26 +157,23 @@ function removeHighlight(highlightClass) {
 		c[0].classlist.remove('blinking-red');
 	}
 
-		return;
+	return;
 }
 
 // Consumes clicks and dispatches to handlers
 function cardsContainerHandler(mgo) {
 
-	// TODO: is this needed now????
-	let selectedCardClass = 'card card0 back';
+	// Primer values for the first
+//	let selectedCardClass = 'card card0 back';
 
-	// TODO: is this needed now???  Handled just below
-	event.stopPropagation();
-
-	if (testHarness) {
+	if (testHarness || testMode) {
 		console.log(`
 			%%%%%%%% Test Click Received %%%%%%%%`);
 //		selectedCardClass = 'card card1 back';
-	} else {
-		event.stopPropagation();
-		selectedCardClass = event.target.classList.value;
 	}
+
+	event.stopPropagation();
+	let selectedCardClass = event.target.classList.value;
 
 // If the card container has been clicked, but not a card, just return.
 	if ( selectedCardClass === 'cards-container') { return};
