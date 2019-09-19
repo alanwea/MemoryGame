@@ -826,16 +826,12 @@ let logicMap = new Map([
 		clickState(mgo, 2);
 		return;
 	}}],
-	//* Handle a double click on same card
+
+	// Handle a double click on same card
 	['2001', {logic: (selectedCardObj, mgo) => {
-	//	let showFace = selectedCardObj.faceUp ? false : true;
 	if (testHarness) {console.log('2001 -------------------------------------> double click same card');}
 
-//		setFace(selectedCardObj, false, mgo);
 		updateTally(+1, mgo);
-// double click on second card - card face is now down and tally updated
-// need to adjust state and queue
-// how to know if second card or first card?  should be in the clickQueue
 
 		let newCardIdx = getCardIdx(selectedCardObj, mgo);
 
@@ -850,7 +846,7 @@ let logicMap = new Map([
 			return;
 		}
 
-		if (mgo.clickQueue.length === 2) { // card 1, card 2, card 1 - turn all over, cler array, reset state
+		if (mgo.clickQueue.length === 2) { // card 1, card 2, card 1 - turn all over, clear array, reset state
 			if (mgo.clickQueue[0] === mgo.clickQueue[1]) { // double click on first card
 				setFace(selectedCardObj, false, mgo);
 				clickState(mgo,0);
@@ -862,7 +858,6 @@ let logicMap = new Map([
 		return;
 	}
 }],
-	//*/
 
 // Cards match
 // if all cards are face-up, indicate and finish game
