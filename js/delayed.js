@@ -148,7 +148,7 @@ function getCardIdx(cardObj, mgo) {
 	return cardIdx;
 }
 
-//
+/*
 function removeHighlight(highlightClass) {
 
 	var c = document.getElementsByClassName("blinking-red");
@@ -159,6 +159,7 @@ function removeHighlight(highlightClass) {
 
 	return;
 }
+//*/
 
 // Consumes clicks and dispatches to handlers
 function cardsContainerHandler(mgo) {
@@ -261,7 +262,7 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard) && !isAlreadyMatc
 		return;
 }
 
-//
+// Sets the front card images directly into the card element
 function setFrontCardHTML(mgo) {
 
 	for (let i=1; i<=mgo.rows * mgo.columns; i++) {
@@ -271,9 +272,10 @@ function setFrontCardHTML(mgo) {
 		let cardObj = mgo.cardMap.get(idx);
 		let imageIdx = cardObj.image;
 		let image = mgo.imageMap.get(imageIdx);
-
 		frontCardElement.src = image;
 	}
+
+	return;
 }
 
 // Blink the border by classname
@@ -603,7 +605,7 @@ if (mgo.testMode) {
 // Randomly removes one value from array on each call until array is empty
 // Derived from https://stackoverflow.com/questions/12987719/javascript-how-to-randomly-sample-items-without-replacement
 function getRandom(bucket) {
-	if (mgo.testMode) {console.log('getRandom: bucket(' + bucket + ')');}
+	//if (mgo.testMode) {console.log('getRandom: bucket(' + bucket + ')');}
 
 	let randomValue = 0;
 
