@@ -653,7 +653,7 @@ let updateTT = function(mgo) {
 	return isAllSet;
 }
 
-// Simple, but annoying, beep for sound feedback
+// TODO Simple, but annoying, beep for sound feedback
 // Adapted from https://odino.org/emit-a-beeping-sound-with-javascript/
 function beep(soundAlert,vol, freq, duration){
 	let v = soundAlert.createOscillator();
@@ -667,7 +667,7 @@ function beep(soundAlert,vol, freq, duration){
 	v.stop(soundAlert.currentTime+duration*0.001);
 }
 
-//*
+// Generator to keep count between clicks without using a global
 function* timerCount(flag) {
 	let count = 0;
 	while (flag) {
@@ -675,19 +675,18 @@ function* timerCount(flag) {
 			count = count + 1;
 		}
 }
-//*/
 
-//* Set state to newState, or if undefined, use fancy technique to toggle between 1 and 2.
+// Update the clickState, 0 is start, 1-3 is number of clicks
 function clickState(mgo, newState) {
-	if (testHarness) {console.log('clickState: value(' + mgo.clickState + ')');}
-	if (newState === undefined) {
-	mgo.clickState = 3 - mgo.clickState;
+	if (mgo.testMode) {console.log('clickState: value(' + mgo.clickState + ')');}
+
+	if (newState === undefined) { // toggle the click state
+		mgo.clickState = 3 - mgo.clickState; // Fancy 1/2 toggle used in previous version
 	} else {
-		mgo.clickState = newState;
+		mgo.clickState = newState;  // Normal operation mode
 	}
 	return mgo.clickState;
 }
-//*/
 
 function highlightBorder(cardSelector, colorClass, doHighlight, mgo) {
 // find card to change highlight but without class hidden
