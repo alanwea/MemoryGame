@@ -2,8 +2,6 @@
 
 // IMPORTANT: See notes in styles.css for usage notes and message to reviewer
 
-
-
 /*
 Test mode is set from web page by clicking the Udacity 'U'.
 
@@ -128,9 +126,6 @@ function initializeHandlers() {
 function InitCardHandler(mgo) {
 
 	mgo.initialCard = false;  // toggle so that click event handler only calls this once
-//	mgo.previousCard = '0';  // TODO need this???
-//	mgo.previousFace = false; // TODO need this ???
-//	mgo.clickState = 0; // TODO should be set in preload, it's 2 now, should be 0 there start state;
 
 // Start game timer and store it in the game object
 		const seconds = timerCount(true);
