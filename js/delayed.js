@@ -869,8 +869,8 @@ let logicMap = new Map([
 // Using a truth table for experimental purposes
 	['2010', {'logic': (selectedCardObj, mgo) => {
 		console.log('2010 ----------------------------------------> cards match');
-//*
-		setFace(selectedCardObj, true, mgo); // turn face-up
+
+		setFace(selectedCardObj, true, mgo);
 
 			if (updateTT(mgo)) {
 				updateTally(+1, mgo);
@@ -884,17 +884,13 @@ let logicMap = new Map([
 			cardIdx.push(selectedCardObj.matchCard);
 			logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
 
-//			mgo.previousCard = selectedCardObj.cardIdx;
 			updateTally(+1, mgo);
-//			clickState(mgo); // toggle event ready state
-			mgo.clickQueue.shift(); // pop second card off of the queue
-			mgo.clickQueue.shift(); // pop second card off of the queue
-			clickState(mgo,0); // set back to a start state
-//		updateTT(mgo);
-//*/
+			mgo.clickQueue.shift();
+			mgo.clickQueue.shift();
+			clickState(mgo,0);
+
 			return;
-	//			}
-			}}],
+		}}],
 
 	['2011', {logic: (function() { return() => { console.log('2011 future');};})()}],
 
