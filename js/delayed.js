@@ -222,23 +222,27 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard));
 // Add the new card to the front of the click queue
 		mgo.clickQueue.unshift(mgo.selectedCard);
 
+/* When in card face-up state 2 or 3, if the current selected card equals the last card in the queue, then they will match
+ */
 	let willMatch = ((selectedCardObj.matchCard === mgo.clickQueue[mgo.clickQueue.length-1])
 		&& (mgo.clickState === 2 || mgo.clickState === 3)) ? true : false;
 
-		console.log(
-`${selectedCardObj.matchCard} : ${mgo.clickQueue[1]} : ${mgo.clickState} : ${willMatch}`
-);
-// Create a dispatch key
+	if (testMode) {	console.log(
+		`${selectedCardObj.matchCard} : ${mgo.clickQueue[1]} : ${mgo.clickState} : ${willMatch}`);
+	}
+
+// Create a dispatch key to use in the logic map
 	let logicKey =
 	(mgo.clickState) +
 	(isAlreadyMatched ? '1' : '0') +
 	(willMatch ? '1' : '0') +
 	(isDoubleClick ? '1' : '0');
 
-		console.log(`BEFORE dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
+		if (testMode) {console.log(`BEFORE dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
+	}
 
 	// Before indexing into the logic map, make sure the key is valid.  This would occur if a card container state was not anticipated during development.
-//	logicKey = '9999';
+//	For testing: logicKey = '9999';
 	if (!logicMap.has(logicKey)) {
 		throw ('Invalid logic map key: ' + logicKey);
 	};
@@ -246,29 +250,26 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard));
 // Dispatch to the handler routine
 		logicMap.get(logicKey)['logic'](selectedCardObj, mgo);
 
-		if (mgo.testMode) {	console.log('Waiting........'); }
-
-//		mgo.clickQueue.shift();
 // reset isdoubleclick, should be set on next iteration, but do it here to be consistent with console.log output that follows
-	isDoubleClick = false;
+//	isDoubleClick = false;
 
-//		console.log(`After: key ${logicKey}: click state(${mgo.clickState}) selected(${mgo.selectedCard}) Already (${isAlreadyMatched}) Will (${willMatch}) 2-click(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
-		console.log(`AFTER dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
+	if (testMode) {console.log(`AFTER dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
+	};
 
+// When the test harness is used, simulated mouse clicks are issued here
 		if (testHarness) {
-			let testClass = document.getElementsByClassName('card' + mgo.selectedCard)[0];
-			console.log('at inserted click, class is ' + testClass);
+//			let testClass = document.getElementsByClassName('card' + mgo.selectedCard)[0];
+//			console.log('at inserted click, class is ' + testClass);
 //			let cardsContainer = retrieveFirstClassValue('cards-container');
 //			cardsContainer.addEventListener("click", mgo.cardHandlerFunction, true);
 //			cardsContainer.click();
-			document.getElementsByClassName('cards-container')[0]
-				.dispatchEvent(new MouseEvent('click'));
+			document.getElementsByClassName('cards-container')[0].dispatchEvent(new MouseEvent('click'));
 
 	}
 
 		return;
 
-} // End of cards container handler
+}
 
 //
 function setFrontCardHTML(mgo) {
