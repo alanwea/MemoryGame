@@ -708,23 +708,24 @@ let state = false;
 // key: 1st or 2nd click, is a match flag, will match flag, double-click flag
 let logicMap = new Map([
 
-	['1000', {logic: (selectedCardObj, mgo) => {
-		if (mgo.testMode) {console.log('1000 -------------------------------> first click');}
+	['1000', {logic: (selectedCardObj, mgo) =>
+		{
+			if (mgo.testMode) {console.log('1000 first click');}
 
-		setFace(selectedCardObj, true, mgo);
-
-		clickState(mgo,1);
+			setFace(selectedCardObj, true, mgo);
+			clickState(mgo,1);
 
 		return;
 		}}],
 
 // First click
-		['1001', {logic: (selectedCardObj, mgo) => {  //
-			if (testMode) console.log('1001 first card click twice');
+	['1001', {logic: (selectedCardObj, mgo) =>
+		{
+			if (mgo.testMode) console.log('1001 first card double-click');
 
 			let selectedCardIdx = getCardIdx(selectedCardObj, mgo);
 
-			if (selectedCardIdx === mgo.clickQueue[2]) { // first card, then second card, then first card selected
+			if (selectedCardIdx === mgo.clickQueue[2]) {
 				setFace(selectedCardObj, false, mgo);
 				setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
 				mgo.clickQueue.shift(); //
@@ -776,7 +777,7 @@ let logicMap = new Map([
 
 	// Handle a double click on same card
 	['2001', {logic: (selectedCardObj, mgo) => {
-	if (testMode) {console.log('2001 double click same card');}
+	if (mgo.testMode) {console.log('2001 double click same card');}
 
 		updateTally(+1, mgo);
 
@@ -809,8 +810,9 @@ let logicMap = new Map([
 // Cards match
 // if all cards are face-up, indicate and finish game
 // Using a truth table for experimental purposes
-	['2010', {'logic': (selectedCardObj, mgo) => {
-		console.log('2010 ----------------------------------------> cards match');
+	['2010', {'logic': (selectedCardObj, mgo) =>
+		{
+			if (mgo.testMode) {console.log('2010 cards match');}
 
 		setFace(selectedCardObj, true, mgo);
 
@@ -837,20 +839,19 @@ let logicMap = new Map([
 	['2011', {logic: (function() { return() => { console.log('2011 future');};})()}],
 
 	//*  1st card clicked on face down, 2nd card is already matched
-	['2100', {logic: (selectedCardObj, mgo) => { //second, up, down, no
-		console.log('2100 ------------------------------------> 1st click, 2nd up');
+	['2100', {logic: (selectedCardObj, mgo) =>
+		{ //second, up, down, no
+			if (mgo.testMode) {console.log('2100 1st click, 2nd up');}
 //		setFace(selectedCardObj, true, mgo);
 	// 2nd card is already matched, and 1st card is not going to match
 	// blink green the 2nd card and its match card and continue in card 1 ready state
 
-	const cardIdx = [];
-		cardIdx.push(selectedCardObj.cardIdx);
-		cardIdx.push(selectedCardObj.matchCard);
-		logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
-
-
-		mgo.clickQueue.shift();
-		clickState(mgo,1);
+			const cardIdx = [];
+			cardIdx.push(selectedCardObj.cardIdx);
+			cardIdx.push(selectedCardObj.matchCard);
+			logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
+			mgo.clickQueue.shift();
+			clickState(mgo,1);
 
 		return;
 	}}],
@@ -876,15 +877,13 @@ let logicMap = new Map([
 	}],
 //*/
 	['3000', {logic: (selectedCardObj, mgo) => {
-		console.log('3000 -------------------------------------> third click');
-		setFace(selectedCardObj, true, mgo);
+		if (mgo.testMode) {console.log('3000 third click');}
 
+		setFace(selectedCardObj, true, mgo);
 		setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
 		mgo.clickQueue.shift();
 		mgo.clickQueue.shift();
 		mgo.clickQueue.unshift(getCardIdx(selectedCardObj, mgo));
-//		updateTally(+1, mgo);
-//		clickState(mgo, 2);
 		// clickQueue has been adjusted to look like a two card match, so call the 2 card unmatched routine
 		logicMap.get('2000')['logic'](selectedCardObj ,mgo);
 
@@ -893,9 +892,9 @@ let logicMap = new Map([
 	}],
 
 	['3001', {logic: (selectedCardObj, mgo) => {
-		console.log('3001 -------------------------------------> third click on second card - double');
-		setFace(selectedCardObj, false, mgo);
+		if (mgo.testMode) {console.log('3001 third click is a double-click');}
 
+		setFace(selectedCardObj, false, mgo);
 		if (mgo.clickQueue[0] === mgo.clickQueue[1]) {
 			mgo.clickQueue.shift(); // the double-click card
 			mgo.clickQueue.shift(); // the double-click card
