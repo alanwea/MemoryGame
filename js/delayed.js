@@ -640,16 +640,16 @@ function getRandom(bucket) {
 
 // Bespoke truth table to track <cardCount> face-up cards that signal game end.  Given two card index numbers, sets corresponding bits in the table.  The table is inverted to make testing for the result easier.  That is, when all bits are set, the result is all bits unset.
 let updateTT = function(mgo) {
-	if (testHarness) {console.log('updateTT: ');}
+	if (mgo.testMode) {console.log(
+	`updateTT before ${Number(mgo.clickQueue[1])} ${Number(mgo.selectedCard)} ${mgo.truthTable.toString(2)}`);}
 
-//	let {truthTable, clickQueue, selectedCard} = mgo;
-
+	// Set corresponding bit for the selected card and for the following card
 	mgo.truthTable |= ((1 << Number(mgo.clickQueue[1]) - 1) | (1 << Number(mgo.selectedCard) - 1));
-	// Mask everything but the <cardCount> bits of the truth table
+	// Invert TT for easier true/false comparison and mask unneeded bits
 	let isAllSet = ( parseInt(~mgo.truthTable & 0x0000FFFF, 10) === 0 ) ? true : false;
-	if (mgo.testMode) {
-//		console.log(`updateTT: isSet(${isAllSet}) oldTT(${mgo.truthTable}) size TT(${truthTable.size})`);
-	}
+
+	if (mgo.testMode) {console.log('updateTT: after ' + mgo.truthTable.toString(2));}
+
 	return isAllSet;
 }
 
