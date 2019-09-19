@@ -204,21 +204,23 @@ function cardsContainerHandler(mgo) {
 		};
 	}
 
-// Retrieve the card object associated with the current click, and its match card object
+// Retrieve the current click card object its match card object
 	let selectedCardObj = mgo.cardMap.get(mgo.selectedCard);
 	let matchedCardObj = mgo.cardMap.get(selectedCardObj.matchCard);
 
-// Increment the click state - start is 0, first click is 1, second click is 2
+/* clickState keeps a running record of the current state corresponding to face up cards.  Its key use is to handle states where two unmatched cards are faceup and then a third click comes in
+*/
 	mgo.clickState = mgo.clickState + 1;
-// looks in Q to find if current click is same as previous click
+		if (mgo.clickState > 3) {throw 'Invalid click state'};
+
+// The clickQueue contains up to the last three selected cards.  If the card just clicked, matches a cards in the queue then this is a double click
 let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard));
 
-// If current card and and match card are both faceup, then they have already matched
+// If the current card its match card are faceup, then they have already matched
 	let isAlreadyMatched = (selectedCardObj.faceUp && matchedCardObj.faceUp) ? true : false;
 
-//	if (mgo.clickState === 1) {
+// Add the new card to the front of the click queue
 		mgo.clickQueue.unshift(mgo.selectedCard);
-//	}
 
 	let willMatch = ((selectedCardObj.matchCard === mgo.clickQueue[mgo.clickQueue.length-1])
 		&& (mgo.clickState === 2 || mgo.clickState === 3)) ? true : false;
