@@ -136,18 +136,6 @@ function InitCardHandler(mgo) {
 
 } // end of inital card processing
 
-// Convenience to retrieve the card object that corresponds to a given card index
-function getCardObj(cardIdx, mgo) {
-	let cardObj = mgo.cardMap.get(cardIdx);
-	return cardObj;
-}
-
-// Convenience to retrieve the card index given a card object
-function getCardIdx(cardObj, mgo) {
-	let cardIdx = cardObj.cardIdx;
-	return cardIdx;
-}
-
 /*
 function removeHighlight(highlightClass) {
 
@@ -972,6 +960,18 @@ function populateHTMLClasses(mgo) {
 		cardHTML.setAttribute('data-match', cardObj.matchCard);
 	}
 	return;
+}
+
+// Convenience to retrieve the card object that corresponds to a given card index
+function getCardObj(cardIdx, mgo) {
+	let cardObj = mgo.cardMap.get(cardIdx);
+	return cardObj;
+}
+
+// Convenience to retrieve the card index given a card object
+function getCardIdx(cardObj, mgo) {
+	let cardIdx = cardObj.cardIdx;
+	return cardIdx;
 }
 
 // Returns the base64 representation of the masterImage
