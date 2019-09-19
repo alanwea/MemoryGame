@@ -251,6 +251,12 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard));
 
 		console.log(`BEFORE dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
 
+	// Before indexing into the logic map, make sure the key is valid.  This would occur if a card container state was not anticipated during development.
+//	logicKey = '9999';
+	if (!logicMap.has(logicKey)) {
+		throw ('Invalid logic map key: ' + logicKey);
+	};
+
 // Dispatch to the handler routine
 		logicMap.get(logicKey)['logic'](selectedCardObj, mgo);
 
@@ -1173,14 +1179,6 @@ if (getCardIdx(selectedCardObj, mgo) == mgo.clickQueue[1]) {
 	}]
 	//*/
 ]); // end of Map
-
-let logicMapProxy = new Proxy(logicMap, {
-	get: { function (target) {
-					console.log('Undefined logic state ???????????????????????????????');
-					return target;
-				}
-	},
-});
 
 // EXPERIMENTAL: in test mode, attaches match card index to HTML element custom data attribute
 function populateHTMLClasses(mgo) {
