@@ -342,7 +342,6 @@ function toggleFace(selectedCardObj, mgo) {
 */
 function setFace(cardObj, faceUp, mgo) {
 
-//	let cardIdx = cardObj.cardIdx;  // retrieve the numeric index of card
 	let cardIdx = getCardIdx(cardObj);
 	cardObj.faceUp = faceUp;	// This isn't used for much anymore, but keeping it just in case
 	mgo.cardMap.set(cardIdx, cardObj);  // Update the cardObj with new face
@@ -353,14 +352,13 @@ function setFace(cardObj, faceUp, mgo) {
 		// update card image in RT from the image array
 		if (cardObj.faceUp) {
 			let base64Image = mgo.imageMap.get(cardObj.image);
-			// confusing here, but in testmode the back class card src is used for both the back image and the front image retrieved from the image map
+			// confusing here, but in testmode the back class card src attribute is used for both the back image and the front image retrieved from the image map
 			document.querySelector('.back.card' + cardIdx).src = base64Image;
 		}
 
-		if (!cardObj.faceUp){	// faceup false, show card back
+		if (!cardObj.faceUp) {	// faceup false, show card back
 			document.querySelector('.back.card' + cardIdx).src = mgo.cardBackImage;
 		}
-
 	}
 
 	if (!mgo.testMode) { // If not in test mode use card image stored in src of element
@@ -377,41 +375,6 @@ function setFace(cardObj, faceUp, mgo) {
 			document.querySelector('.front.card' + cardIdx).setAttribute('hidden', '');
 		}
 }
-
-
-// KEEP THIS AND ADD IT TO TEST MODE
-/*	let htmlCard = '';
-	let backHtmlCard = mgo.cardBackImage;
-	let frontHtmlCard = '';
-
-	cardObj.faceUp = newFace;
-	mgo.cardMap.set(cardIdx, cardObj);
-
- TODO  testing use of html shard v mgo shard storage
-	if (imageSourceTest) {
-		backHtmlCard = document.querySelector('.back.card' + cardIdx);
-		frontHtmlCard = document.querySelector('.front.card' + cardIdx);
-	} else {
-		htmlCard = document.getElementsByClassName('card' + cardIdx)[0];
-	}
-
-	if (newFace) {
-		if (imageSourceTest) {
-			backHtmlCard.setAttribute('hidden', '');
-			frontHtmlCard.removeAttribute('hidden');
-		} else {
-			htmlCard.src = mgo.imageMap.get(cardObj.image);
-		}
-}
-	else {
-		if (imageSourceTest) {
-			backHtmlCard.removeAttribute('hidden');
-			frontHtmlCard.setAttribute('hidden', '');
-		} else {
-			htmlCard.src = mgo.cardBackImage;
-		}
-	}
-//*/
 
 	return;
 }
@@ -527,7 +490,6 @@ function randomizeCardsToImages(mgo) {
 
 		cardObj = {cardIdx: secondRandomCard, matchCard: firstRandomCard, image: imageIdx.toString(), faceUp: false, isFaceUp: function() {return () => { this.faceUp;};}};
 		cardMap.set(secondRandomCard, cardObj);
-
 	}
 
 	return cardMap;
@@ -597,7 +559,6 @@ if (mgo.testMode) {
 // Randomly removes one value from array on each call until array is empty
 // Derived from https://stackoverflow.com/questions/12987719/javascript-how-to-randomly-sample-items-without-replacement
 function getRandom(bucket) {
-	//if (mgo.testMode) {console.log('getRandom: bucket(' + bucket + ')');}
 
 	let randomValue = 0;
 
