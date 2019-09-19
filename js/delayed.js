@@ -190,10 +190,10 @@ function cardsContainerHandler(mgo) {
 		InitCardHandler(mgo);
 	}
 
-// Extract the card number by matching one or more digits if preceeded by 'card', 'cardxx' -> xx
+// Extract the card number by matching one or more digits if preceeded by 'card': 'cardxx' -> xx
 	mgo.selectedCard = (selectedCardClass.match(/(?<=card)\d+/))[0];
 
-// testHarness to simulate clicks using a generator function, that iterates test patterns
+// testHarness to simulate clicks using a generator function that iterates test patterns
 	if (testHarness) {
 		mgo.selectedCard = genClick.next().value;
 		console.log('testHarness: simulated click on card: ' + mgo.selectedCard);
@@ -222,7 +222,7 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard) && !isAlreadyMatc
 // Add the new card to the front of the click queue
 		mgo.clickQueue.unshift(mgo.selectedCard);
 
-		//		If the card just clicked, matches a cards in the queue then this is a double click
+//		If the card just clicked, matches a cards in the queue then this is a double click
 // Two or three cards are faceup: if current match card equals the last card in the queue, they will match
 	let willMatch = ((selectedCardObj.matchCard === mgo.clickQueue[mgo.clickQueue.length-1])
 		&& (mgo.clickState === 2 || mgo.clickState === 3)) ? true : false;
@@ -313,21 +313,6 @@ function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
 	return;
 }
 
-
-/*
-const doSomething = async () => {
-	await sleep(2000);
-	console.log('return from sleep');
-}
-//*/
-
-// Handles reset button when clicked
-// Reset button has been clicked
-// remove the blink - red from the allmatch, if it exisits
-// show back image for all cards
-// reset stars
-// reset moves
-// reset timer
 function resetButtonHandler(mgo) {
 
 	event.stopPropagation();
@@ -723,7 +708,9 @@ let state = false;
 // key: 1st or 2nd click, is a match flag, will match flag, double-click flag
 let logicMap = new Map([
 
+// NEEDED ANYMORE???????????????????????
 	// First card clicked, second card clicked. The two crads are the same.
+	/*
 	['0001', {logic: (selectedCardObj, mgo) => {
 		if (testHarness) {console.log('0001 -------------------------------> first click');}
 
@@ -731,12 +718,12 @@ let logicMap = new Map([
 		clickState(mgo, 0);
 		mgo.clickQueue.shift();
 		mgo.clickQueue.shift();
-/*
+
 //		mgo.clickQueue.shift();
-*/
+
 		return;
 		}}],
-
+//*/
 	['1000', {logic: (selectedCardObj, mgo) => {
 		if (mgo.testMode) {console.log('1000 -------------------------------> first click');}
 
@@ -762,9 +749,9 @@ let logicMap = new Map([
 				setFace(selectedCardObj, false, mgo);
 //				let secondCardObj = getCardObj()
 				setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
-				mgo.clickQueue.shift(); // the double-click card
-				mgo.clickQueue.shift(); // the double-click card
-				mgo.clickQueue.shift(); // the double-click card
+				mgo.clickQueue.shift(); //
+				mgo.clickQueue.shift(); //
+				mgo.clickQueue.shift(); //
 				clickState(mgo, 0);
 
 			}
@@ -772,8 +759,8 @@ let logicMap = new Map([
 			if (selectedCardIdx === mgo.clickQueue[1]) { // first card, then second card, then second card
 				setFace(selectedCardObj, false, mgo);
 //				setFace(getCardObj(mgo.clickQueue[1]), false, mgo);
-				mgo.clickQueue.shift(); // the double-click card
-				mgo.clickQueue.shift(); // the double-click card
+				mgo.clickQueue.shift(); //
+				mgo.clickQueue.shift(); //
 //				mgo.clickQueue.shift(); // the double-click card
 				clickState(mgo, 0);
 
@@ -792,9 +779,9 @@ let logicMap = new Map([
 	['1011', {logic: (function() { return() => { console.log('Inside 1011 function');};})()}],
 //*/
 
-	//* Click on cards that are already matched
+	//* Click on a card that is already matched
 	['1100', {logic: (selectedCardObj, mgo) => {
-		console.log('1100 already matched');
+		if (mgo.testMode) {console.log('1100 already matched');}
 
 				const cardIdx = [];
 				cardIdx.push(selectedCardObj.cardIdx);
@@ -810,18 +797,18 @@ let logicMap = new Map([
 	//*/
 
 	//*
-	['1110', {logic: (selectedCardObj, mgo) => {
-			console.log('1100 unknown ??????????');
+//	['1110', {logic: (selectedCardObj, mgo) => {
+//			if (mgo.testMode) {console.log('1100 unknown ??????????');}
 
 //			const cardIdx = [selectedCardObj.cardIdx, selectedCardObj.matchCard];
 //			logicMap.get('blink')['logic']('blinking-green', cardIdx ,mgo);
 
-			return;
-		}
-	}],
+//			return;
+//		}
+//	}],
 	//*/
 
-	//* Future expansion
+	/* Future expansion
 		['1101', {logic: (function() { return() => { console.log('1101 unknown ??????????');};})()}],
 		['1111', {logic: (function() { return() => { console.log('1111 unknown ??????????');};})()}],
 	//*/
