@@ -71,10 +71,9 @@ function initializeHandlers() {
 
 // TODO: intention is to store away game state if game is terminiated early, and then be able to resume game later by loading from local storage during preload.  There is some partial implementation but it is not complete.  For now, mgo.gameType will always be 'new'
 	if (mgo.gameType === 'new') {
-// DO THIS ONLY WHEN ITS A NEW GAME, OTHERWISE THE MASTER IMAGE THUMBNAILS WILL COME FROM THE mgo
-		if (testHarness || mgo.testMode) console.log('NEW GAME INITIALIZING');
+	if (testHarness || mgo.testMode) console.log('NEW GAME INITIALIZING');
 
-/* masterImage might hold a large image that takes a while to load. This is the primary reason that the preload code is run during web page initialization. Setup a callback function to be triggered after the master Image has loaded
+/* MasterImage might be a large image that takes a while to load. This is the primary reason that the preload code is run during web page initialization instead of loading all of the images and JS. Setup a callback function to be triggered after the masterImage has loaded
 */
 		let masterImage = new Image();
 
@@ -338,16 +337,18 @@ function toggleFace(selectedCardObj, mgo) {
 	setFace(selectedCardObj, showFace, mgo);
 }
 
-// Set card face image, in test mode shard comes from in-memory image map.
+/*
+ Set image for front face of card.  A bit complicated because in test mode the face is coming from the embedded base64 image at the end of this file, otherwise the image shards in the src attribute of the card elements are used.  This is entirely for experimental purposes.
+*/
 function setFace(cardObj, faceUp, mgo) {
 
-	let cardIdx = cardObj.cardIdx;  // retrieve the numeric index of card
-
-	cardObj.faceUp = faceUp;
+//	let cardIdx = cardObj.cardIdx;  // retrieve the numeric index of card
+	let cardIdx = getCardIdx(cardObj);
+	cardObj.faceUp = faceUp;	// This isn't used for much anymore, but keeping it just in case
 	mgo.cardMap.set(cardIdx, cardObj);  // Update the cardObj with new face
 
 	if (mgo.testMode) {
-		if (testHarness) {console.log('setFace: test mode and test harness are enabled #######################');}
+		if (testHarness) {console.log(`setFace: ${cardObj} ${faceUp}`);}
 
 		// update card image in RT from the image array
 		if (cardObj.faceUp) {
@@ -357,16 +358,15 @@ function setFace(cardObj, faceUp, mgo) {
 		}
 
 		if (!cardObj.faceUp){	// faceup false, show card back
-//			let backImage = mgo.cardBackImage;
 			document.querySelector('.back.card' + cardIdx).src = mgo.cardBackImage;
 		}
 
 	}
 
-	if (!mgo.testMode) { // Use card image stored in src of element
+	if (!mgo.testMode) { // If not in test mode use card image stored in src of element
 
 		if (cardObj.faceUp) { // faceUp true, show card front face
-		// Display by swapping element properties
+		// Display by swapping element hidden properties
 			document.querySelector('.back.card' + cardIdx).setAttribute('hidden', '');
 			document.querySelector('.front.card' + cardIdx).removeAttribute('hidden');
 		}
@@ -421,7 +421,7 @@ function setFace(cardObj, faceUp, mgo) {
 // in test to normal:  back cards set to back image and unhidden, front card images are all set to hidden
 function testModeHandler(mgo) {
 //TODO remove
-	console.log('testModeHandler: TEST TEST TEST TEST TEST TEST TEST TEST TEST ');
+	console.log('Entering test mode');
 
 	// Turn all cards face down
 	for (let i=1; i <= mgo.rows * mgo.columns; i++) {
@@ -431,7 +431,8 @@ function testModeHandler(mgo) {
 
 	//toggle test mode flag
 	mgo.testMode = mgo.testMode ? false : true;
-	mgo.cardMap =	randomizeCardsToImages(mgo);  // testMode true suppresses randomization
+	// In test mode matches will be generated side by side
+	mgo.cardMap =	randomizeCardsToImages(mgo);
 
 	let testModeButton = document.getElementsByClassName('udacity-logo')[0];
 	mgo.testMode ? testModeButton.classList.add('test-mode') : testModeButton.classList.remove('test-mode');
@@ -445,6 +446,9 @@ function testModeHandler(mgo) {
 
 	mgo.tally = 0;	// Set tally back to start value
 	dashboardSet('tally-count', 0);
+
+	mgo.clickState = 0;
+	mgo.clickQueue = [];
 
 	return;
 }
