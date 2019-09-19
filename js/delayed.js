@@ -7,7 +7,7 @@ Test mode is set from web page by clicking the Udacity 'U'.
 
 Test harness is used to automate card clicks for testing.  To create debug patterns use: number = card, P = pause, 999 = sentinel. To enter the test harness, set the testHarness constant to true, click on any card on the web page.  Note that 'test mode,' entered by clicking Udacity logo, and 'test harness,' enabled here, are two different debug modes that may optionally be run concurrently.
 */
-const testHarness = false;
+const testHarness = true;
 
 //const testPattern = ['1','2','999']; // unmatched, in testMode will match
 //const testPattern = ['1','P','1','999']; double click on same card
@@ -310,30 +310,34 @@ function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
 Triggered when reset icon in the dashboard is clicked.  May be clicked in middle of game. At end of game, when this routine is invoked, the reset button has already been set to blinking red.
 */
 function resetButtonHandler(mgo) {
-	if (mgo.testMode) {console.log('resetButtonHandler: temporarily turns red blink on');}
+	if (mgo.testMode) {console.log('resetButtonHandler:');}
 
-	//event.stopPropagation();
+		event.stopPropagation();
+		blinkBorder('a.reset', 'reset-blink-red', 10, 200, mgo);
 
 	// REMOVE THE BLINK HERE
-	// blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo)
-	resetBlink("a.reset", "blink", 50, 2000, mgo);
 	let targetElement = document.getElementsByClassName('reset')[0];
+
+	// blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo)
+	//resetBlink("a.reset", "blink", 50, 2000, mgo);
+//	let targetElement = document.getElementsByClassName('reset')[0];
 	// Class would exist when all cards are matched
-	//targetElement.classList.remove('blink');
+//	targetElement.classList.add('blink');
+	// targetElement.classList.remove('blink');
 
 	mgo.tally = 0;	// Set tally back to start value
-	dashboardSet('tally-count', mgo.tally);
+	//dashboardSet('tally', mgo.tally);
 
-	resetStars();
+	//resetStars();
 
 	let backCollection = 	document.querySelectorAll('.back.card');
 	backCollection.forEach(element => {
 		element.src = mgo.cardBackImage;
 	});
 
-	mgo.cardMap = randomizeCardsToImages(mgo);
+	//mgo.cardMap = randomizeCardsToImages(mgo);
 
-	mgo.initialCard = true;  // trigger card handler init
+	//mgo.initialCard = true;  // trigger card handler init
 
 	return;
 	// TODO need to stop timer and reset
@@ -419,7 +423,7 @@ function testModeHandler(mgo) {
 	clearInterval(mgo.gameTimerId);
 
 	mgo.tally = 0;	// Set tally back to start value
-	dashboardSet('tally-count', 0);
+	dashboardSet('tally', 0);
 
 	mgo.clickState = 0;
 	mgo.clickQueue = [];
@@ -443,7 +447,7 @@ function updateTally(value, mgo) {
 	if (testHarness) {console.log('updateTally: value(' + value + ')');}
 
 	mgo.tally = (parseInt(mgo.tally, 10) + value).toString();
-	dashboardSet('tally-count', mgo.tally);
+	dashboardSet('tally', mgo.tally);
 	let starRange=[1, 3, 6];
 	if (mgo.tally > starRange[0] && mgo.tally < starRange[1]) {
 		dashboardSet('stars', darkStar + whiteStar + whiteStar);
@@ -910,7 +914,7 @@ let logicMap = new Map([
 			handlerElement.removeEventListener('click', mgo.cardHandlerFunction, true);
 
 			// TODO Starts blinking and then stops
-//			blinkBorder('a.reset', 'reset-blink-red', 10, 200, mgo);
+			blinkBorder('a.reset', 'reset-blink-red', 10, 200, mgo);
 
 		return;
 		}

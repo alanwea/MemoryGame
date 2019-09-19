@@ -209,25 +209,24 @@ border-color: red;
 	background-size: cover;
 }
 
-
 @keyframes blink-reset {
 	0%{
-/*			background-color: #ff3d50;
+			background-color: #ff3d50;
 			color: #ddd;
 		border-color: blueviolet;
-*/			border-color: black;
+			border-color: black;
 		}
 	100%{
-/*			background-color: #222291;
+			background-color: #222291;
 			color: #fff;
 			border-color: coral;
-*/		border-color: red;
+		border-color: red;
 		}
 	}
 
 .blink {
 	border: 3px #ff0000 solid;
-	animation: blink-reset 1s 50;
+/*	animation: blink-reset 1s 50; */
 }
 
 @keyframes blinking-red {
@@ -266,5 +265,6 @@ border-color: red;
 /* TODO Used for reset button background.  This also needs to be coordinated with padding of button */
 .reset-blink-red {
 	padding: 10px;
+	border: 20px solid red;
 	animation: blinking-red .5s infinite;
 }
