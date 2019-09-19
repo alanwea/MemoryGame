@@ -9,10 +9,13 @@ const darkStar = "&#x02605";
 const whiteStar = "&#x02606";
 const semicircleArrow = "&#x21bb";
 
-// A template literal used to define HTML that will be injected for each card image element during initial page load.  The arrow syntax is used to defer resolution of the parameters until used below at runtime.  Change the literal here to change the injected HTML.
-
-// TODO add tabindex=0 for accessibility
-// Template definition for front and back of card.  Backimage is used in both here, the front will be filled in with actual value in the delayed.js code as part of the performance experiement with a base64 embedded image.
+/*
+A template literal used to define HTML that will be injected for each card image element during initial page load.
+Arrow syntax is used to defer resolution of the parameters until used below at runtime.
+Change the template here to change the injected HTML.
+TODO add tabindex=0 for accessibility.
+Template definition for front and back of card.  Backimage is used for both to begin.  The front will be filled in by the code in delayed.js when it is decided whether the base64 embedded images will used from within the JS, or written out to each element.
+*/
 function initializeGame(rows, columns) {
 
 	var htmlTemplate = (cardNumber, backImage) => `<img class='card card${cardNumber} back' data-match='00'  src='${backImage}' alt='Card ${cardNumber}'>
