@@ -93,7 +93,7 @@ function initializeHandlers() {
 
 // Attach the reset event handler
 		let resetButton = retrieveFirstClassValue('reset');
-		resetButton.addEventListener("click", function(){resetButtonHandler(mgo)}, false);
+		resetButton.addEventListener("click", function(){resetButtonHandler(mgo)});
 
 // Attach the test mode event handler that is embedded in the logo
 		let testModeButton = retrieveFirstClassValue('udacity-logo');
@@ -113,7 +113,7 @@ function initializeHandlers() {
 
 	// Trigger to start front image load
 	masterImage.src = getMasterFrontImage();
-
+return;
 };
 
 // TODO	need this anymore???? return; // Important to prevent double call
@@ -268,7 +268,10 @@ function setFrontCardHTML(mgo) {
 // Blink the border by classname
 function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
 
+	if (mgo.testMode) {console.log(`blinkBorder: ${className} ${CSSSelector} ${blinkCount} ${blinkDuration}`);}
+
 	let targetElement = document.querySelector(className);
+//	targetElement = document.getElementsByClassName('cards-container')[0];
 	// TODO why is this needed??????????????????????
 	let blinkState = 1; // toggle whether to add or remove blink class
 
@@ -284,6 +287,7 @@ function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
 				}
 
 				blinkState = 3 - blinkState;
+				if (mgo.testMode) {console.log('blinkstate is ' + blinkState);}
 
 				let innerTimeout = setTimeout(blinkAnimate, blinkDuration);
 
@@ -302,16 +306,20 @@ function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
 	return;
 }
 
+/*
+Triggered when reset icon in the dashboard is clicked.  May be clicked in middle of game. At end of game, when this routine is invoked, the reset button has already been set to blinking red.
+*/
 function resetButtonHandler(mgo) {
-	if (mgo.testMode) {console.log('resetButtonHandler');}
+	if (mgo.testMode) {console.log('resetButtonHandler: temporarily turns red blink on');}
 
-	event.stopPropagation();
+	//event.stopPropagation();
 
 	// REMOVE THE BLINK HERE
-//	blinkBorder("reset", "border-blink-red", mgo);
+	// blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo)
+	resetBlink("a.reset", "blink", 50, 2000, mgo);
 	let targetElement = document.getElementsByClassName('reset')[0];
 	// Class would exist when all cards are matched
-	targetElement.classList.remove('border-blink-red');
+	//targetElement.classList.remove('blink');
 
 	mgo.tally = 0;	// Set tally back to start value
 	dashboardSet('tally-count', mgo.tally);
@@ -856,20 +864,20 @@ let logicMap = new Map([
 		}
 	}],
 
-	['blink', { // Utility: blink border each card in the cardIdx array
+// Utility: blink border of each card in the cardIdx array
+	['blink', {
 		logic:(colorClass, cardIdx, mgo) => {
-		console.log('blink ' + cardIdx[0] + ' ' + cardIdx[1]);
+		if (mgo.testMode) {console.log('blink ' + cardIdx[0] + ' ' + cardIdx[1]);}
 
 // This is used to differentiate between the base64 and on disk image in test mode
 				let blinkFace = mgo.testMode ? '.back' : '.front';
 //				setFace(mgo.cardMap.get(mgo.selectedCard), false, mgo);
-				if (testHarness) console.log(cardIdx[0] + ' : ' + cardIdx[1]);
-
+//				if (testHarness) console.log(cardIdx[0] + ' : ' + cardIdx[1]);
 
 				for (let i=0; i<cardIdx.length; i++) {
 					let cardSelector = '.card' + cardIdx[i] + blinkFace;
 
-					highlightBorder(cardSelector, colorClass, true, mgo);
+//					highlightBorder(cardSelector, colorClass, true, mgo);
 
 					blinkBorder(cardSelector, colorClass, 5, 200, mgo);
 				}
@@ -902,7 +910,7 @@ let logicMap = new Map([
 			handlerElement.removeEventListener('click', mgo.cardHandlerFunction, true);
 
 			// TODO Starts blinking and then stops
-			blinkBorder('a.reset', 'reset-blink-red', 10, 200, mgo);
+//			blinkBorder('a.reset', 'reset-blink-red', 10, 200, mgo);
 
 		return;
 		}

@@ -136,14 +136,23 @@ At a screen size of <--low-screen> the font is <--low-px>, at a screen size of <
 	width: 15%;
 }
 
-
-.tally-count {
+.tally {
 	width: 5%;
+}
+
+.moves {
+	width: 15%;
 }
 
 /* Reset button */
 .reset {
 	width: 15%;
+/*	background-color: greenyellow; */
+/*
+border-color: red;
+	border-width: 3px;
+	border-style: solid;
+*/
 }
 
 /* Running timer */
@@ -200,8 +209,25 @@ At a screen size of <--low-screen> the font is <--low-px>, at a screen size of <
 	background-size: cover;
 }
 
+
+@keyframes blink-reset {
+	0%{
+/*			background-color: #ff3d50;
+			color: #ddd;
+		border-color: blueviolet;
+*/			border-color: black;
+		}
+	100%{
+/*			background-color: #222291;
+			color: #fff;
+			border-color: coral;
+*/		border-color: red;
+		}
+	}
+
 .blink {
-	animation: blinking .5s 3;
+	border: 3px #ff0000 solid;
+	animation: blink-reset 1s 50;
 }
 
 @keyframes blinking-red {
@@ -213,35 +239,32 @@ At a screen size of <--low-screen> the font is <--low-px>, at a screen size of <
 	}
 }
 
-
 .blinking-red {
 	font-size: 1.3em;
 	font-weight: bold;
 	padding: 10px;
-	border: 20px solid red;
+	border: 20px solid #ff3d50;
 }
 
 @keyframes blinking-green {
 	0%{
-		background-color: #000000;
+		border-color: #000000;
 	}
 	100%{
-		background-color:  #00f05c;
+		border-color:  #00f05c;
 	}
 }
 
-/* TODO border same as background color ?????? */
 .blinking-green {
 	font-size: 1.3em;
 	font-weight: bold;
 	padding: 10px;
-	border: 20px solid #7FFF00;
+
+	border: 20px solid #00f05c;
 }
 
 /* TODO Used for reset button background.  This also needs to be coordinated with padding of button */
 .reset-blink-red {
-/*	font-size: 1.3em;
-	font-weight: bold;
-*/	padding: 10px;
+	padding: 10px;
 	animation: blinking-red .5s infinite;
 }

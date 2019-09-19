@@ -136,7 +136,7 @@ retrieveFirstClassValue('cards-container').innerHTML = generatedHTML;
 // Set all dashboard elements to initial values
 function dashboardUpdateAll() {
 		dashboardSet('stars', whiteStar + whiteStar + whiteStar);
-		dashboardSet('tally-count', 0);
+		dashboardSet('tally', 0);
 		dashboardSet('reset', semicircleArrow);
 		document.getElementsByClassName('current-timer')[0].innerHTML = "00:00";
 }
@@ -156,7 +156,9 @@ try {
 	}
 }
 
-// Given a className, that potentially returns multiple elements, returns just the first.
+/*
+Given a className, that potentially returns multiple elements, returns just the first.  Also shows another example of a try...catch for error handling
+*/
 function retrieveFirstClassValue(className) {
 
 	try {
