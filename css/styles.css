@@ -266,5 +266,15 @@ border-color: red;
 .reset-blink-red {
 	padding: 10px;
 	border: 20px solid red;
-	animation: blinking-red .5s infinite;
+	animation-name: reset-blink;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+}
+@keyframes reset-blink {
+	from {
+		background-color: red;
+	}
+	to {
+		background-color: black;
+	}
 }
