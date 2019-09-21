@@ -7,7 +7,7 @@ Test mode is set from web page by clicking the Udacity 'U'.
 
 Test harness is used to automate card clicks for testing.  To create debug patterns use: number = card, P = pause, 999 = sentinel. To enter the test harness, set the testHarness constant to true, click on any card on the web page.  Note that 'test mode,' entered by clicking Udacity logo, and 'test harness,' enabled here, are two different debug modes that may optionally be run concurrently.
 */
-const testHarness = true;
+const testHarness = false;
 
 //const testPattern = ['1','2','999']; // unmatched, in testMode will match
 //const testPattern = ['1','P','1','999']; double click on same card
@@ -313,10 +313,12 @@ function resetButtonHandler(mgo) {
 	if (mgo.testMode) {console.log('resetButtonHandler:');}
 
 		event.stopPropagation();
-		blinkBorder('a.reset', 'reset-blink-red', 10, 200, mgo);
+//		blinkBorder('a.reset', 'reset-blink-red', 10, 200, mgo);
 
 	// REMOVE THE BLINK HERE
-	let targetElement = document.getElementsByClassName('reset')[0];
+	highlightBorder('a.reset', 'reset-blink-red', false, mgo);
+
+//	let targetElement = document.getElementsByClassName('reset')[0];
 
 	// blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo)
 	//resetBlink("a.reset", "blink", 50, 2000, mgo);
@@ -448,7 +450,7 @@ function updateTally(value, mgo) {
 
 	mgo.tally = (parseInt(mgo.tally, 10) + value).toString();
 	dashboardSet('tally', mgo.tally);
-	let starRange=[1, 3, 6];
+	let starRange=[1, 3, 6];  // click triggers to add a star
 	if (mgo.tally > starRange[0] && mgo.tally < starRange[1]) {
 		dashboardSet('stars', darkStar + whiteStar + whiteStar);
 	} else if (mgo.tally > starRange[1] && mgo.tally < starRange[2]) {
@@ -462,7 +464,7 @@ function updateTally(value, mgo) {
 
 // TODO - Reset stars
 function resetStars() {
-	console.log("resetStars");
+	if (mgo.testMode) {console.log("resetStars");}
 	dashboardSet('stars', whiteStar + whiteStar + whiteStar);
 };
 
@@ -803,10 +805,10 @@ let logicMap = new Map([
 
 		setFace(selectedCardObj, true, mgo);
 		setFace(getCardObj(mgo.clickQueue[1], mgo), false, mgo);
+		// adjust the clickQueue to look like a two card match, then call the 2 card unmatched routine
 		mgo.clickQueue.shift();
 		mgo.clickQueue.shift();
 		mgo.clickQueue.unshift(getCardIdx(selectedCardObj, mgo));
-		// clickQueue has been adjusted to look like a two card match, so call the 2 card unmatched routine
 		logicMap.get('2000')['logic'](selectedCardObj ,mgo);
 
 		return;
@@ -904,22 +906,22 @@ let logicMap = new Map([
 	}],
 
 	//*
-	['endOfGame', { logic:(selectedCardObj, mgo) => {
-			if (mgo.testMode) {console.log('End of game');}
+['endOfGame', { logic:(selectedCardObj, mgo) => {
+	if (mgo.testMode) {console.log('End of game');}
 
-			clearInterval(mgo.gameTimerId);
+	clearInterval(mgo.gameTimerId);
 
-// remove the card handler so only the reset button can be pushed.
-			let handlerElement = document.getElementsByClassName('cards-container')[0];
-			handlerElement.removeEventListener('click', mgo.cardHandlerFunction, true);
+// remove the card handler so only the reset button can be clicked.
+	let handlerElement = document.getElementsByClassName('cards-container')[0];
+	handlerElement.removeEventListener('click', mgo.cardHandlerFunction, true);
 
-			// TODO Starts blinking and then stops
-			blinkBorder('a.reset', 'reset-blink-red', 10, 200, mgo);
+	highlightBorder('a.reset', 'reset-blink-red', true, mgo);
 
-		return;
-		}
-	}]
-	//*/
+	return;
+	}
+}]
+//*/
+
 ]); // end of Map
 
 // EXPERIMENTAL: in test mode, attaches match card index to HTML element custom data attribute

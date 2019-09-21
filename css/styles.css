@@ -148,15 +148,7 @@ At a screen size of <--low-screen> the font is <--low-px>, at a screen size of <
 /* Reset button */
 .reset {
 	width: 15%;
-	border: 10px solid #eee;
-/*	box-shadow: 10px 10px 10px 10px transparent; */
-
-/*	background-color: greenyellow; */
-/*
-border-color: red;
-	border-width: 3px;
-	border-style: solid;
-*/
+	border: 10px solid white;
 }
 
 /* Running timer */
@@ -213,28 +205,6 @@ border-color: red;
 	background-size: cover;
 }
 
-/*
-@keyframes blink-reset {
-	0%{
-			background-color: #ff3d50;
-			color: #ddd;
-		border-color: blueviolet;
-			border-color: black;
-		}
-	100%{
-			background-color: #222291;
-			color: #fff;
-			border-color: coral;
-		border-color: red;
-		}
-	}
-*/
-
-.blink {
-	border: 3px #ff0000 solid;
-/*	animation: blink-reset 1s 50; */
-}
-
 @keyframes blinking-red {
 	0%{
 		background-color: #000000;
@@ -268,21 +238,18 @@ border-color: red;
 	border: 20px solid #00f05c;
 }
 
-/* TODO Used for reset button background.  This also needs to be coordinated with padding of button */
 .reset-blink-red {
-/*	border: 10px solid #eee; */
 	animation-name: reset-blink;
 	animation-duration: 1s;
 	animation-iteration-count: infinite;
 }
 @keyframes reset-blink {
 	from {
-		border-color: red;
-		border-width: 6px;
-
+		border-color: white;
+		border-width: 10px;
 	}
 	to {
-		border-color:orangered;
+		border-color:red;
 		border-width: 10px;
 	}
 }
