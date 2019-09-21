@@ -17,6 +17,7 @@ const testPattern = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14
 
 // Generator stores current position in the testPattern, yields next position on each call
 function* testClick(testPattern) {
+
 	let index = 0;
 
 	while (true) {
@@ -63,15 +64,15 @@ When the callback triggers, the face image has been loaded and is then apportion
 //  Called from HTML
 function initializeHandlers() {
 
-	// Retrieve game state from global object created in local storage during preload
+	// Retrieve game state from local storage
 	let mgo = JSON.parse( localStorage.getItem('FEWD: Matching Game') );
 
 	// Retrieve the number of cards
 	let cardCount = Number(mgo.rows) * Number(mgo.columns);
 
-// TODO: intention is to store away game state if game is terminiated early, and then be able to resume game later by loading from local storage during preload.  There is some partial implementation but it is not complete.  For now, mgo.gameType will always be 'new'
+// TODO: intention was to store away game state if game is terminiated early, and then be able to resume game later by loading from local storage during preload.  There is some partial implementation but it is not complete.  For now, mgo.gameType will always be 'new'
 	if (mgo.gameType === 'new') {
-	if (testHarness || mgo.testMode) console.log('NEW GAME INITIALIZING');
+		if (testHarness || mgo.testMode) console.log('NEW GAME INITIALIZING');
 
 /* MasterImage might be a large image that takes a while to load. This is the primary reason that the preload code is run during web page initialization instead of loading all of the images and JS. Setup a callback function to be triggered after the masterImage has loaded
 */
@@ -89,7 +90,6 @@ function initializeHandlers() {
 		mgo.cardMap = randomizeCardsToImages(mgo);
 
 		setFrontCardHTML(mgo);
-		if (mgo.testMode) { populateHTMLClasses(mgo)} // Experimental, populate custom data in HTML
 
 // Attach the reset event handler
 		let resetButton = retrieveFirstClassValue('reset');
@@ -111,12 +111,11 @@ function initializeHandlers() {
 		return;
 	};
 
-	// Trigger to start front image load
-	masterImage.src = getMasterFrontImage();
-return;
-};
+	// Trigger front image load
+		masterImage.src = getMasterFrontImage();
 
-// TODO	need this anymore???? return; // Important to prevent double call
+		return;
+	};
 
 };  // end of initialize handlers
 
@@ -135,29 +134,12 @@ function InitCardHandler(mgo) {
 
 } // end of inital card processing
 
-/*
-function removeHighlight(highlightClass) {
-
-	var c = document.getElementsByClassName("blinking-red");
-	console.log('highlightCards length is ' + c.length);
-	while (c.length) {
-		c[0].classlist.remove('blinking-red');
-	}
-
-	return;
-}
-//*/
-
 // Consumes clicks and dispatches to handlers
 function cardsContainerHandler(mgo) {
-
-	// Primer values for the first
-//	let selectedCardClass = 'card card0 back';
 
 	if (testHarness || mgo.testMode) {
 		console.log(`
 			%%%%%%%% Test Click Received %%%%%%%%`);
-//		selectedCardClass = 'card card1 back';
 	}
 
 	event.stopPropagation();
@@ -173,7 +155,6 @@ function cardsContainerHandler(mgo) {
 	console.assert(isCard, isCard,'Could not find card class');
 
 	// Beginning of game setup, called once when game loads
-	// TODO: should not be called when restarting an old game
 	if (mgo.initialCard) {
 		InitCardHandler(mgo);
 	}
@@ -192,11 +173,12 @@ function cardsContainerHandler(mgo) {
 		};
 	}
 
-// Retrieve the current click card object its match card object
+// Retrieve the current click card object and its corresponding match card object
 	let selectedCardObj = mgo.cardMap.get(mgo.selectedCard);
 	let matchedCardObj = mgo.cardMap.get(selectedCardObj.matchCard);
 
-/* clickState keeps a running record of the current state corresponding to face up cards.  Its key use is to handle states where two unmatched cards are faceup and then a third click comes in
+/*
+ClickState keeps a running record of the current state corresponding to face up cards.  Its key use is to handle states where two unmatched cards are faceup and then a third click comes in
 */
 	mgo.clickState = mgo.clickState + 1;
 		if (mgo.clickState > 3) {throw 'Invalid click state'};
@@ -208,10 +190,11 @@ let isAlreadyMatched = (selectedCardObj.faceUp && matchedCardObj.faceUp) ? true 
 let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard) && !isAlreadyMatched);
 
 // Add the new card to the front of the click queue
-		mgo.clickQueue.unshift(mgo.selectedCard);
+mgo.clickQueue.unshift(mgo.selectedCard);
 
-//		If the card just clicked, matches a cards in the queue then this is a double click
-// Two or three cards are faceup: if current match card equals the last card in the queue, they will match
+/*
+If the card just clicked matches a cards in the queue then this is a double click.  Two or three cards are faceup: if current match card equals the last card in the queue, they will match
+*/
 	let willMatch = ((selectedCardObj.matchCard === mgo.clickQueue[mgo.clickQueue.length-1])
 		&& (mgo.clickState === 2 || mgo.clickState === 3)) ? true : false;
 
@@ -230,12 +213,12 @@ let isDoubleClick = (mgo.clickQueue.includes(mgo.selectedCard) && !isAlreadyMatc
 	}
 
 // Before indexing into the logic map, make sure the key is valid.  This would occur if a card container state was not anticipated during development.
-//	For testing: logicKey = '9999';
+
 	if (!logicMap.has(logicKey)) {
 		throw ('Invalid logic map key: ' + logicKey);
 	};
 
-// Dispatch to the handler routine
+// Dispatch to the map handler routines
 		logicMap.get(logicKey)['logic'](selectedCardObj, mgo);
 
 	if (mgo.testMode) {console.log(`AFTER dispatch: key(${logicKey}) state(${mgo.clickState}) card(${mgo.selectedCard}) already(${isAlreadyMatched}) will(${willMatch}) double(${isDoubleClick}) clickQ(${mgo.clickQueue})`);
@@ -287,7 +270,6 @@ function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
 				}
 
 				blinkState = 3 - blinkState;
-				if (mgo.testMode) {console.log('blinkstate is ' + blinkState);}
 
 				let innerTimeout = setTimeout(blinkAnimate, blinkDuration);
 
@@ -307,45 +289,28 @@ function blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo) {
 }
 
 /*
-Triggered when reset icon in the dashboard is clicked.  May be clicked in middle of game. At end of game, when this routine is invoked, the reset button has already been set to blinking red.
+Triggered when reset icon in the dashboard is clicked.  May be clicked in middle of game.
 */
 function resetButtonHandler(mgo) {
 	if (mgo.testMode) {console.log('resetButtonHandler:');}
 
-		event.stopPropagation();
-//		blinkBorder('a.reset', 'reset-blink-red', 10, 200, mgo);
+	event.stopPropagation();
 
 	// REMOVE THE BLINK HERE
 	highlightBorder('a.reset', 'reset-blink-red', false, mgo);
 
-//	let targetElement = document.getElementsByClassName('reset')[0];
-
-	// blinkBorder(className, CSSSelector, blinkCount, blinkDuration, mgo)
-	//resetBlink("a.reset", "blink", 50, 2000, mgo);
-//	let targetElement = document.getElementsByClassName('reset')[0];
-	// Class would exist when all cards are matched
-//	targetElement.classList.add('blink');
-	// targetElement.classList.remove('blink');
-
 	mgo.tally = 0;	// Set tally back to start value
-	//dashboardSet('tally', mgo.tally);
-
-	//resetStars();
 
 	let backCollection = 	document.querySelectorAll('.back.card');
 	backCollection.forEach(element => {
 		element.src = mgo.cardBackImage;
 	});
 
-	//mgo.cardMap = randomizeCardsToImages(mgo);
-
-	//mgo.initialCard = true;  // trigger card handler init
-
 	return;
-	// TODO need to stop timer and reset
 }
 
-// if card face is up make it down, and vice versa.  Not used, left in for demoinstration purposes
+// if card face is up make it down, and vice versa.  Not used, left in for demostration purposes
+/*
 function toggleFace(selectedCardObj, mgo) {
 	let showFace = selectedCardObj.faceUp ? false : true;
 	if (mgo.testMode) {console.log('toggleFace ' + showFace);}
@@ -353,6 +318,7 @@ function toggleFace(selectedCardObj, mgo) {
 
 	return;
 }
+*/
 
 /*
  Set image for front face of card.  A bit complicated because in test mode the face is coming from the embedded base64 image at the end of this file, otherwise the image shards in the src attribute of the card elements are used.  This is entirely for experimental purposes.
@@ -360,13 +326,13 @@ function toggleFace(selectedCardObj, mgo) {
 function setFace(cardObj, faceUp, mgo) {
 
 	let cardIdx = getCardIdx(cardObj);
-	cardObj.faceUp = faceUp;	// This isn't used for much anymore, but keeping it just in case
+	cardObj.faceUp = faceUp;
 	mgo.cardMap.set(cardIdx, cardObj);  // Update the cardObj with new face
 
 	if (mgo.testMode) {
 		if (testHarness) {console.log(`setFace: ${cardObj} ${faceUp}`);}
 
-		// update card image in RT from the image array
+		// update card image in real-time from the image array
 		if (cardObj.faceUp) {
 			let base64Image = mgo.imageMap.get(cardObj.image);
 			// confusing here, but in testmode the back class card src attribute is used for both the back image and the front image retrieved from the image map
@@ -430,10 +396,13 @@ function testModeHandler(mgo) {
 	mgo.clickState = 0;
 	mgo.clickQueue = [];
 
+	// Experimental: playing with creating and populating a custom data attribute]
+	populateHTMLClasses(true, mgo);
+
 	return;
 }
 
-// Retrieves running seconds from a generator function instead of a global
+// Implements a 'static' variable to keep running seconds instead of a global
 function showGameTimer(seconds) {
 
 	let date = new Date(null);
@@ -468,15 +437,6 @@ function resetStars() {
 	dashboardSet('stars', whiteStar + whiteStar + whiteStar);
 };
 
-function setStars(count) {
-	let stars = '';
-	for ( let i = 1; i<=count; i++) {
-		stars = stars + darkStar;
-	}
-
-	dashboardSet('stars', stars);
-	return;
-}
 //
 function randomizeCardsToImages(mgo) {
 	if (testHarness) {console.log('randomizeCardsToImages');}
@@ -586,7 +546,10 @@ function getRandom(bucket) {
 	return randomValue;
 }
 
-// Bespoke truth table to track <cardCount> face-up cards that signal game end.  Given two card index numbers, sets corresponding bits in the table.  The table is inverted to make testing for the result easier.  That is, when all bits are set, the result is all bits unset.
+/*
+Bespoke truth table to track <cardCount> face-up cards that signal game end.  Given two card index numbers, sets corresponding bits in the table.  The table is inverted to make testing for the result easier.  That is, when all bits are set, the result is all bits unset.
+*/
+
 let updateTT = function(card1, card2, mgo) {
 	if (mgo.testMode) {console.log(
 	`updateTT before ${card1} ${card2} ${mgo.truthTable.toString(2)}`);}
@@ -600,8 +563,9 @@ let updateTT = function(card1, card2, mgo) {
 		return ( parseInt(~mgo.truthTable & 0x0000FFFF, 10) === 0 ) ? true : false;
 }
 
-// TODO Simple, but annoying, beep for sound feedback
-// Adapted from https://odino.org/emit-a-beeping-sound-with-javascript/
+/* TODO Simple, but annoying, beep for sound feedback
+ Adapted from https://odino.org/emit-a-beeping-sound-with-javascript/
+*/
 function beep(soundAlert,vol, freq, duration){
 	let v = soundAlert.createOscillator();
 	let u = soundAlert.createGain();
@@ -661,7 +625,7 @@ let logicMap = new Map([
 			setFace(selectedCardObj, true, mgo);
 			clickState(mgo,1);
 
-		return;
+			return;
 		}}],
 
 // First click
@@ -688,7 +652,7 @@ let logicMap = new Map([
 			}
 
 			return;
-}}],
+	}}],
 
 	//* Click on a card that is already matched
 	['1100', {logic: (selectedCardObj, mgo) => {
@@ -723,7 +687,7 @@ let logicMap = new Map([
 
 	// Handle a double click on same card
 	['2001', {logic: (selectedCardObj, mgo) => {
-	if (mgo.testMode) {console.log('2001 double click same card');}
+		if (mgo.testMode) {console.log('2001 double click same card');}
 
 		updateTally(+1, mgo);
 
@@ -750,8 +714,7 @@ let logicMap = new Map([
 		}
 
 		return;
-	}
-}],
+	}}],
 
 // Cards match
 // if all cards are face-up, indicate and finish game
@@ -779,7 +742,7 @@ let logicMap = new Map([
 			clickState(mgo,0);
 
 			return;
-		}}],
+	}}],
 
 	//*  1st card clicked on face down, 2nd card is already matched
 	['2100', {logic: (selectedCardObj, mgo) =>
@@ -890,7 +853,7 @@ let logicMap = new Map([
 
 				return;
 			}
-		}],
+	}],
 	//*/
 	['allMatched', {logic:(mgo) => {
 		if (mgo.testMode) console.log('All cards are matched');
@@ -906,29 +869,29 @@ let logicMap = new Map([
 	}],
 
 	//*
-['endOfGame', { logic:(selectedCardObj, mgo) => {
-	if (mgo.testMode) {console.log('End of game');}
+	['endOfGame', { logic:(selectedCardObj, mgo) => {
+		if (mgo.testMode) {console.log('End of game');}
 
-	clearInterval(mgo.gameTimerId);
+		clearInterval(mgo.gameTimerId);
 
 // remove the card handler so only the reset button can be clicked.
-	let handlerElement = document.getElementsByClassName('cards-container')[0];
-	handlerElement.removeEventListener('click', mgo.cardHandlerFunction, true);
+		let handlerElement = document.getElementsByClassName('cards-container')[0];
+		handlerElement.removeEventListener('click', mgo.cardHandlerFunction, true);
 
-	highlightBorder('a.reset', 'reset-blink-red', true, mgo);
+		highlightBorder('a.reset', 'reset-blink-red', true, mgo);
 
-	return;
-	}
-}]
+		return;
+	}}]
 //*/
-
 ]); // end of Map
 
-// EXPERIMENTAL: in test mode, attaches match card index to HTML element custom data attribute
-function populateHTMLClasses(mgo) {
+// EXPERIMENTAL: in test mode, attaches match card index to HTML element custom data attribute 'data-match'.  Can be viewed by examining the card elements in the debugger.  Chrome CTRL-SHIFT-I then 'Elements' then examine elements under 'cards-container'
+function populateHTMLClasses(mode, mgo) {
 	// retrieve all card elements
 	let cards = document.querySelectorAll('.card');
 	// loop through them
+	let newValue = '';  // will be set into custom data attribute
+
 	for (let i=0; i< cards.length; i++) {
 	// get HTML element for the ith card
 		let cardHTML = cards[i];
@@ -938,9 +901,12 @@ function populateHTMLClasses(mgo) {
 		let cardIdx = cardClasslist.match(/(?<=card)\d+/)[0];
 	// Use the card index to retrieve the cooresponding mapped card object
 		let cardObj = mgo.cardMap.get((cardIdx));
-	// retrieve the card that matches the current card and set it into the 'data-match' attribute. Can be viewed by examining the card elements in the debugger
-		cardHTML.setAttribute('data-match', cardObj.matchCard);
+	// retrieve the card that matches the current card and set it into the 'data-match' attribute.
+		newValue = mode ? cardObj.matchCard : '00';
+
+		cardHTML.setAttribute('data-match', newValue);
 	}
+
 	return;
 }
 
